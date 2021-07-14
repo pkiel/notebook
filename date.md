@@ -11,7 +11,7 @@ title: Posts by Date
 	{% else %}
 		{% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}{% capture nyear %}{{ post.next.date | date: '%Y' }}{% endcapture %}
 		{% if year != nyear %}
-			</ul><h2 class="archivetitletopbottom">{{ post.date | date: '%Y' }}</h2>
+			<h2 class="archivetitletopbottom">{{ post.date | date: '%Y' }}</h2>
 		{% endif %}
 	{% endunless %}
 {% capture month %}{{ post.date | date: '%m%Y' }}{% endcapture %}
@@ -36,6 +36,7 @@ title: Posts by Date
 		{% endif %}
 		{% if post.date %} - {{ post.date | date: "%m/%d/%Y" }}{% endif %}</li>
 	{% endif %}
+	
 {% endfor %}
 	</ul>
 </div>
