@@ -7,23 +7,8 @@ title: About
   Hey there! Welcome to my lab notebook.
 </p>
 
-In the novel, *The Strange Case of Dr. Jeykll and Mr. Hyde*, Mr. Poole is Dr. Jekyll's virtuous and loyal butler. Similarly, Poole is an upstanding and effective butler that helps you build Jekyll themes. It's made by [@mdo](https://twitter.com/mdo).
+My name is Patrick Kiel and I am a PhD student at the Rosenstiel School's Marine Biology and Ecology program researching ecological mechanics, biomineralization, and ecological restoration of coral reefs. I began my graduate studies in January 2022 in <a href='https://www.marinebiophysics.org/' target ='_blank'>Dr. Vivek N. Prakash's lab</a>. Additionally, my advisors include <a href='https://accesslabumiami.com/' target='_blank'>Dr. Prannoy Suraneni, <a href='https://www.coral.noaa.gov/people/ian-enochs.html' target='_blank'>Dr. Ian Enochs</a>, and <a href='https://marine-biology-ecology.rsmas.miami.edu/research-themes/centers-and-labs/benthic-ecology-coral-restoration-lab/people/diego-lirman/index.html' target='_blank'>Dr. Diego Lirman</a>. Prior to matriculating at RSMAS, I worked as an intern in NOAA's AOML Coral Program and completed my undergraduate eduation at the University of Miami. To learn more, <a href='http://patrickkiel.com'>please visit my website</a>.
 
-There are currently two themes built on Poole:
-
-* [Hyde](http://hyde.getpoole.com)
-* [Lanyon](http://lanyon.getpoole.com)
-
-Learn more and contribute on [GitHub](https://github.com/poole).
-
-## Setup
-
-Some fun facts about the setup of this project include:
-
-* Built for [Jekyll](https://jekyllrb.com)
-* Developed on GitHub and hosted for free on [GitHub Pages](https://pages.github.com)
-* Coded with [Atom](https://atom.io)
-
-Have questions or suggestions? Feel free to [open an issue on GitHub](https://github.com/poole/issues/new) or [ask me on Twitter](https://twitter.com/mdo).
+Have questions or suggestions? Feel free to [contact me](https://twitter.com/patrickmkiel).
 
 Thanks for reading!
