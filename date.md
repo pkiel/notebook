@@ -1,6 +1,6 @@
 ---
 layout: page
-permalink: /dates/
+permalink: /monthview/
 title: Posts by Date
 ---
 
