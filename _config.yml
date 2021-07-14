@@ -1,0 +1,22 @@
+# Setup
+title:               Patrick Kiel's Notebook
+tagline:             'An Open Lab Notebook'
+description:         'An open lab notebook of Patrick Kiel's graduate research while at the Rosenstiel School's Marine Biology and Ecology program.'
+url:                 http://patrickkiel.com
+baseurl:             '/notebook'
+paginate:            5
+permalink:           pretty
+
+# About/contact
+author:
+  name:              Patrick Kiel
+  url:               https://patrickkiel.com
+  email:             pkiel@rsmas.miami.edu
+
+# Gems
+plugins:
+  - jekyll-paginate
+
+# Custom vars
+version:             1.1.0
+google_analytics_id: #UA-XXXX-Y
