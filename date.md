@@ -27,10 +27,8 @@ title: Posts by Date
 			<i class="fa fa-link"></i></a>
 	</h3>
 	{% else %}
-		<li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a> {% if post.categories %} - {% for category in categories %}
-  <a href="{{site.baseurl}}/categories/#{{category|slugize}}">{{ category }}</a>
-  {% unless forloop.last %}&nbsp;{% endunless %}
-  {% endfor %} {% endif %} {% if post.date %} - {{ post.date | date: "%m/%d/%Y" }}{% endif %}</li>
+		<li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a> 
+		{% if post.date %} - {{ post.date | date: "%m/%d/%Y" }}{% endif %}</li>
 	{% endif %}
 {% endfor %}
 	</ul>
