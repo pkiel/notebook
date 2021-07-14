@@ -15,7 +15,7 @@ title: Posts by Categories
     <a name="{{ category_name | slugize }}"></a>
     {% for post in site.categories[category_name] %}
     <article class="archive-item">
-      <h4><a href="{{ site.baseurl }}{{ post.url }}">{{post.title}}</a> {% if post.date %} • {{ post.date | date: "%m/%d/%Y" }}{% endif %}</h4>
+      <h4><a href="{{ site.baseurl }}{{ post.url }}">{{post.title  post.date | date: "%m/%d/%Y"}}</a></h4>
     </article>
     {% endfor %}
   </div>
