@@ -28,6 +28,12 @@ title: Posts by Date
 	</h3>
 	{% else %}
 		<li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a> 
+		{% capture category_names %}{{ post.categories }}{% endcapture %}
+		{% if category_name %} - {% for category in category_names %}
+				  <a href="{{site.baseurl}}/categories/#{{category|slugize}}">{{category}}</a>
+				  {% unless forloop.last %}&nbsp;{% endunless %}
+				  {% endfor %}
+		{% endif %}
 		{% if post.date %} - {{ post.date | date: "%m/%d/%Y" }}{% endif %}</li>
 	{% endif %}
 {% endfor %}
