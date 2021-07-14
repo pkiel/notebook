@@ -1,8 +1,8 @@
 # Setup
-title:               "Patrick Kiel's Notebook"
+title:               "Patrick Kiel"
 tagline:             "An Open Lab Notebook"
 description:         "An open lab notebook of Patrick Kiel's graduate research while at the Rosenstiel School's Marine Biology and Ecology program."
-url:                 "http://patrickkiel.com/"
+url:                 "https://patrickkiel.com/"
 baseurl:             "/notebook"
 paginate:            5
 permalink:           pretty
