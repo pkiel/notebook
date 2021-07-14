@@ -10,7 +10,7 @@ permalink:            /:categories/:title/
 # About/contact
 author:
   name:              Patrick Kiel
-  url:               "https://patrickkiel.com/"
+  url:               "https://patrickkiel.com"
   email:             "pkiel@rsmas.miami.edu"
 
 # Gems
