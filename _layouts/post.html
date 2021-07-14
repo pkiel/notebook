@@ -8,9 +8,11 @@ layout: default
   {{ content }}
 </div>
 
-
+<div class="related">
+  <h2>Related posts</h2>
+  <ul class="related-posts">
 {% assign maxRelated = 3 %}
-{% assign minCommonTags =  2 %}
+{% assign minCommonTags =  1 %}
 {% assign maxRelatedCounter = 0 %}
 
 {% for post in site.posts %}
@@ -28,9 +30,6 @@ layout: default
       {% endif %}
     {% endfor %}
 
-<div class="related">
-  <h2>Related posts</h2>
-  <ul class="related-posts">
 {% if sameTagCount >= minCommonTags %}
       <li>
         <h3>
