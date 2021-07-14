@@ -5,18 +5,19 @@ title: Posts by Date
 ---
 
 <div id="archives">
-{% for category in site.categories %}
+{% for date in site.dates %}
   <div class="archive-group">
-    {% capture category_name %}{{ category | first }}{% endcapture %}
-    <div id="#{{ category_name | slugize }}"></div>
+    {% capture date %}{{ date | first }}{% endcapture %}
+    <div id="#{{ date | slugize }}"></div>
     <p></p>
 
-    <h3 class="category-head">{{ category_name }} ({{ site.categories[category_name].size }})</h3>
-    <a name="{{ category_name | slugize }}"></a>
-    {% for post in site.categories[category_name] %}
+    <h3 class="category-head">{{ date }} ({{ site.dates[date].size }})</h3>
+    <a name="{{ date | slugize }}"></a>
+    {% for post in site.dates[date] %}
     <article class="archive-item">
-      <h4><a href="{{ site.baseurl }}{{ post.url }}">{{post.title}}</a> - {{ page.date | date_to_string}}</h4>
+      <h4><a href="{{ site.baseurl }}{{ post.url }}">{{post.title}}</a></h4>
     </article>
     {% endfor %}
   </div>
-{% endfor 
+{% endfor %)
+</div>
