@@ -1,7 +1,7 @@
 ---
 layout: page
-permalink: /categories/
-title: Posts by Categories
+permalink: /date/
+title: Posts by Date
 ---
 
 <div id="archives">
@@ -15,9 +15,8 @@ title: Posts by Categories
     <a name="{{ category_name | slugize }}"></a>
     {% for post in site.categories[category_name] %}
     <article class="archive-item">
-      <h4><a href="{{ site.baseurl }}{{ post.url }}">{{post.title}}</a></h4>
+      <h4><a href="{{ site.baseurl }}{{ post.url }}">{{post.title}}</a> - {{ page.date | date_to_string}}</h4>
     </article>
     {% endfor %}
   </div>
-{% endfor %}
-</div>
+{% endfor 
