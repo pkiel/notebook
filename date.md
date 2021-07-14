@@ -6,38 +6,15 @@ title: Posts by Date
 
 <div id="date_archives">
 {% for post in site.posts %}
-	{% unless post.next %}
-		<h2 class="archivetitletopbottom">{{ post.date | date: '%Y' }}</h2>
-	{% else %}
-		{% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}{% capture nyear %}{{ post.next.date | date: '%Y' }}{% endcapture %}
-		{% if year != nyear %}
-			<h2 class="archivetitletopbottom">{{ post.date | date: '%Y' }}</h2>
-		{% endif %}
-	{% endunless %}
-{% capture month %}{{ post.date | date: '%m%Y' }}{% endcapture %}
-{% capture nmonth %}{{ post.next.date | date: '%m%Y' }}{% endcapture %}
-{% if month != nmonth %}
-	{% if forloop.index != 1 %}</ul>{% endif %}
-	<h2 class="archivetitle">{{ post.date | date: '%B %Y' }}</h2><ul>
-	{% endif %}
-	{% if post.link %}
-	<h3 class="link-post">
-		<a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
-		<a href="{{ post.link }}" target="_blank">
-			<i class="fa fa-link"></i></a>
-	</h3>
-	{% else %}
-		<li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a> 
-		{% capture category_names %}{{ post.categories }}{% endcapture %}
-		{% if category_name %} - {% for category in category_names %}
-				  <a href="{{site.baseurl}}/categories/#{{category|slugize}}">{{category}}</a>
-				  {% unless forloop.last %}&nbsp;{% endunless %}
-				  {% endfor %}
-		{% endif %}
-		{% if post.date %} - {{ post.date | date: "%m/%d/%Y" }}{% endif %}</li>
-	{% endif %}
-	
+  {% assign currentdate = post.date | date: "%B %Y" %}
+  {% if currentdate != date %}
+    {% unless forloop.first %}</ul>{% endunless %}
+    <h1 id="y{{post.date | date: "%B %Y"}}">{{ currentdate }}</h1>
+    <ul>
+    {% assign date = currentdate %}
+  {% endif %}
+    <li><a href="{{ post.url }}">{{ post.title }}</a> {% if post.date %} - {{ post.date | date: "%m/%d/%Y" }}{% endif %} </li>
+  {% if forloop.last %}</ul>{% endif %}
 {% endfor %}
-	</ul>
 </div>
 
