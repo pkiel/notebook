@@ -14,9 +14,7 @@ title: Posts by Categories
     <h3 class="category-head">{{ category_name }} ({{ site.categories[category_name].size }})</h3>
     <a name="{{ category_name | slugize }}"></a>
     {% for post in site.categories[category_name] %}
-    <article class="archive-item">
-      <h4><a href="{{ site.baseurl }}{{ post.url }}">HI: {{post.title  post.date | date: "%m/%d/%Y"}}</a></h4>
-    </article>
+      <h4><a href="{{ site.baseurl }}{{ post.url }}">this better work</a></h4>
     {% endfor %}
   </div>
 {% endfor %}
