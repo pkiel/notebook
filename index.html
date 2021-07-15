@@ -1,37 +1,19 @@
 ---
-layout: default
+layout: page
 title: Home
 ---
 
-<div class="posts">
-  {% for post in paginator.posts %}
-  <div class="post">
-    <h1 class="post-title">
-      <a href="{{ post.url | absolute_url }}">
-        {{ post.title }}
-      </a>
-    </h1>
-
-    <span class="post-date">{{ post.date | date_to_string }}</span>
-
-    {{ post.content }}
-  </div>
-  {% endfor %}
+<div class="message">
+  Welcome to my Open Lab Notebook!
 </div>
 
-<div class="pagination">
-  {% if paginator.next_page %}
-    <a class="pagination-item older" href="{{ paginator.next_page_path | absolute_url }}">Older</a>
-  {% else %}
-    <span class="pagination-item older">Older</span>
-  {% endif %}
-  {% if paginator.previous_page %}
-    {% if paginator.page == 2 %}
-      <a class="pagination-item newer" href="{{ '/' | absolute_url }}">Newer</a>
-    {% else %}
-      <a class="pagination-item newer" href="{{ paginator.previous_page_path | absolute_url }}">Newer</a>
-    {% endif %}
-  {% else %}
-    <span class="pagination-item newer">Newer</span>
-  {% endif %}
-</div>
+In this open lab notebook, I seek to commit to open science through my data, methodology, and analyses. This notebook was inspired by <a href='https://github.com/hputnam/Putnam_Lab_Notebook' target='_blank'>Holly Putnam</a>. 
+
+Blog posts will outline the analysis I am conducting and link to resources, data, and other github repositories. I hope this notebook not only documents and improves my own work, but advances the capabilities and knowledge of our scientific community.
+
+The layout of the notebook will be simple: each post will contain one or more categories and the date the entry was written. Then, posts will be archived by category and date. This will allow easy jumping from related post to related post - effectively tracking my progress through time and topic. To access these archives, click the  My hope is that this will allow myself to and for others following along to easily connect the threads of my work. 
+
+
+-----
+
+Thank you for opening my lab notebook.
