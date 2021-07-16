@@ -4,7 +4,7 @@ tagline:             "An Open Lab Notebook"
 description:         "Patrick Kiel's Notebook."
 url:                 "https://patrickkiel.com"
 baseurl:             "/notebook"
-paginate:            5
+paginate:            3
 permalink:            /:categories/:title/
 
 # About/contact
