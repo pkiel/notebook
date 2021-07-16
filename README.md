@@ -20,7 +20,7 @@ I edited the theme using a combination of other Jekyll themes including [Jekyll-
 Open Sience is the movement within science to make research more accessible, understandable, and reproducible. Open science is based on the principles of transparency and open-access. As an interdisciplinary ecologist, open science is particularly useful to foster collaborations and ensure accountability as I delve into multiple fields. 
 
 Resources on open science can be found here:
-* [Opening Science: The Evolving Guide on How the Internetis Changing Research, Collaborationand Scholarly Publishing](https://library.oapen.org/bitstream/handle/20.500.12657/28008/1001989.pdf)
+* [Opening Science: The Evolving Guide on How the Internet is Changing Research, Collaborationand Scholarly Publishing](https://library.oapen.org/bitstream/handle/20.500.12657/28008/1001989.pdf)
 * Low availability of code in ecology: A call for urgent action [doi:10.1371/journal.pbio.3000763](https://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.3000763&type=printable)
 * Open Science principles for accelerating trait-based science across the Tree of Life [doi:10.1038/s41559-020-1109-6](https://sci-hub.se/10.1038/s41559-020-1109-6)
 
@@ -29,4 +29,4 @@ Resources on open science can be found here:
 
 Open sourced under the [MIT license](LICENSE.md).
 
-<3
+- Patrick
