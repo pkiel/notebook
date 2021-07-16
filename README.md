@@ -29,4 +29,6 @@ Resources on open science can be found here:
 
 Open sourced under the [MIT license](LICENSE.md).
 
-- Patrick
+Best regards,
+
+Patrick
