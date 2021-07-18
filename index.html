@@ -28,7 +28,9 @@ title: Home
 
     <span class="post-date">{{ post.date | date_to_string }}</span>
 
-    {{ post.content }}
+    {{ post.excerpt }}
+	
+	<a href="{{ post.url | absolute_url }}"><strong>Open Notebook Entry...</strong></a>
   </div>
   {% endfor %}
 </div>
