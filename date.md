@@ -13,7 +13,7 @@ title: Posts by Date
     <ul>
     {% assign date = currentdate %}
   {% endif %}
-    <li><a href="{{ post.url }}">{{ post.title }}</a> {% if post.date %} - {{ post.date | date: "%m/%d/%Y" }}{% endif %} </li>
+    <li><a href="/notebook/{{post.url }}">{{ post.title }}</a> - {{post.categories}} {% if post.date %} - {{ post.date | date: "%m/%d/%Y" }}{% endif %} </li>
   {% if forloop.last %}</ul>{% endif %}
 {% endfor %}
 </div>
