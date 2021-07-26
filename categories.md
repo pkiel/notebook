@@ -8,7 +8,7 @@ title: Posts by Categories
 <p>
 	{% for category in site.categories %}
 	{% capture category_name %}{{ category | first }}{% endcapture %}
-		<a href="#{{category_name}}"> {{ category_name }} ({{ site.categories[category_name].size }}) </a> / 
+		<a href="#{{ category_name }}"> {{ category_name }} ({{ site.categories[category_name].size }}) </a> / 
 	{% endfor %}
 </p>
 <hr />
