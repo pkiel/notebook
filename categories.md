@@ -5,10 +5,10 @@ title: Posts by Categories
 ---
 
 <h3 class="category-head">Navigate to a Category</h3>
-<p>
+<p style="font-size: larger;">
 	{% for category in site.categories %}
 	{% capture category_name %}{{ category | first }}{% endcapture %}
-		<a href="#{{ category_name }}"> {{ category_name }} ({{ site.categories[category_name].size }}) </a> / 
+		<a href="#{{ category_name }}"> {{ category_name }} ({{ site.categories[category_name].size }}) </a> {% unless forloop.last %}/{% endunless %}
 	{% endfor %}
 </p>
 <hr />
