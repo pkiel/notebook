@@ -13,7 +13,7 @@ title: Posts by Date
     <ul>
     {% assign date = currentdate %}
   {% endif %}
-    <li><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a> {% if post.categories %} {% for category in site.categories %} {% capture category_name %}{{ category | first }}{% endcapture %} - <a href="/notebook/categories#{{ category_name }}">{{ category_name }}</a> {% endfor %}{% endif %} {% if post.date %} - {{ post.date | date: "%m/%d/%Y" }}{% endif %} </li>
+    <li><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a> {% if post.categories %} {% for category in site.categories %} {% capture category_name %}{{ category | first }}{% endcapture %} - <a href="/notebook/categories#{{ category_name }}">{{ category_name }}</a>  {% unless forloop.last %},{% endunless %}{% endfor %}{% endif %} {% if post.date %} - {{ post.date | date: "%m/%d/%Y" }}{% endif %} </li>
   {% if forloop.last %}</ul>{% endif %}
 {% endfor %}
 </div>
