@@ -3,10 +3,6 @@ layout: post
 title: 'Going from Rmarkdown to Jekyll'
 date: "2022-02-18"
 categories: [Methods, Goals]
-output:
-  md_document:
-    variant: gfm
-    preserve_yaml: true
 ---
 
 ## R Markdown
