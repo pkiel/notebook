@@ -1,14 +1,12 @@
 ---
-categories:
-- Methods
-- Goals
-date: 2022-02-18
 layout: post
+title: 'Going from Rmarkdown to Jekyll'
+date: "2022-02-18"
+categories: [Methods, Goals]
 output:
   md_document:
+    variant: gfm
     preserve_yaml: true
-    variant: markdown_github
-title: Going from Rmarkdown to Jekyll
 ---
 
 ## R Markdown
@@ -33,7 +31,7 @@ head(mtcars)
 
 You can also embed plots, for example:
 
-![](/images/pressure-1.png)
+![](/images/pressure-1.png)<!-- -->
 
 Note that the `echo = FALSE` parameter was added to the code chunk to
 prevent printing of the R code that generated the plot.

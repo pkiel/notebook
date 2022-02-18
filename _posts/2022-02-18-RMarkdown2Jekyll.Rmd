@@ -5,7 +5,7 @@ date: "`r format(Sys.Date(), '%Y-%m-%d')`"
 categories: [Methods, Goals]
 output:
   md_document:
-    variant: markdown_github
+    variant: gfm
     preserve_yaml: true
 ---
 
