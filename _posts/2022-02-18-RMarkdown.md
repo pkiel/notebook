@@ -27,7 +27,7 @@ head(iris)
 
 You can also embed plots, for example:
 
-![](/notebook/images/pressure-1.png)<!-- -->
+![](images/pressure-1.png)<!-- -->
 
 Note that the `echo = FALSE` parameter was added to the code chunk to
 prevent printing of the R code that generated the plot.
