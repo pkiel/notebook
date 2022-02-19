@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Going from Rmarkdown to Jekyll'
-date: "2022-02-18
+date: '2022-02-18'
 categories: [Methods, Goals]
 ---
 
