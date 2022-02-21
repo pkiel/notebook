@@ -1,0 +1,54 @@
+---
+layout: post
+title:  "Testing knitr and blogdown"
+author: "Patrick Kiel"
+date: "`r format(Sys.time(), '%Y-%m-%d')`"
+categories: [methods]
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, 
+  encoding = encoding, 
+  output_file=paste0(Sys.Date(), "-", sub(".Rmd", ".md",inputFile)), 
+  output_dir = "./") })
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+#load packages
+library(tidyverse)
+
+base_dir <- "../" # i.e. where the jekyll blog is on the hard drive.
+base_url <- "/" # keep as is
+
+# If the document is currently being knit, do this; skip it in normal execution
+if (!is.null(knitr::current_input())){
+  
+  # Output path for figures
+  fig_path <- paste0("images/", str_remove(knitr::current_input(), ".Rmd"), "/")
+  
+  # Set base directories
+  knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
+  
+  # Set figure directories
+  knitr::opts_chunk$set(fig.path = fig_path,
+                      cache.path = '../cache/',
+                      message=FALSE, warning=FALSE,
+                      cache = FALSE)
+}
+
+
+
+```
+
+
+
+Does it work. I really want to know
+
+```{r}
+summary(mtcars) %>%
+  knitr::kable()
+```
+

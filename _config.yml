@@ -1,7 +1,7 @@
 # Setup
 title:               "Patrick Kiel"
 tagline:             "An Open Lab Notebook"
-description:         "Patrick Kiel's Notebook."
+description:         "Patrick Kiel's open science notebook detailing methods, analyses, and thoughts of his biophysical and structural examination of corals."
 url:                 "https://patrickkiel.com"
 baseurl:             "/notebook"
 paginate:            3
@@ -12,6 +12,8 @@ author:
   name:              Patrick Kiel
   url:               "https://patrickkiel.com"
   email:             "pkiel@rsmas.miami.edu"
+  twitter_username: "patrickmkiel"
+  github_username: "pkiel"
 
 # Gems
 plugins:
@@ -20,3 +22,6 @@ plugins:
 # Custom vars
 version:             1.1.0
 google_analytics_id: #UA-XXXX-Y
+
+
+
