@@ -4,7 +4,7 @@ title:  "Publishing RMarkdown Reports with Jekyll"
 author: "Patrick Kiel"
 date: '2022-02-22'
 categories: [methods]
-description: "This is a fun test to see if tests work."
+description: "By combining the power of RMarkdown reports, Github Pages, and Jekyll, you can easily share in-depth data analyses with your team. Follow this guide to deploy RMarkdown reports in your Open Notebook."
 output:
   md_document:
     variant: gfm
