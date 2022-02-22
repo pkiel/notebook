@@ -2,7 +2,7 @@
 layout: post
 title:  "Publishing RMarkdown Reports with Jekyll"
 author: "Patrick Kiel"
-date: "`r format(Sys.time(), '%Y-%m-%d')`"
+date: "`r Sys.Date()`"
 categories: [methods]
 output:
   md_document:
@@ -11,6 +11,10 @@ output:
 knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile, 
   encoding = encoding, 
+  output_file = paste0(Sys.Date(), "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
   output_dir = "../_posts") })
 always_allow_html: true
 ---
@@ -21,7 +25,7 @@ library(tidyverse)
 library(kableExtra)
 
 base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
-base_url <- "/" # keep as is
+base_url <- "/notebook/" # subdirectory of patrickkiel.com
 fig_path <- "images/"
 
   # Set base directories

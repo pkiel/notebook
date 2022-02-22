@@ -2,7 +2,7 @@
 layout: post
 title:  "Publishing RMarkdown Reports with Jekyll"
 author: "Patrick Kiel"
-date: "2022-02-21"
+date: "2022-02-22"
 categories: [methods]
 output:
   md_document:
@@ -11,6 +11,10 @@ output:
 knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile, 
   encoding = encoding, 
+  output_file = paste0(Sys.Date(), "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
   output_dir = "../_posts") })
 always_allow_html: true
 ---
@@ -109,7 +113,7 @@ mtcars %>%
   theme_classic()
 ```
 
-![](/images/boxplotExample-1.png)<!-- -->
+![](/notebook/images/boxplotExample-1.png)<!-- -->
 
 Finally, I can just output a figure without underlying code.
-![](/images/lmExample-1.png)<!-- -->
+![](/notebook/images/lmExample-1.png)<!-- -->
