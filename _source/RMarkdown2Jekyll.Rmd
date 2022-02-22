@@ -41,6 +41,9 @@ fig_path <- "images/"
                       cache = FALSE)
 ```
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"></script>
+
 A major goal of this Open Notebook is to share my analyses with collaborators. I primarily use R and find RMarkdown an effective way to create reproducible code. However, sharing HTML files or PDF files back and forth over email is cumbersome, and prevents the use of dynamic applets. Toward this end, I have developed a reusable RMarkdown template that generates a Github Flavored markdown file which is converted to a Jekyll static page on my Open Notebook website.
 
 ## Github Pages
@@ -111,7 +114,7 @@ fig_path <- "images/" #folder that contains images of all generated plots
                       cache = FALSE)
 ```
 
-I can some create some code and it is viewable by others to see what I am doing. The kableExtra package creates beautiful tables
+I can create some code and it is viewable by others to see what I am doing. The kableExtra package creates beautiful tables
 
 ```{r}
 mtcars %>%
@@ -145,11 +148,11 @@ mtcars %>%
 Github pages unfortunately only allows client side code, precluding the use of Shiny apps. However, there are a few apps and even dashboards you can create using HTML widgets. A comprehensive listing of widgets and examples [can be seen here](http://www.htmlwidgets.org/). Further, you can add limited interaction with [Crosstalk.](https://rstudio.github.io/crosstalk/)
 
 For example, here is an interactive map to visualize data.
-```{r leaflet example}
+```{r leaflet example, echo=F}
 countries <- readOGR("https://rstudio.github.io/leaflet/json/countries.geojson")
 map <- leaflet(countries) %>% addTiles()
-
 qpal <- colorQuantile("RdYlBu", countries$gdp_md_est, n = 5)
+
 map %>%
   addPolygons(stroke = FALSE, smoothFactor = 0.2, fillOpacity = 1,
     color = ~qpal(gdp_md_est)
