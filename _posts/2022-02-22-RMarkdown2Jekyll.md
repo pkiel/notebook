@@ -2,7 +2,7 @@
 layout: post
 title:  "Publishing RMarkdown Reports with Jekyll"
 author: "Patrick Kiel"
-date: '2022-02-22'
+date: "2022-02-22"
 categories: [methods]
 output:
   md_document:
