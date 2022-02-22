@@ -28,6 +28,8 @@ library(leaflet)
 library(rgdal)
 library(htmlwidgets)
 
+countries <- readOGR("https://rstudio.github.io/leaflet/json/countries.geojson")
+
 base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
 base_url <- "/notebook/" # subdirectory of patrickkiel.com
 fig_path <- "images/"
@@ -152,8 +154,7 @@ mtcars %>%
 Github pages unfortunately only allows client side code, precluding the use of Shiny apps. However, there are a few apps and even dashboards you can create using HTML widgets. A comprehensive listing of widgets and examples [can be seen here](http://www.htmlwidgets.org/). Further, you can add limited interaction with [Crosstalk.](https://rstudio.github.io/crosstalk/)
 
 For example, here is an interactive map to visualize data.
-```{r leaflet example, echo=F, message=F, error=F,warning=F}
-countries <- readOGR("https://rstudio.github.io/leaflet/json/countries.geojson")
+```{r leaflet example, include=F, cache=F}
 map <- leaflet(countries) %>% addTiles()
 qpal <- colorQuantile("RdYlBu", countries$gdp_md_est, n = 5)
 
@@ -163,6 +164,8 @@ map %>%
   ) %>%
   addLegend("bottomright", pal = qpal, values = ~gdp_md_est,
             opacity = 1, title = "Est. GDP (2010)",
-    labFormat = labelFormat(prefix = "$"))
+    labFormat = labelFormat(prefix = "$")) %>%
+  saveWidget(here::here('images/', 'mapExample.html'))
 ```
 
+<iframe src="/notebook/images/mapExample.html" height="600px" width="100%" style="border:none;"></iframe>
