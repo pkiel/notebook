@@ -4,6 +4,7 @@ title:  "Publishing RMarkdown Reports with Jekyll"
 author: "Patrick Kiel"
 date: '2022-02-22'
 categories: [methods]
+description: "This is a fun test to see if tests work."
 output:
   md_document:
     variant: gfm
