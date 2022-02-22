@@ -1,7 +1,7 @@
 # Setup
 title:               "Patrick Kiel"
 tagline:             "An Open Lab Notebook"
-description:         "Patrick Kiel's open science notebook detailing methods, analyses, and thoughts of his biophysical and structural examination of corals."
+description:         "Patrick Kiel's open science notebook detailing analyses and methods in his biophysical and structural investigations of corals."
 url:                 "https://patrickkiel.com"
 baseurl:             "/notebook"
 paginate:            3
