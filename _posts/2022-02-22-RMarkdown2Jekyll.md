@@ -247,3 +247,28 @@ For example, here is an interactive map to visualize data.
 
 <iframe src="/notebook/images/mapExample.html" height="600px" width="100%" style="border:none;">
 </iframe>
+
+To embed widgets requires some work. I first create a new code chunk
+with include set to FALSE so as not to run when compiling. I create the
+map and then save externally in my images folder. Finally, I import the
+widget as an iframe. This is required because of Jekyll and Github Pages
+messing with https protocols.
+
+``` r
+countries <- readOGR("https://rstudio.github.io/leaflet/json/countries.geojson")
+map <- leaflet(countries) %>% addTiles()
+qpal <- colorQuantile("RdYlBu", countries$gdp_md_est, n = 5)
+
+map %>%
+  addPolygons(stroke = FALSE, smoothFactor = 0.2, fillOpacity = 1,
+    color = ~qpal(gdp_md_est)
+  ) %>%
+  addLegend("bottomright", pal = qpal, values = ~gdp_md_est,
+            opacity = 1, title = "Est. GDP (2010)",
+    labFormat = labelFormat(prefix = "$")) %>%
+  saveWidget(here::here('images/', 'mapExample.html'))
+```
+
+``` html
+<iframe src="/notebook/images/mapExample.html" height="600px" width="100%" style="border:none;"></iframe>
+```
