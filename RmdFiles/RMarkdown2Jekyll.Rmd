@@ -2,7 +2,7 @@
 layout: post
 title:  "Publishing RMarkdown Reports with Jekyll"
 author: "Patrick Kiel"
-date: "`r Sys.Date()`"
+date: '`r as.character(Sys.Date())`'
 categories: [methods]
 output:
   md_document:
