@@ -36,7 +36,7 @@ Jekyll static page on my Open Notebook website.
 [Github pages](https://pages.github.com/) allows the free hosting of
 static sites for personal websites and individual projects (repos). I
 further use [Google Domains](https://domains.google.com/) to register
-the [patrickkiel.com](https://patrickkiel.com) domain for $12 a year. I
+the [patrickmkiel.com](https://patrickmkiel.com) domain for $12 a year. I
 am then able to configure any subdomains, email forwards, and multiple
 Github Pages sites all for a reasonable price.
 
@@ -70,11 +70,11 @@ available on [the Github
 documentation.](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll)
 An important step if creating Jekyll in a second repository and wanting
 to leverage your domain is to correctly setup the \_config.yml file. I
-want my notebook to be served at patrickkiel.com/notebook so I set my
+want my notebook to be served at patrickmkiel.com/notebook so I set my
 config file as follows.
 
     ---
-    url:                 "https://patrickkiel.com"
+    url:                 "https://patrickmkiel.com"
     baseurl:             "/notebook"
     ---
 
@@ -121,7 +121,7 @@ knitted file into the \_posts folder.
 
 In the setup chunk set the location to place generated figures and
 correct path based on how you have your blog setup. Since my notebook is
-a subdirectory of patrickkiel.com, I include ‘/notebook/’ in the
+a subdirectory of patrickmkiel.com, I include ‘/notebook/’ in the
 base\_url. A caveat I am still trying to work out is that when I view
 individual markdown files on Github, I cannot see the plots. However,
 when I navigate to the page itself, plots show. This is an artifact of
@@ -133,7 +133,7 @@ Liquid tags to make functionality work in both locations.
 library(tidyverse)
 
 base_dir <- "~/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
-base_url <- "/notebook/" # subdirectory of patrickkiel.com
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
 fig_path <- "images/" #folder that contains images of all generated plots
 
   # Set base directories
