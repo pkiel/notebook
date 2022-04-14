@@ -2,7 +2,7 @@
 title:               "Patrick Kiel"
 tagline:             "An Open Lab Notebook"
 description:         "Patrick Kiel's open science notebook detailing analyses and methods in his biophysical and structural investigations of corals."
-url:                 "https://patrickkiel.com"
+url:                 "https://patrickmkiel.com"
 baseurl:             "/notebook"
 paginate:            3
 permalink:            /:categories/:title/
@@ -10,7 +10,7 @@ permalink:            /:categories/:title/
 # About/contact
 author:
   name:              Patrick Kiel
-  url:               "https://patrickkiel.com"
+  url:               "https://patrickmkiel.com"
   email:             "pkiel@rsmas.miami.edu"
   twitter_username: "patrickmkiel"
   github_username: "pkiel"
