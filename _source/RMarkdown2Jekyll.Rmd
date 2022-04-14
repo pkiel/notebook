@@ -29,7 +29,7 @@ library(rgdal)
 library(htmlwidgets)
 
 base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
-base_url <- "/notebook/" # subdirectory of patrickkiel.com
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
 fig_path <- "images/"
 
   # Set base directories
@@ -51,7 +51,7 @@ fig_path <- "images/"
 A major goal of this Open Notebook is to share my analyses with collaborators. I primarily use R and find RMarkdown an effective way to create reproducible code. However, sharing HTML files or PDF files back and forth over email is cumbersome, and prevents the use of dynamic applets. Toward this end, I have developed a reusable RMarkdown template that generates a Github Flavored markdown file which is converted to a Jekyll static page on my Open Notebook website.
 
 ## Github Pages
-[Github pages](https://pages.github.com/) allows the free hosting of static sites for personal websites and individual projects (repos). I further use [Google Domains](https://domains.google.com/) to register the [patrickkiel.com](https://patrickkiel.com) domain for \$12 a year. I am then able to configure any subdomains, email forwards, and multiple Github Pages sites all for a reasonable price.
+[Github pages](https://pages.github.com/) allows the free hosting of static sites for personal websites and individual projects (repos). I further use [Google Domains](https://domains.google.com/) to register the [patrickmkiel.com](https://patrickmkiel.com) domain for \$12 a year. I am then able to configure any subdomains, email forwards, and multiple Github Pages sites all for a reasonable price.
 
 To setup Github pages, first create a repository with [username].github.io. Replace the [username] with your account's username. For instance, my repo has the name pkiel.github.io. Commit some html files to this repo and then head over to https://username.github.io to see if it works.
 
@@ -60,10 +60,10 @@ Github provides excellent documentation on [how to setup the custom domain names
 ## Setting up a Jekyll Blog
 [Jekyll](https://jekyllrb.com/) is a static website generator that uses Ruby and Liquid to easily develop blogs from Markdown files. You can host a Jekyll Blog on any capable server, but Github has the capabilities to compile Jekyll from within a repository, permitting the creation of blogs without needing to run a server or installing Ruby locally. There is an abundance of beautiful themes and ready to fork repos to quickly setup your own Jekyll blog. You may [fork my notebook](https://github.com/pkiel/notebook) as a starting point, which I built by combining features from multiple blogs and themes that I liked. 
 
-I host my Jekyll blog on Github in a second repository different than my personal website. In depth steps of creating the Jekyll blog are available on [the Github documentation.](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll) An important step if creating Jekyll in a second repository and wanting to leverage your domain is to correctly setup the _config.yml file. I want my notebook to be served at patrickkiel.com/notebook so I set my config file as follows.
+I host my Jekyll blog on Github in a second repository different than my personal website. In depth steps of creating the Jekyll blog are available on [the Github documentation.](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll) An important step if creating Jekyll in a second repository and wanting to leverage your domain is to correctly setup the _config.yml file. I want my notebook to be served at patrickmkiel.com/notebook so I set my config file as follows.
 
     ---
-    url:                 "https://patrickkiel.com"
+    url:                 "https://patrickmkiel.com"
     baseurl:             "/notebook"
     ---
 
@@ -98,14 +98,14 @@ I name each of these files with the title I want to give the post without the no
 
 The output_file argument appends the correct date format required by Jekyll to each post markdown file. The output_dir argument places the knitted file into the _posts folder. 
 
-In the setup chunk set the location to place generated figures and correct path based on how you have your blog setup. Since my notebook is a subdirectory of patrickkiel.com, I include '/notebook/' in the base_url. A caveat I am still trying to work out is that when I view individual markdown files on Github, I cannot see the plots. However, when I navigate to the page itself, plots show. This is an artifact of being a subdirectory and I am okay with it for now. Trying to leverage Liquid tags to make functionality work in both locations.
+In the setup chunk set the location to place generated figures and correct path based on how you have your blog setup. Since my notebook is a subdirectory of patrickmkiel.com, I include '/notebook/' in the base_url. A caveat I am still trying to work out is that when I view individual markdown files on Github, I cannot see the plots. However, when I navigate to the page itself, plots show. This is an artifact of being a subdirectory and I am okay with it for now. Trying to leverage Liquid tags to make functionality work in both locations.
 
 ```{r code setup demonstration, eval=FALSE}
 #load packages you want
 library(tidyverse)
 
 base_dir <- "~/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
-base_url <- "/notebook/" # subdirectory of patrickkiel.com
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
 fig_path <- "images/" #folder that contains images of all generated plots
 
   # Set base directories
