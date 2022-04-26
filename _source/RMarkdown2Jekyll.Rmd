@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Publishing RMarkdown Reports with Jekyll"
-author: "Patrick Kiel"
+author: "Patrick M Kiel"
 date: '`r Sys.Date()`'
 categories: [methods]
 description: "By combining the power of RMarkdown reports, Github Pages, and Jekyll, you can easily share in-depth data analyses with your team. Follow this guide to deploy RMarkdown reports in your Open Notebook."
