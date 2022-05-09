@@ -113,7 +113,7 @@ Javascript is quite effective.
 
 <div id="credentials">
 
-<input type="text" id="password" placeholder="Enter the password" onkeydown="if (event.keyCode == 13) verify()" />
+<input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
 <br/>
 <input id="button" type="button" value="Show Content" onclick="verify()" />
 

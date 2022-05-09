@@ -117,7 +117,7 @@ And that's it! It certainly is not secure. One can go onto your GitHub account a
 
 <!-- The password box -->
 <div id="credentials">
-  <input type="text" id="password" placeholder="Enter the password" onkeydown="if (event.keyCode == 13) verify()" />
+  <input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
   <br/>
   <input id="button" type="button" value="Show Content" onclick="verify()" />
 </div>
