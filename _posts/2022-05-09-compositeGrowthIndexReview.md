@@ -62,7 +62,7 @@ function verify() {
 
 <div id="HIDDENDIV" class="hidden" markdown="1">
 
-<iframe src="/notebook/images/compositeGrowth/genotypeTraitOverview.html" height="100vh" width="100%" style="border:none;">
+<iframe src="/notebook/images/compositeGrowth/compositeGrowthIndex.html" height="100%" width="100%" style="border:none; overflow: scroll;" scroling="no">
 </iframe>
 
 </div>
