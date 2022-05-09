@@ -33,7 +33,7 @@ function verify() {
 }
 </script>
 <style type="text/css">
-# Change content Display
+Change content Display
 .hidden {
   display: none;
 }
@@ -49,7 +49,7 @@ my notebook.
 For this reason, I have adapted the following code to work with my
 Jekyll pages and RMarkdown workflow. To understand this workflow better,
 [please visit this
-post.](%7B%%20post_url%202022-02-22-RMarkdown2Jekyll%20%%7D)
+post.](https://patrickmkiel.com/notebook/methods/RMarkdown2Jekyll/)
 
 First, create a new Javascript chunk and create the password
 verification script.
@@ -70,7 +70,7 @@ function verify() {
 Then, create a css chunk and create the hidden class.
 
 ``` css
-# Change content Display
+/*Change content Display */ 
 .hidden {
   display: none;
 }
@@ -82,7 +82,7 @@ You can get as fancy as you want here with css.
 
 ``` html
 <div id="credentials">
-  <input type="text" id="password" placeholder"Enter the password" onkeydown="if (event.keyCode == 13) verify()" />
+  <input type="text" id="password" placeholder="Enter the password" onkeydown="if (event.keyCode == 13) verify()" />
   <br/>
   <input id="button" type="button" value="Show Content" onclick="verify()" />
 </div>
@@ -113,8 +113,8 @@ Javascript is quite effective.
 
 <div id="credentials">
 
-&lt;input type=“text” id=“password” placeholder“Enter the password”
-onkeydown=“if (event.keyCode == 13) verify()” /&gt; <br/>
+<input type="text" id="password" placeholder="Enter the password" onkeydown="if (event.keyCode == 13) verify()" />
+<br/>
 <input id="button" type="button" value="Show Content" onclick="verify()" />
 
 </div>

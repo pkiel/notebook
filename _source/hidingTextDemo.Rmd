@@ -56,7 +56,7 @@ function verify() {
 ```
 
 ```{css, echo=FALSE}
-# Change content Display
+Change content Display
 .hidden {
   display: none;
 }
@@ -65,7 +65,7 @@ function verify() {
 # Overview
 I mainly use this blog to share data analysis with my collaborators. Since we are working with unpublished datasets that are still being analyzed, I do not want this data to be visible to everyone who visits my notebook.
 
-For this reason, I have adapted the following code to work with my Jekyll pages and RMarkdown workflow. To understand this workflow better, [please visit this post.]({% post_url 2022-02-22-RMarkdown2Jekyll %})
+For this reason, I have adapted the following code to work with my Jekyll pages and RMarkdown workflow. To understand this workflow better, [please visit this post.](https://patrickmkiel.com/notebook/methods/RMarkdown2Jekyll/)
 
 First, create a new Javascript chunk and create the password verification script.
 
@@ -85,7 +85,7 @@ function verify() {
 Then, create a css chunk and create the hidden class.
 
 ```{css, eval=FALSE}
-# Change content Display
+/*Change content Display */ 
 .hidden {
   display: none;
 }
@@ -95,7 +95,7 @@ Next up, create the "credentials" div which will hold the password box and the i
 
 ```{html, eval=FALSE}
 <div id="credentials">
-  <input type="text" id="password" placeholder"Enter the password" onkeydown="if (event.keyCode == 13) verify()" />
+  <input type="text" id="password" placeholder="Enter the password" onkeydown="if (event.keyCode == 13) verify()" />
   <br/>
   <input id="button" type="button" value="Show Content" onclick="verify()" />
 </div>
@@ -117,7 +117,7 @@ And that's it! It certainly is not secure. One can go onto your GitHub account a
 
 <!-- The password box -->
 <div id="credentials">
-  <input type="text" id="password" placeholder"Enter the password" onkeydown="if (event.keyCode == 13) verify()" />
+  <input type="text" id="password" placeholder="Enter the password" onkeydown="if (event.keyCode == 13) verify()" />
   <br/>
   <input id="button" type="button" value="Show Content" onclick="verify()" />
 </div>
@@ -134,6 +134,4 @@ mtcars %>%
   geom_point() +
   theme_classic()
 ```
-
-
 </div>
