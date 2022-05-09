@@ -40,6 +40,15 @@ fig_path <- "images/"
                       cache.path = '../cache/',
                       message=FALSE, warning=FALSE,
                       cache = FALSE)
+  
+  #knitr Chunk Hook to Wrap for Hidden Div
+#   knit_hooks$set(wrap = function(before, options, envir){
+#   if (before){
+#     paste0('<', options$wrap, 'id=', options$ '>')
+#   } else {
+#     paste0('</', options$wrap, '>')
+#   }
+# })
 ```
 
 ```{js, echo=FALSE}
@@ -56,7 +65,7 @@ function verify() {
 ```
 
 ```{css, echo=FALSE}
-.hidden { /* Changed id selector to a class */
+.hidden {
   display: none;
 }
 ```
@@ -70,7 +79,7 @@ function verify() {
 
 <!-- The content we want to show after password -->
 <div id="HIDDENDIV" class="hidden">
-```{r}
+```{r comment = NA, results='asis',echo=F}
 mtcars %>%
   ggplot(aes(cyl,mpg)) +
   geom_point() +

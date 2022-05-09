@@ -33,7 +33,7 @@ function verify() {
 }
 </script>
 <style type="text/css">
-.hidden { /* Changed id selector to a class */
+.hidden {
   display: none;
 }
 </style>
@@ -50,13 +50,6 @@ function verify() {
 <!-- The content we want to show after password -->
 
 <div id="HIDDENDIV" class="hidden">
-
-``` r
-mtcars %>%
-  ggplot(aes(cyl,mpg)) +
-  geom_point() +
-  theme_classic()
-```
 
 ![](/notebook/images/unnamed-chunk-3-1.png)<!-- -->
 
