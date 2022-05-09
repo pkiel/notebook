@@ -26,7 +26,7 @@ function verify() {
     document.getElementById('HIDDENDIV').classList.remove("hidden"); 
     document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
   } else {
-    alert('Invalid Password!');
+    alert('Invalid Password! You cannot view this content.');
     password.setSelectionRange(0, password.value.length);
   }
   return false;
@@ -49,7 +49,7 @@ function verify() {
 
 <!-- The content we want to show after password -->
 
-<div id="HIDDENDIV" class="hidden">
+<div id="HIDDENDIV" class="hidden" markdown="1">
 
 ![](/notebook/images/tesing-1.png)<!-- -->
 
