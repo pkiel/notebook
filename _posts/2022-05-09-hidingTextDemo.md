@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "Testing Javascript Passwords"
+title:  "Password Protected Posts"
 author: "Patrick M Kiel"
 date: '2022-05-09'
 categories: [methods]
-description: "Here I am testing Javascript enabled passwords of content on my blog"
+description: "Follow this guide to build password protected posts for GitHub Pages hosted Jekyll blogs using this simple Javascript code."
 output:
   md_document:
     variant: gfm
@@ -33,16 +33,88 @@ function verify() {
 }
 </script>
 <style type="text/css">
+# Change content Display
 .hidden {
   display: none;
 }
 </style>
+
+# Overview
+
+I mainly use this blog to share data analysis with my collaborators.
+Since we are working with unpublished datasets that are still being
+analyzed, I do not want this data to be visible to everyone who visits
+my notebook.
+
+For this reason, I have adapted the following code to work with my
+Jekyll pages and RMarkdown workflow. To understand this workflow better,
+[please visit this
+post.](%7B%%20post_url%202022-02-22-RMarkdown2Jekyll%20%%7D)
+
+First, create a new Javascript chunk and create the password
+verification script.
+
+``` js
+function verify() {
+  if (document.getElementById('password').value === 'password') {// Set the desired password here
+    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
+    document.getElementById('credentials').classList.add("hidden"); 
+  } else {
+    alert('Invalid Password! You cannot view this content.');
+    password.setSelectionRange(0, password.value.length);
+  }
+  return false;
+}
+```
+
+Then, create a css chunk and create the hidden class.
+
+``` css
+# Change content Display
+.hidden {
+  display: none;
+}
+```
+
+Next up, create the “credentials” div which will hold the password box
+and the input. I also have an alert box pop up if the password is wrong.
+You can get as fancy as you want here with css.
+
+``` html
+<div id="credentials">
+  <input type="text" id="password" placeholder"Enter the password" onkeydown="if (event.keyCode == 13) verify()" />
+  <br/>
+  <input id="button" type="button" value="Show Content" onclick="verify()" />
+</div>
+```
+
+Finally create a new div which will hold all of your hidden content
+which will display once the password is correct. It is important to
+include the markdown=“1” argument so that Jekyll knows all code within
+this html div tag needs to be executed. Otherwise verbatim code will be
+displayed.
+
+``` html
+<div id="HIDDENDIV" class="hidden" markdown="1">
+  
+  # Place all r chunks, text, etc. in between these div tags
+  
+</div>
+```
+
+And that’s it! It certainly is not secure. One can go onto your GitHub
+account and look at the raw code and the underlying data if you have it
+hosted. But for most cases, this hidden content trick with simple
+Javascript is quite effective.
+
+# Example
+
 <!-- The password box -->
 
 <div id="credentials">
 
-<input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
-<br/>
+&lt;input type=“text” id=“password” placeholder“Enter the password”
+onkeydown=“if (event.keyCode == 13) verify()” /&gt; <br/>
 <input id="button" type="button" value="Show Content" onclick="verify()" />
 
 </div>
@@ -51,6 +123,9 @@ function verify() {
 
 <div id="HIDDENDIV" class="hidden" markdown="1">
 
-![](/notebook/images/tesing-1.png)<!-- -->
+Here is my hidden blog post where I analyze the top secret mtcars
+dataset.
+
+I can even show you a plot! ![](/notebook/images/tesing-1.png)<!-- -->
 
 </div>
