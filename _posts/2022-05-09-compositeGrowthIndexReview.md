@@ -62,7 +62,10 @@ function verify() {
 
 <div id="HIDDENDIV" class="hidden" markdown="1">
 
-<iframe src="/notebook/images/compositeGrowth/compositeGrowthIndex.html" height="100%" width="100%" style="border:none; overflow: scroll; position:relative;left:0;width:100%;min-height:100vh;height:100%;">
+<iframe src="/notebook/images/compositeGrowth/compositeGrowthIndex.html" height="100%" width="100%" style="border:none; overflow: scroll; position:relative;left:0;width:100%;min-height:85vh;height:100%;">
 </iframe>
+
+For some reason, the mathjax equations are messed up here. Please
+forgive the ugly look on a line or two.
 
 </div>
