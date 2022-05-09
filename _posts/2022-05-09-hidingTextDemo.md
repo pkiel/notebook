@@ -38,19 +38,14 @@ function verify() {
 }
 </style>
 <!-- The password box -->
-
-<div id="credentials">
-
-<input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
-<br/>
-<input id="button" type="button" value="Show Content" onclick="verify()" />
-
-</div>
-
+<!-- <div id="credentials"> -->
+<!--   <input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" /> -->
+<!--   <br/> -->
+<!--   <input id="button" type="button" value="Show Content" onclick="verify()" /> -->
+<!-- </div> -->
 <!-- The content we want to show after password -->
+<!-- <div id="HIDDENDIV" class="hidden"> -->
 
-<div id="HIDDENDIV" class="hidden">
+![](/notebook/images/tesing-1.png)<!-- -->
 
-![](/notebook/images/unnamed-chunk-3-1.png)<!-- -->
-
-</div>
+<!-- </div> -->
