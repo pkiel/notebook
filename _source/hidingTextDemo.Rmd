@@ -42,26 +42,6 @@ fig_path <- "images/"
                       cache = FALSE)
 ```
 
-```{js, echo=FALSE}
-function verify() {
-  if (document.getElementById('password').value === 'password') {
-    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
-    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
-  } else {
-    alert('Invalid Password! You cannot view this content.');
-    password.setSelectionRange(0, password.value.length);
-  }
-  return false;
-}
-```
-
-```{css, echo=FALSE}
-Change content Display
-.hidden {
-  display: none;
-}
-```
-
 <!-- # Overview -->
 <!-- I mainly use this blog to share data analysis with my collaborators. Since we are working with unpublished datasets that are still being analyzed, I do not want this data to be visible to everyone who visits my notebook. -->
 
@@ -113,6 +93,24 @@ Change content Display
 
 <!-- And that's it! It certainly is not secure. One can go onto your GitHub account and look at the raw code and the underlying data if you have it hosted. But for most cases, this hidden content trick with simple Javascript is quite effective. -->
 
+```{js, echo=FALSE}
+function verify() {
+  if (document.getElementById('password').value === 'password') {
+    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
+    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
+  } else {
+    alert('Invalid Password! You cannot view this content.');
+    password.setSelectionRange(0, password.value.length);
+  }
+  return false;
+}
+```
+
+```{css, echo=FALSE}
+.hidden {
+  display: none;
+}
+```
 
 <!-- The password box -->
 <div id="credentials">
@@ -123,14 +121,12 @@ Change content Display
 
 <!-- The content we want to show after password -->
 <div id="HIDDENDIV" class="hidden" markdown="1">
-
-Here is my hidden blog post where I analyze the top secret mtcars dataset.
-
-I can even show you a plot! 
 ```{r tesing, echo=F}
 mtcars %>%
   ggplot(aes(cyl,mpg)) +
   geom_point() +
   theme_classic()
 ```
+
+
 </div>

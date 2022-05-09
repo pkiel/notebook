@@ -20,24 +20,6 @@ knit: (function(inputFile, encoding) {
 always_allow_html: true
 ---
 
-<script type="text/javascript">
-function verify() {
-  if (document.getElementById('password').value === 'password') {
-    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
-    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
-  } else {
-    alert('Invalid Password! You cannot view this content.');
-    password.setSelectionRange(0, password.value.length);
-  }
-  return false;
-}
-</script>
-<style type="text/css">
-Change content Display
-.hidden {
-  display: none;
-}
-</style>
 <!-- # Overview -->
 <!-- I mainly use this blog to share data analysis with my collaborators. Since we are working with unpublished datasets that are still being analyzed, I do not want this data to be visible to everyone who visits my notebook. -->
 <!-- For this reason, I have adapted the following code to work with my Jekyll pages and RMarkdown workflow. To understand this workflow better, [please visit this post.](https://patrickmkiel.com/notebook/methods/RMarkdown2Jekyll/) -->
@@ -76,6 +58,23 @@ Change content Display
 <!-- </div> -->
 <!-- ``` -->
 <!-- And that's it! It certainly is not secure. One can go onto your GitHub account and look at the raw code and the underlying data if you have it hosted. But for most cases, this hidden content trick with simple Javascript is quite effective. -->
+<script type="text/javascript">
+function verify() {
+  if (document.getElementById('password').value === 'password') {
+    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
+    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
+  } else {
+    alert('Invalid Password! You cannot view this content.');
+    password.setSelectionRange(0, password.value.length);
+  }
+  return false;
+}
+</script>
+<style type="text/css">
+.hidden {
+  display: none;
+}
+</style>
 <!-- The password box -->
 
 <div id="credentials">
@@ -90,9 +89,6 @@ Change content Display
 
 <div id="HIDDENDIV" class="hidden" markdown="1">
 
-Here is my hidden blog post where I analyze the top secret mtcars
-dataset.
-
-I can even show you a plot! ![](/notebook/images/tesing-1.png)<!-- -->
+![](/notebook/images/tesing-1.png)<!-- -->
 
 </div>
