@@ -62,7 +62,7 @@ function verify() {
 
 <div id="HIDDENDIV" class="hidden" markdown="1">
 
-<iframe src="/notebook/images/compositeGrowth/compositeGrowthIndex.html" height="100%" width="100%" style="border:none; overflow: scroll;" scroling="no">
+<iframe src="/notebook/images/compositeGrowth/compositeGrowthIndex.html" height="100%" width="100%" style="border:none; overflow: scroll; position:relative;left:0;width:100%;min-height:100vh;height:100%;">
 </iframe>
 
 </div>
