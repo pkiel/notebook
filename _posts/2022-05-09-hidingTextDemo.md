@@ -122,6 +122,9 @@ function verify() {
 
 <div id="HIDDENDIV" class="hidden" markdown="1">
 
+You are now viewing my in deph analysis of the top-secret mtcars
+dataset.
+
 ![](/notebook/images/tesing-1.png)<!-- -->
 
 </div>

@@ -124,6 +124,9 @@ function verify() {
 
 <!-- The content we want to show after password -->
 <div id="HIDDENDIV" class="hidden" markdown="1">
+
+You are now viewing my in deph analysis of the top-secret mtcars dataset.
+
 ```{r tesing, echo=F}
 mtcars %>%
   ggplot(aes(cyl,mpg)) +
