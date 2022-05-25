@@ -197,22 +197,7 @@ pre code {
 
 <!-- code folding -->
 
-
-</head>
-
 <div class="container-fluid main-container">
-
-
-<div id="header">
-
-
-
-<h1 class="title toc-ignore"><em>Acropora cervicornis</em> Composite Growth Index</h1>
-<h4 class="author">Patrick Kiel</h4>
-<h4 class="date">25 May, 2022</h4>
-
-</div>
-
 
 <style type="text/css">
 caption {
