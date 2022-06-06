@@ -2,7 +2,7 @@
 layout: post
 title: "AcDC Composite Growth Index"
 author: "Patrick Kiel"
-date: '2022-05-25'
+date: '2022-06-06'
 categories: [research]
 description: "Growth of the staghorn coral is measured in many different ways. Here I propose a composite indexing methodology to align disparate measurements to deduce genotype-specific influences on growth."
 output:
