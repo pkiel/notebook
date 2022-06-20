@@ -20,7 +20,7 @@ knit: (function(inputFile, encoding) {
 always_allow_html: true
 ---
 
-<script type="text/javascript">
+script type="text/javascript">
 function verify() {
   if (document.getElementById('password').value === 'acidification') {
     document.getElementById('HIDDENDIV').classList.remove("hidden"); 
@@ -50,6 +50,12 @@ function verify() {
 <!-- The content we want to show after password -->
 <div id="HIDDENDIV" class="hidden" markdown="1">
 
+# Overview
+
+Here, I analyze the 10 coral skeletons grown under OA and ambient
+conditions. I investigate the response of skeletal density to OA
+treatment and begin to look at genotype variability within the control
+group.
 
 # Linear Growth Analysis
 
@@ -200,11 +206,11 @@ When this growth data is standardized to initial height (Lirman *et al.*
 
 # Skeletal Density Analysis
 
-![Segmentation of CT-Scan](./snapshot.jpg)
+![Segmentation of CT-Scan](/notebook/images/ctSegmentation.jpg)
 
 Skeletal density of the corals was measured by CT scanning with a
 Siemens Somatom Volume Zoom CT scanner at a resolution of
-0.1*m**m* scan<sup>−</sup>1. The three dimensional reconstruction was
+0.1mm scan<sup> − 1</sup>. The three dimensional reconstruction was
 digitally bisected using the software Amira (ThermoFischer Scientific)
 at the distance of new growth from the most distal slice of the apical
 branch. Materials were assigned ‘Old Growth’ and ‘New Growth’, where
@@ -220,7 +226,7 @@ the coral we can accurately analyze for treatment effect on skeletal
 density.
 
 Bisected Slice = Distal Slice − \[(*H*<sub>*f*</sub> − *H*<sub>*i*</sub>) \* 10\]
-where *H* is measured in *m**m* and slices represent 0.1*m**m* of the
+where *H* is measured in mm, and slices represent 0.1mm of the
 skeleton’s reconstruction.
 
 Then, holes were filled of the reconstruction to enclose the volume of
@@ -412,9 +418,9 @@ As mentioned before, this was to be expected, however we cannot parse
 apart skeleton grown under treatment conditions in the Old Growth
 section.
 
-It is important to remember that the vertical growth was significantly
-different among treatments. Therefore, we should standardize the density
-of the new material to its growth.
+It is important to remember that the density is also a factor of the
+coral’s growth and not its treatment group. Therefore, we should
+standardize the density of the new material to its vertical growth.
 
 ## Statistical Testing
 
@@ -548,7 +554,9 @@ large
 </tbody>
 </table>
 
-![](/notebook/images/unnamed-chunk-4-2.png)<!-- -->
+Now, let’s just analyze the new growth material.
+
+![](/notebook/images/unnamed-chunk-5-1.png)<!-- -->
 
     ## # A tibble: 2 x 4
     ##   treatment variable    statistic     p
@@ -678,14 +686,14 @@ large
 </tbody>
 </table>
 
-#### Both Materials
+### Both Materials
 
 The mean standardized density in the HCO2 group was 0.05 (SD = 0.02),
 whereas the mean in LCO2 group was 0.08 (SD = 0.01). A Student
 two-samples t-test showed that the difference was statistically
 significant, t(18) = -3.364, p &lt; 0.01, d = 2.18.
 
-#### New Growth
+### New Growth
 
 When looking at just the new growth, the mean standardized density in
 the HCO2 group was 0.05 (SD = 0.01), whereas the mean in LCO2 group was
@@ -700,49 +708,20 @@ the variability of a genoype within that population to begin to
 understand genotype-specific sensitivities. Here, I compare 3 ramets of
 P-Lirman grown under LCO2 conditions and compare it to all LCO2 corals
 
-<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
-<caption>
-Comparison of P-Lrman to Everything Else in LCO2
-</caption>
-<thead>
-<tr>
-<th style="text-align:center;font-weight: bold;">
-genotype
-</th>
-<th style="text-align:center;font-weight: bold;">
-standardized density
-</th>
-<th style="text-align:center;font-weight: bold;">
-sd
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center;">
-Everything Else
-</td>
-<td style="text-align:center;">
-0.076
-</td>
-<td style="text-align:center;">
-0.020
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-P-Lirman
-</td>
-<td style="text-align:center;">
-0.078
-</td>
-<td style="text-align:center;">
-0.009
-</td>
-</tr>
-</tbody>
-</table>
+![](/notebook/images/unnamed-chunk-6-1.png)<!-- -->
 
-![](/notebook/images/unnamed-chunk-5-1.png)<!-- -->
+    ## 
+    ##  Bartlett test of homogeneity of variances
+    ## 
+    ## data:  density.std by genotype
+    ## Bartlett's K-squared = 2.6368, df = 1, p-value = 0.1044
+
+From this data, the variance of standardized skeletal density among the
+genotype P-Lirman is certainly less than the variance of the population,
+yet there is no statistically significant difference between these two
+groups. This is possibly driven by the small sample size (n=3 for
+P-Lirman and n=6 for total population). However, I am shying away from
+making any claims of genotypic variability due to the small sample sizes
+and lack of genotype replication throughout the experiment design.
 
 </div>
