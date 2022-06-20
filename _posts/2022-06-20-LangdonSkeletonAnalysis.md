@@ -220,17 +220,17 @@ Siemens Somatom Volume Zoom CT scanner at a resolution of
 0.1mm scan<sup> − 1</sup>. The three dimensional reconstruction was
 digitally bisected using the software Amira (ThermoFischer Scientific)
 at the distance of new growth from the most distal slice of the apical
-branch. Materials were assigned ‘Old Growth’ and ‘New Growth’, where
-‘Old Growth’ denotes the portion of the skeleton that was present at the
-beginning of the experiment and ‘New Growth’ denotes the portion of the
-skeleton that is grown under treatment conditions. Because coral growth
-has vertical and lateral components, the ‘Old Growth’ material contains
-the initial skeleton and laterally grown calcium carbonate. However, we
-are unable to accurately parse apart these two growth forms in this
-material. Thus, ‘New Growth’, or the portion of the skeleton that grew
-above the maximum height of the initial skeleton, is the only section of
-the coral we can accurately analyze for treatment effect on skeletal
-density.
+branch. Materials were assigned ‘Old Growth’ (red) and ‘New Growth’
+(blue), where ‘Old Growth’ denotes the portion of the skeleton that was
+present at the beginning of the experiment and ‘New Growth’ denotes the
+portion of the skeleton that is grown under treatment conditions.
+Because coral growth has vertical and lateral components, the ‘Old
+Growth’ material contains the initial skeleton and laterally grown
+calcium carbonate. However, we are unable to accurately parse apart
+these two growth forms in this material. Thus, ‘New Growth’, or the
+portion of the skeleton that grew above the maximum height of the
+initial skeleton, is the only section of the coral we can accurately
+analyze for treatment effect on skeletal density.
 
 Bisected Slice = Distal Slice − \[(*H*<sub>*f*</sub> − *H*<sub>*i*</sub>) \* 10\]
 where *H* is measured in mm, and slices represent 0.1mm of the
@@ -428,10 +428,10 @@ section.
 It is important to remember that the skeletal density is also a factor
 of the coral’s growth and not solely its treatment group. Therefore, we
 should standardize the density to a metric reflective of the coral’s
-influence on its vertical growth to subtract the variability of the
-coral’s growth from its treatment effect. When this is done, we begin to
-see significant differences in standardized skeletal density among
-treatment groups both in the New Growth and Old Growth materials.
+influence on its density to subtract the variability of the coral’s
+growth from its treatment effect. When this is done, we begin to see
+significant differences in standardized skeletal density among treatment
+groups both in the New Growth and Old Growth materials.
 
 ## Statistical Testing
 
@@ -591,7 +591,7 @@ Now, let’s just analyze the new growth material.
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-T-Test Results of Standardized Density of New Growth
+Welch’s T-Test Results of Standardized Density of New Growth
 </caption>
 <thead>
 <tr>
