@@ -20,6 +20,7 @@ knit: (function(inputFile, encoding) {
 always_allow_html: true
 ---
 
+
 <script type="text/javascript">
 function verify() {
   if (document.getElementById('password').value === 'acidification') {
@@ -426,11 +427,11 @@ section.
 
 It is important to remember that the skeletal density is also a factor
 of the coral’s growth and not solely its treatment group. Therefore, we
-should standardize the density of the new material to its vertical
-growth to subtract the variability of the coral’s growth from its
-treatment effect. When this is done, we begin to see significant
-differences in standardized skeletal density among treatment groups both
-in the New Growth and Old Growth materials.
+should standardize the density to a metric reflective of the coral’s
+influence on its vertical growth to subtract the variability of the
+coral’s growth from its treatment effect. When this is done, we begin to
+see significant differences in standardized skeletal density among
+treatment groups both in the New Growth and Old Growth materials.
 
 ## Statistical Testing
 
@@ -441,17 +442,17 @@ in the New Growth and Old Growth materials.
     ## # A tibble: 2 x 4
     ##   treatment variable    statistic     p
     ##   <chr>     <chr>           <dbl> <dbl>
-    ## 1 HCO2      density.std     0.863 0.130
-    ## 2 LCO2      density.std     0.934 0.421
+    ## 1 HCO2      density.std     0.947 0.686
+    ## 2 LCO2      density.std     0.898 0.150
 
     ## # A tibble: 1 x 4
-    ##     df1   df2 statistic     p
-    ##   <int> <int>     <dbl> <dbl>
-    ## 1     1    18   0.00823 0.929
+    ##     df1   df2 statistic       p
+    ##   <int> <int>     <dbl>   <dbl>
+    ## 1     1    18      8.91 0.00795
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-T-Test Results of Standardized Density of Both Materials
+Welch’s T-Test Results of Standardized Density of Both Materials
 </caption>
 <thead>
 <tr>
@@ -499,13 +500,13 @@ LCO2
 12
 </td>
 <td style="text-align:center;">
--3.364
+-4.628
 </td>
 <td style="text-align:center;">
-18
+17.168
 </td>
 <td style="text-align:center;">
-0.003
+0
 </td>
 </tr>
 </tbody>
@@ -551,7 +552,7 @@ HCO2
 LCO2
 </td>
 <td style="text-align:center;">
-2.182
+1.974
 </td>
 <td style="text-align:center;">
 8
@@ -566,6 +567,11 @@ large
 </tbody>
 </table>
 
+The mean standardized density in the HCO2 group was 0.01 (SD = 0),
+whereas the mean in LCO2 group was 0.02 (SD = 0). A Welch’s two-samples
+t-test showed that the difference was statistically significant,
+t(17.17) = -4.628, p &lt; 0.001, d = 1.974.
+
 ### New Growth
 
 Now, let’s just analyze the new growth material.
@@ -573,15 +579,15 @@ Now, let’s just analyze the new growth material.
 ![](/notebook/images/unnamed-chunk-5-1.png)<!-- -->
 
     ## # A tibble: 2 x 4
-    ##   treatment variable    statistic     p
-    ##   <chr>     <chr>           <dbl> <dbl>
-    ## 1 HCO2      density.std     0.873 0.308
-    ## 2 LCO2      density.std     0.887 0.305
+    ##   treatment variable    statistic      p
+    ##   <chr>     <chr>           <dbl>  <dbl>
+    ## 1 HCO2      density.std     0.943 0.674 
+    ## 2 LCO2      density.std     0.794 0.0522
 
     ## # A tibble: 1 x 4
-    ##     df1   df2 statistic     p
-    ##   <int> <int>     <dbl> <dbl>
-    ## 1     1     8    0.0140 0.909
+    ##     df1   df2 statistic        p
+    ##   <int> <int>     <dbl>    <dbl>
+    ## 1     1     8      32.8 0.000440
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
@@ -633,13 +639,13 @@ LCO2
 6
 </td>
 <td style="text-align:center;">
--2.88
+-3.615
 </td>
 <td style="text-align:center;">
-8
+6.713
 </td>
 <td style="text-align:center;">
-0.02
+0.009
 </td>
 </tr>
 </tbody>
@@ -685,7 +691,7 @@ HCO2
 LCO2
 </td>
 <td style="text-align:center;">
-2.057
+1.832
 </td>
 <td style="text-align:center;">
 4
@@ -700,20 +706,10 @@ large
 </tbody>
 </table>
 
-### Both Materials
-
-The mean standardized density in the HCO2 group was 0.05 (SD = 0.02),
-whereas the mean in LCO2 group was 0.08 (SD = 0.01). A Student
-two-samples t-test showed that the difference was statistically
-significant, t(18) = -3.364, p &lt; 0.01, d = 2.18.
-
-### New Growth
-
 When looking at just the new growth, the mean standardized density in
-the HCO2 group was 0.05 (SD = 0.01), whereas the mean in LCO2 group was
-0.07 (SD = 0.01). A Student two-samples t-test showed that the
-difference was statistically significant, t(8) = -2.88, p &lt; 0.05, d =
-2.06.
+the HCO2 group was 0.01 (SD = 0), whereas the mean in LCO2 group was
+0.01 (SD = 0). A Welch’s two-samples t-test showed that the difference
+was statistically significant, t(6.71) = -3.62, p &lt; 0.01, d = 1.832.
 
 # Genotype Variability
 
@@ -728,14 +724,13 @@ P-Lirman grown under LCO2 conditions and compare it to all LCO2 corals
     ##  Bartlett test of homogeneity of variances
     ## 
     ## data:  density.std by genotype
-    ## Bartlett's K-squared = 2.6368, df = 1, p-value = 0.1044
+    ## Bartlett's K-squared = 5.9302, df = 1, p-value = 0.01488
 
 From this data, the variance of standardized skeletal density among the
 genotype P-Lirman is certainly less than the variance of the population,
-yet there is no statistically significant difference between these two
-groups. This is possibly driven by the small sample size (n=3 for
-P-Lirman and n=6 for total population). However, I am shying away from
-making any claims of genotypic variability due to the small sample sizes
-and lack of genotype replication throughout the experiment design.
+and there is a statistically significant difference between these two
+groups’ variances. However, I am shying away from making any claims of
+genotypic variability due to the small sample sizes and lack of genotype
+replication throughout the experiment design.
 
 </div>
