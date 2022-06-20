@@ -212,7 +212,7 @@ When this growth data is standardized to initial height (Lirman *et al.*
 
 # Skeletal Density Analysis
 
-![Segmentation of CT-Scan](/ctSegmentation.jpg)
+![Segmentation of CT-Scan](/notebook/images/ctSegmentation.jpg)
 
 Skeletal density of the corals was measured by CT scanning with a
 Siemens Somatom Volume Zoom CT scanner at a resolution of
