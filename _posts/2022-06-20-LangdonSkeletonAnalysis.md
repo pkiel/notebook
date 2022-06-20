@@ -36,6 +36,12 @@ function verify() {
 .hidden {
   display: none;
 }
+img {
+    display: block;
+    max-width: 50%;
+    margin: 0 auto 1rem;
+    border-radius: 5px;
+}
 </style>
 <!-- The password box -->
 
@@ -206,7 +212,7 @@ When this growth data is standardized to initial height (Lirman *et al.*
 
 # Skeletal Density Analysis
 
-![Segmentation of CT-Scan](/notebook/images/ctSegmentation.jpg)
+![Segmentation of CT-Scan](/ctSegmentation.jpg)
 
 Skeletal density of the corals was measured by CT scanning with a
 Siemens Somatom Volume Zoom CT scanner at a resolution of
@@ -418,11 +424,17 @@ As mentioned before, this was to be expected, however we cannot parse
 apart skeleton grown under treatment conditions in the Old Growth
 section.
 
-It is important to remember that the density is also a factor of the
-coral’s growth and not its treatment group. Therefore, we should
-standardize the density of the new material to its vertical growth.
+It is important to remember that the skeletal density is also a factor
+of the coral’s growth and not solely its treatment group. Therefore, we
+should standardize the density of the new material to its vertical
+growth to subtract the variability of the coral’s growth from its
+treatment effect. When this is done, we begin to see significant
+differences in standardized skeletal density among treatment groups both
+in the New Growth and Old Growth materials.
 
 ## Statistical Testing
+
+### Both Materials
 
 ![](/notebook/images/unnamed-chunk-4-1.png)<!-- -->
 
@@ -553,6 +565,8 @@ large
 </tr>
 </tbody>
 </table>
+
+### New Growth
 
 Now, let’s just analyze the new growth material.
 

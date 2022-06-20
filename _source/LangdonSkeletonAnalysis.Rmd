@@ -132,7 +132,7 @@ LE %>%
   scale_y_continuous(expand = c(0,0)) +
   theme_bw() +
   labs(y = "Vertical Extension (mm)",
-       title = "Vertical extension not significantly different")
+       title = "Vertical extension not significantly different, p=0.07")
 
 LE %>%
   ggplot(aes(treatment,prod)) +
@@ -181,7 +181,7 @@ The mean growth in the HCO2 group was `r round(mean(LE$growth[which(LE$treatment
 When this growth data is standardized to initial height (Lirman *et al.* 2014), there is definitely no observable differences (p>0.7).
 
 # Skeletal Density Analysis
-![Segmentation of CT-Scan](ctSegmentation.jpg)
+![Segmentation of CT-Scan](/ctSegmentation.jpg)
 
 Skeletal density of the corals was measured by CT scanning with a Siemens
 Somatom Volume Zoom CT scanner at a resolution of $0.1 \text{mm} \text{ scan}^{-1}$. The three dimensional reconstruction was digitally bisected using the software Amira (ThermoFischer Scientific) at the distance of new growth from the most distal slice of the apical branch.  Materials were assigned 'Old Growth' and 'New Growth', where 'Old Growth' denotes the portion of the skeleton that was present at the beginning of the experiment and 'New Growth' denotes the portion of the skeleton that is grown under treatment conditions. Because coral growth has vertical and lateral components, the 'Old Growth' material contains the initial skeleton and laterally grown calcium carbonate. However, we are unable to accurately parse apart these two growth forms in this material. Thus, 'New Growth', or the portion of the skeleton that grew above the maximum height of the initial skeleton, is the only section of the coral we can accurately analyze for treatment effect on skeletal density.
@@ -234,9 +234,11 @@ New Growth is less dense than Old Growth which makes sense as the Old Growth con
 
 There is, however, an interesting trend of corals grown under LCO2 (or control) treatments being less dense than corals grown under HCO2. This trend is apparent for both New Growth and Old Growth. One interpretation is that the treatment group had significant effect on both the vertical extension and the lateral thickening of coral growth, and thus treatment effect is apparent in both the 'New Growth' and 'Old Growth' materials. As mentioned before, this was to be expected, however we cannot parse apart skeleton grown under treatment conditions in the Old Growth section.
 
-It is important to remember that the density is also a factor of the coral's growth and not its treatment group. Therefore, we should standardize the density of the new material to its vertical growth. 
+It is important to remember that the skeletal density is also a factor of the coral’s growth and not solely its treatment group. Therefore, we should standardize the density of the new material to its vertical growth to subtract the variability of the coral's growth from its treatment effect. When this is done, we begin to see significant differences in standardized skeletal density among treatment groups both in the New Growth and Old Growth materials.
 
 ## Statistical Testing
+
+### Both Materials
 
 ```{r}
 ct_test <- ct %>%
@@ -266,6 +268,8 @@ ct %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 ```
+
+### New Growth
 
 Now, let's just analyze the new growth material.
 
