@@ -20,8 +20,6 @@ knit: (function(inputFile, encoding) {
 always_allow_html: true
 ---
 
-
-
 <script type="text/javascript">
 function verify() {
   if (document.getElementById('password').value === 'acidification') {
