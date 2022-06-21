@@ -21,6 +21,7 @@ always_allow_html: true
 ---
 
 
+
 <script type="text/javascript">
 function verify() {
   if (document.getElementById('password').value === 'acidification') {
@@ -718,7 +719,7 @@ the variability of a genoype within that population to begin to
 understand genotype-specific sensitivities. Here, I compare 3 ramets of
 P-Lirman grown under LCO2 conditions and compare it to all LCO2 corals
 
-![](/notebook/images/unnamed-chunk-6-1.png)<!-- -->
+![](/notebook/images/unnamed-chunk-6-1.png)<!-- -->![](/notebook/images/unnamed-chunk-6-2.png)<!-- -->
 
     ## 
     ##  Bartlett test of homogeneity of variances

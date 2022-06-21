@@ -327,10 +327,20 @@ genos <- ct %>%
              mutate(genotype = "Everything Else"))
 
 genos %>%
+  ggplot(aes(genotype,density, fill=material)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  scale_fill_brewer(palette="Spectral") +
+  labs(title = "Material Skeletal Density ~ Genotype",
+       y = expression(paste("Standardized Skeletal Density (g ", cm^-3,")"))) 
+
+genos %>%
   ggplot(aes(genotype,density.std, fill=material)) +
   geom_boxplot() +
   scale_y_continuous(expand = c(0,0)) +
   theme_bw() +
+  scale_fill_brewer(palette="Spectral") +
   labs(title = "Material Skeletal Density ~ Genotype",
        y = expression(paste("Standardized Skeletal Density (g ", cm^-3, day^-1, ")"))) 
 
