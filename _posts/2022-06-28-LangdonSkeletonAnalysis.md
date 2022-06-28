@@ -20,6 +20,24 @@ knit: (function(inputFile, encoding) {
 always_allow_html: true
 ---
 
+<script type="text/javascript">
+function verify() {
+  if (document.getElementById('password').value === 'acidification') {
+    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
+    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
+  } else {
+    alert('Invalid Password! You cannot view this content.');
+    password.setSelectionRange(0, password.value.length);
+  }
+  return false;
+}
+</script>
+<style type="text/css">
+/*Change content Display */
+.hidden {
+  display: none;
+}
+</style>
 <!-- The password box -->
 
 <div id="credentials">
@@ -1742,8 +1760,6 @@ data to add to our comparison of thesholding differnces.
     ## Residual standard error: 0.4958 on 14 degrees of freedom
     ## Multiple R-squared:  0.2762, Adjusted R-squared:  0.2246 
     ## F-statistic: 5.344 on 1 and 14 DF,  p-value: 0.03653
-
-![](/notebook/images/LangdonCorals/unnamed-chunk-18-2.png)<!-- -->
 
 Multiplying ct scan density and volume underestimates the derived mass
 gain as compared to buoyant weight data. To some extent, this was to be
