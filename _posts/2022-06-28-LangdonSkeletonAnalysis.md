@@ -71,6 +71,11 @@ densities.
 
 # Linear Growth Analysis
 
+The sharp drop offs and increases in vertical extension are likely the
+artifact of a few erroneous data points. There were never 2 back to back
+data points like this, so the total growth, from initial to final is
+unaffeted.
+
 ![](/notebook/images/LangdonCorals/unnamed-chunk-3-1.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-3-2.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-3-3.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-3-4.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-3-5.png)<!-- -->
 
 ## Statistical Testing
@@ -784,10 +789,12 @@ statistically significant, t(6) = 3.65, p &lt; 0.05, d = 2.582.
 In summary, standardized vertical extension data was not signifcantly
 different among treatment groups. However, calcification rates were
 significantly different, with acidified groups having significantly less
-calcification rates.
+calcification rates. This falls in line with other OA experiments which
+observed a decreased in net calcification rates, but observed no
+differences in linear extension.
 
-Most importantly, the length of observation was significantly different
-with control corals observed in the experiment significantly less than
+However, the length of observation was significantly different with
+control corals observed in the experiment significantly less than
 acidified treatment corals. This is critical for phenotypically plastic
 corals such as *A. cervicornis* (Kuffner *et al.* 2017), where the
 corals’ morphology and bulk density will be shaped by its environment
@@ -796,13 +803,13 @@ conditions will artificially increase its bulk density compared to
 corals held in the lab over much shorter time frames. This is because
 nursery grown corals grow in the midwater column and are highly porous
 compared to corals grown in a lab which are affixed to a tag and held
-stationary in an aquarium. Over time, the density will increase, and the
-amount of this density increase is directly proportional to time in the
-lab and any experimental conditions (acidified treatment). Since there
-is a difference in these two variables (length of time and
-control/treatment), we are unable to parse apart the relative
-significance of each of these factors, particularly with the small
-sample size present.
+stationary in an aquarium. Over time, the density will increase in the
+lab relative to the nursery, and the amount of this density increase is
+directly proportional to time in the lab and any experimental conditions
+(acidified treatment). Since there is a difference in these two
+variables (length of time and control/treatment), we are unable to parse
+apart the relative significance of each of these factors, particularly
+with the small sample size present.
 
 # Skeletal Density Analysis
 
@@ -1037,7 +1044,8 @@ apparent in both the ‘New Growth’ and ‘Old Growth’ materials. As
 mentioned before, this was to be expected, however we cannot parse apart
 skeleton grown under treatment conditions in the Old Growth section.
 **More likely, the differences in density is a factor of the amount of
-time held in the experiment.**
+time held in the experiment, with corals held in the experiment longer
+have signifcantly more time to thicken the skeleton.**
 
 ### Statistical Testing
 
@@ -1386,12 +1394,11 @@ greater than the -250 reconstruction by including more low density
 material, resulting in an average determined density 14% less than the
 -250 reconstruction. This lines up well with our theory of segmentation.
 Certainly, a -250 reconstruction should not be compared to a -800
-reconstruction, but the variability between the two is fairly uniform
-among the group.
+reconstruction, but the variability within each group is fairly uniform.
 
 With that in mind, I will proceed with the -800 reconstruction and
-subseciton out materials in the New Growth material. These densities
-will be differen than the New Growth shown above and will only be
+subsection out materials in the New Growth material. These densities
+will be different than the New Growth shown above and will only be
 compared to other -800 reconstructions.
 
 ## Subsectioning New Growth
@@ -1774,8 +1781,8 @@ There was no observable difference in calculation of mass between the
 250 and 800 thresholded reconstructions. Again, this was to be expected
 as calculated gain in mass is the product of volume and density. The two
 different reconstructions have nearly equal and opposite determinations
-of each, balacing out the equation and resulting in nearly similar mass;
-(vol<sub>250</sub> &lt; vol<sub>800</sub>, *ρ*<sub>250</sub> &gt; *ρ*<sub>800</sub>, mass<sub>250</sub> ≈ mass<sub>800</sub>,
+of each, balacing out the equation and resulting in nearly similar mass:
+vol<sub>250</sub> &lt; vol<sub>800</sub>, *ρ*<sub>250</sub> &gt; *ρ*<sub>800</sub>, mass<sub>250</sub> ≈ mass<sub>800</sub>
 
 ## Standardization Metrics
 
@@ -1805,8 +1812,9 @@ than OA corals. However, the differences across sectioned materials and
 different thresholds is nearly uniform, suggesting that the driving
 force is not the difference in densities of each material (as shown
 above in the normal data and backed with theory), but rather the
-standardizing metric. Furher, the differences reflect the boxplot above
-showing the difference in number of days
+standardizing metric. Further, the differences reflect the reciprocal of
+the boxplot above, underscoring the difference in number of days is
+driving the observed differences.
 
 I conclude that standardizing to the number of days in treatment is not
 an appropriate metric.
