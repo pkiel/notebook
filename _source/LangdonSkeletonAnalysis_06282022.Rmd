@@ -1,0 +1,1098 @@
+---
+layout: post
+title:  "Langdon OA Corals"
+author: "Patrick M Kiel"
+date: '`r Sys.Date()`'
+categories: [research]
+description: "Skeletal density analysis of Acropora cervicornis reared under ocean acidification and control experiment conditions."
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, 
+  encoding = encoding, 
+  output_file = paste0(Sys.Date(), "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
+  output_dir = "../_posts") })
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#load packages
+library(tidyverse)
+library(kableExtra)
+library(readxl)
+library(ggpubr)
+library(rstatix)
+
+base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
+fig_path <- "images/LangdonCorals/"
+
+# Set base directories
+knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
+
+# Set figure directories
+knitr::opts_chunk$set(fig.path = fig_path,
+                    cache.path = '../cache/',
+                    message=FALSE, warning=FALSE,
+                    cache = FALSE)
+```
+
+```{r load Langdon Data}
+treatment <- read_excel("~/Grad School/ULink 2022/LangdonCorals/coral_ID_linearGrowth.xlsx", 
+                        col_types = c("text", "text", "skip")) %>%
+  rename(treatment=Treatment)
+
+genotype <- read_excel("~/Grad School/ULink 2022/LangdonCorals/coral_ID_linearGrowth.xlsx", 
+                       sheet = "genotypes")
+
+ve <- read_excel("~/Grad School/ULink 2022/LangdonCorals/coral_ID_linearGrowth.xlsx", 
+                 sheet = "vertical extension",
+                 col_types = c("date","skip", "skip", 
+                               "numeric", "text","skip",
+                               "text", "text", "numeric", 
+                               "skip","skip", "skip")) %>%
+  drop_na(Height_mm) %>%
+  arrange(Date) %>%
+  left_join(treatment,
+            by=c("Coral"="Coral.ID")) %>%
+  left_join(genotype,
+            by=c("Coral"="coral.id"))
+  
+LE <- ve %>%
+  group_by(Coral, treatment, genotype) %>%
+  summarise(growth = last(Height_mm)-first(Height_mm),
+            initialH = first(Height_mm)/10,
+            days = as.numeric(last(Date)-first(Date)),
+            prod = growth/initialH/days)
+  
+
+```
+
+```{r calcification data}
+bw <- read_excel('~/Grad School/ULink 2022/LangdonCorals/bwData.xlsx',
+                col_types = c("date","text", "numeric")) %>%
+   magrittr::set_names(c("date",
+                        "coral",
+                        "mass"))
+
+G <- bw %>%
+  arrange(coral, date) %>%
+  group_by(coral) %>%
+  summarise(days = as.numeric(last(date)-first(date)),
+            initial = first(mass),
+            newMass = (last(mass)-first(mass)),
+            G = newMass*1000/days/first(mass))
+```
+
+```{r load CT data}
+
+##### 
+#-250 Thresholding w/ Old and New Growth
+#all files containing "ole" in the name
+ctDataString <- list.files('~/Grad School/ULink 2022/LangdonCorals/materialData/', full.names = T, pattern = "ole")
+
+ct <- lapply(ctDataString, function(x) {
+  read.csv(x, skip = 1) %>%
+    filter(Material != 'Coral') %>%
+    select(2, 4, 5, 9,14) %>%
+    slice(2,3) %>%
+    mutate(coral = case_when(
+                    str_detect(x,
+                              '(?<=REDDOT_)(.*)(?=_f|_h)') ~ 
+                        str_extract(x,'(?<=REDDOT_)(.*)(?=_f|_h)'),
+                    TRUE ~ str_extract(x,'(?<=REDDOT_)(.*)(?=.M)')))
+                             
+}) %>%
+  bind_rows() %>%
+  magrittr::set_names(c("material",
+                        "count",
+                        "volume",
+                        "density",
+                        "cumsum",
+                        "coral")) %>%
+  left_join(treatment, 
+            by=c("coral"="Coral.ID")) %>%
+  #change mean brightness to real world density values
+  mutate(density = density*0.0007+0.6174)
+
+#add new and old growth materials into a coral material
+ct <- ct %>%
+  group_by(coral, treatment) %>%
+  summarise(material = 'Coral',
+            count = sum(count),
+            volume = sum(volume),
+            cumsum = sum(cumsum),
+            density = (cumsum/count)*0.0007+0.6174) %>%
+  bind_rows(ct) %>%
+  arrange(coral) %>%
+  select(-c(count, cumsum))
+
+##### 
+#800 thresholding w/ 7.5mm subsections of distal and apical
+ctDataSubString <- list.files('~/Grad School/ULink 2022/LangdonCorals/materialData/800Threshold/', pattern = '.csv', full.names = T)
+
+ctSub <- lapply(ctDataSubString, function(x) {
+  read.csv(x, skip = 1) %>%
+    filter(Material %in% c('NewGrowth','sub', 'apical')) %>%
+    select(2, 4, 5, 9, 14) %>%
+    mutate(coral = case_when(
+                    str_detect(x,
+                              '(?<=REDDOT_)(.*)(?=_f|_h)') ~ 
+                        str_extract(x,'(?<=REDDOT_)(.*)(?=_f|_h)'),
+                    TRUE ~ str_extract(x,'(?<=REDDOT_)(.*)(?=.M)')))
+                             
+}) %>%
+  bind_rows() %>%
+  magrittr::set_names(c("material",
+                        "count",
+                        "volume",
+                        "density",
+                        "cumsum",
+                        "coral")) %>%
+  left_join(treatment, 
+            by=c("coral"="Coral.ID")) %>%
+    #change mean brightness to real world density values
+  mutate(density = density*0.0007+0.6174,
+         #change name from NewGrowth to remainder for material between distal, apical
+         material = case_when(material=='NewGrowth' ~ 'remainder',
+                              TRUE ~ material))
+
+#add sectioned materials together ofr NewGrowth
+ctSub <- ctSub %>%
+  group_by(coral, treatment) %>%
+  summarise(material = 'NewGrowth',
+            count = sum(count),
+            volume = sum(volume),
+            cumsum = sum(cumsum),
+            #change mean brightness to real world density values
+            density = (cumsum/count)*0.0007+0.6174) %>%
+  bind_rows(ctSub %>%
+              filter(material != 'NewGrowth')) %>%
+  arrange(coral) %>%
+  select(-c(count, cumsum)) %>%
+    mutate(material = case_when(material == 'sub' ~ 'distal',
+                              TRUE ~ material),
+           material = factor(material,
+                                levels = c("NewGrowth",
+                                           "apical",
+                                           "remainder",
+                                           "distal")))
+
+```
+
+```{r remove genotype}
+ct_complete <- ct 
+ctSub_complete <- ctSub
+ct <- ct %>%
+  filter(!coral %in% c('313','464','421b'))
+ctSub <- ctSub %>%
+  filter(!coral %in% c('313','464','421b'))
+
+```
+
+```{js, eval=FALSE}
+function verify() {
+  if (document.getElementById('password').value === 'acidification') {
+    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
+    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
+  } else {
+    alert('Invalid Password! You cannot view this content.');
+    password.setSelectionRange(0, password.value.length);
+  }
+  return false;
+}
+```
+
+```{css, eval=FALSE}
+/*Change content Display */
+.hidden {
+  display: none;
+}
+```
+
+<!-- The password box -->
+<div id="credentials">
+  <input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
+  <br/>
+  <input id="button" type="button" value="Show Content" onclick="verify()" />
+</div>
+
+<!-- The content we want to show after password -->
+<div id="HIDDENDIV" class="hidden" markdown="1">
+
+# Overview
+
+Here, I analyze the 11 coral skeletons grown under OA and ambient conditions. I first investigate the vertical extension and calcification data collected by the Langdon Lab, and then I look at the response of skeletal density to OA treatment. I further compare analyses at different thresholding, different scales of segmentation, and the different metrics I could standardize densities to facilitate "apples to apples" comparisons.
+
+To remove genotype-specific variability from the analysis, a subset of 8 genetically distinct corals is selected with 4 corals each in the acidified group and the control group. The remaining 3 corals, all of genotype 'P-Lirman' and in the control group, are then compared to the other control corals to piece apart genotypic influence on skeletal bulk densities.
+
+# Linear Growth Analysis
+
+```{r}
+LE_complete <- LE
+LE <- LE %>%
+  filter(Coral %in% ct$coral)
+
+ve %>%
+  filter(Coral %in% ct$coral) %>%
+  ggplot(aes(Date, Height_mm, color=Coral, linetype=treatment)) +
+  geom_line() +
+  theme_bw() +
+  labs(title = "Vertical Extension Data",
+       y = "Vertical Extension (mm)")
+
+LE %>%
+  ggplot(aes(treatment,initialH)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(y = "Initial Height (cm)",
+       title = "Initial height not significantly different")
+
+LE %>%
+  ggplot(aes(treatment,days)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(title = "Corals in acidified treatment were held in experiment significantly longer")
+
+LE %>%
+  ggplot(aes(treatment,growth)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(y = "Vertical Extension (mm)",
+       title = "Vertical extension not significantly different, p=0.08")
+
+LE %>%
+  ggplot(aes(treatment,prod)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(y = expression(paste("Standardized Growth (mm ", cm^-1," ", d^-1,")")),
+       title = "Standardized vertical extension not significantly different")
+```
+
+## Statistical Testing
+
+#### Growth
+```{r}
+LE_test <- LE %>%
+  ungroup() %>%
+  t_test(growth ~ treatment, var.equal=T)
+
+ggqqplot(LE, x = "growth", facet.by = "treatment") +
+  labs(title = "Growth Normality: Data are approximately normal")
+LE %>%
+  group_by(treatment) %>%
+  shapiro_test(growth)
+LE %>%
+  ungroup() %>%
+  levene_test(growth ~ treatment) %>%
+  mutate(variable = "growth")
+
+LE_test %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "T-Test Results of Vertical Extension") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+
+LE %>%
+  ungroup() %>%
+  cohens_d(growth ~ treatment, var.equal=T) %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "Effect Size Results of Vertical Extension") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+```
+
+The mean growth in the HCO2 group was `r round(mean(LE$growth[which(LE$treatment=='HCO2')] ,na.rm=T),2)` mm (SD = `r round(sd(LE$growth[which(LE$treatment=='HCO2')] ,na.rm=T),2)`mm), whereas the mean in LCO2 group was `r round(mean(LE$growth[which(LE$treatment=='LCO2')] ,na.rm=T),2)`mm (SD = `r round(sd(LE$growth[which(LE$treatment=='LCO2')] ,na.rm=T),2)`mm). A Student's two-samples t-test showed that the difference was **not** statistically significant, t(6) = 2.083, p > 0.05, d = 1.473. Due to the small sample size, a type 2 error might be happening where we are accepting the null hypothesis. Further, the different number of days and times of the year when corals were observed obfuscates any conclusions.
+
+#### Productivity
+Using the productivity (growth standardized to initial size) metric from Lirman *et al.* 2014. 
+```{r}
+LE_test <- LE %>%
+  ungroup() %>%
+  t_test(prod ~ treatment, var.equal=T)
+
+ggqqplot(LE, x = "prod", facet.by = "treatment") +
+  labs(title = "Productivity Normality: Data are approximately normal")
+LE %>%
+  group_by(treatment) %>%
+  shapiro_test(prod) %>%
+  mutate(variable = "productivity")
+LE %>%
+  ungroup() %>%
+  levene_test(prod ~ treatment) %>%
+  mutate(variable = "productivity")
+
+LE_test %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "T-Test Results of Vertical Extension") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+
+LE %>%
+  ungroup() %>%
+  cohens_d(prod ~ treatment, var.equal=T) %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "Effect Size Results of Vertical Extension") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+```
+The mean productivity in the HCO2 group was `r round(mean(LE$prod[which(LE$treatment=='HCO2')] ,na.rm=T),2)` mm (SD = `r round(sd(LE$prod[which(LE$treatment=='HCO2')] ,na.rm=T),2)`mm), whereas the mean in LCO2 group was `r round(mean(LE$prod[which(LE$treatment=='LCO2')] ,na.rm=T),2)`mm (SD = `r round(sd(LE$prod[which(LE$treatment=='LCO2')] ,na.rm=T),2)`mm). A Student's two-samples t-test showed that the difference was **not** statistically significant, t(6) = -1.125, p > 0.05, d = -0.796.
+
+
+#### Number of Days
+```{r}
+LE %>%
+  ungroup() %>%
+  t_test(days ~ treatment, var.equal=F) %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "T-Test Results of Vertical Extension") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+
+LE %>%
+  ungroup() %>%
+  cohens_d(days ~ treatment, var.equal=F) %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "Effect Size Results of Vertical Extension") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+```
+
+The mean days in experiment of the HCO2 group was `r round(mean(LE$days[which(LE$treatment=='HCO2')] ,na.rm=T),2)` days (SD = `r round(sd(LE$days[which(LE$treatment=='HCO2')] ,na.rm=T),2)`), whereas the mean in LCO2 group was `r round(mean(LE$days[which(LE$treatment=='LCO2')] ,na.rm=T),2)` days (SD = `r round(sd(G$days[which(G$treatment=='LCO2')] ,na.rm=T),2)`). A Welch's two-samples t-test showed that the difference was statistically significant, t(3.91) = 4.15, p < 0.05, d = 2.938. 
+
+Due to the different number of days, I am trimming the observation of the OA corals to approximately equal the number of days of the control corals. 
+
+```{r}
+dayTest <- ve %>%
+  filter(Coral %in% ct$coral) %>%
+  group_by(Coral) %>%
+  mutate(day = as.numeric(Date-first(Date))/(60*60*24)) %>%
+  filter(day<100) %>%
+  ungroup()
+
+dayTest %>%
+  ggplot(aes(day, Height_mm, color=Coral, linetype=treatment)) +
+  geom_line() +
+  theme_bw() +
+  labs(title = "Vertical Extension Data over first 100 days",
+       y = "Vertical Extension (mm)")
+
+dayTest %>%
+  group_by(Coral, treatment, genotype) %>%
+  summarise(growth = last(Height_mm)-first(Height_mm),
+            initialH = first(Height_mm)/10,
+            days = as.numeric(last(Date)-first(Date)),
+            prod = growth/initialH/days) %>%
+  ggplot(aes(treatment, prod)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(y = "Productivity",
+       title = "Lack of Significance maintained after trimming to first 100 days")
+  
+```
+
+# Calcification Analysis
+Calcification rates were determined by weekly measurements of buoyant weight. Mass gained during the experiment was standardized to initial mass.
+
+```{r}
+bw %>%
+  left_join(treatment, 
+            by=c("coral"="Coral.ID")) %>%
+  filter(coral %in% ct$coral) %>%
+  ggplot(aes(date, mass, color=coral, linetype=treatment)) +
+  geom_line() +
+  theme_bw() +
+  annotate(geom="rect",
+           xmin=as.POSIXct("2019-12-01"),
+           xmax=as.POSIXct("2020-02-15"),
+           ymin=-Inf,ymax=Inf,
+           alpha=0.3) +
+  labs(title = "Change in mass over time")
+
+ bw %>%
+  arrange(coral, date) %>%
+  group_by(coral) %>%
+   mutate(weekNum = as.numeric(date-first(date))/(60*60*24*7),
+            newGrowth.mg = ifelse(mass!=first(mass),
+                                  (mass - lag(mass))*1000,
+                                  NA),
+            weeklyG.day = ifelse(mass!=first(mass),
+                                  #average daily growth for the week
+                                  #mg/g/day, normalized to initial mass
+                                  newGrowth.mg/
+                                    first(mass)/as.numeric(date-lag(date)),
+                                  NA)) %>%
+   left_join(treatment, 
+            by=c("coral"="Coral.ID")) %>%
+  filter(coral %in% ct$coral,
+         weeklyG.day > 0,
+         weeklyG.day <40) %>%
+   ggplot(aes(weekNum,weeklyG.day,color=treatment)) +
+   geom_line() +
+   theme_bw() +
+   labs(title = "Avg Weekly Calcification Rates; most messy data filtered",
+        x = "Week Number",
+        y = "Avg Daily Calcification")
+```
+
+The data becomes a little messy between December and February near the end of the experiment with most of this mess centered around January 10th, 2022. Further, the different number of days and times of year as seen in linear extension data is present here and continues to muddle conclusions. Regardless, calcification is net positive by taking the difference in mass from the final and initial measurements.
+
+```{r}
+G <- G %>%
+  left_join(treatment, 
+            by=c("coral"="Coral.ID")) %>%
+  filter(coral %in% ct$coral)
+
+G %>%
+  ggplot(aes(treatment,G)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(y = expression(paste("Calcification Rate (mg ", g^-1,day^-1,")")),
+       title = "Calcification rates of acidified group significantly less")
+
+G %>%
+  ggplot(aes(treatment,days)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(title = "Corals in acidified treatment were held in experiment significantly longer")
+```
+
+Due to the different number of days, I am trimming the observation of the OA corals to approximately equal the number of days of the control corals. 
+
+```{r}
+dayTest <- bw %>%
+  left_join(treatment, 
+            by=c("coral"="Coral.ID")) %>%
+  filter(coral %in% ct$coral) %>%
+  group_by(coral) %>%
+  mutate(day = as.numeric(date-first(date))/(60*60*24)) %>%
+  filter(day<100) %>%
+  ungroup()
+  
+dayTest %>%
+  ggplot(aes(day, mass, color=coral, linetype=treatment)) +
+  geom_line() +
+  theme_bw() +
+  labs(title = "Change in mass over first 100 days")
+
+dayTest %>%
+  arrange(coral, day) %>%
+  group_by(coral, treatment) %>%
+  summarise(days = as.numeric(last(day)-first(day)),
+            initial = first(mass),
+            newMass = (last(mass)-first(mass)),
+            G = newMass*1000/days/initial) %>%
+  ungroup() %>%
+  ggplot(aes(treatment, G)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(y = expression(paste("Calcification Rate (mg ", g^-1,day^-1,")")),
+       title = "Significance maintained after trimming to first 100 days")
+  
+```
+
+
+## Statistical Testing
+
+```{r}
+G_test <- G %>%
+  t_test(G ~ treatment, var.equal=T)
+
+ggqqplot(G, x = "G", facet.by = "treatment") +
+  labs(title = "Calcification Normality: Data are approximately normal")
+G %>%
+  group_by(treatment) %>%
+  shapiro_test(G)
+G %>%
+  levene_test(G ~ treatment) %>%
+  mutate(variable = "G")
+
+G_test %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "T-Test Results of Vertical Extension") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+
+G %>%
+  cohens_d(G ~ treatment, var.equal=T) %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "Effect Size Results of Vertical Extension") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+```
+
+The mean calcification rate in the HCO2 group was `r round(mean(G$G[which(G$treatment=='HCO2')] ,na.rm=T),2)` mg/g/day (SD = `r round(sd(G$G[which(G$treatment=='HCO2')] ,na.rm=T),2)`), whereas the mean in LCO2 group was `r round(mean(G$G[which(G$treatment=='LCO2')] ,na.rm=T),2)` mg/g/day (SD = `r round(sd(G$G[which(G$treatment=='LCO2')] ,na.rm=T),2)`). A Student's two-samples t-test showed that the difference was statistically significant, t(6) = -3.79, p < 0.01, d = -2.68. 
+
+```{r}
+G_test <- G %>%
+  t_test(days ~ treatment, var.equal=T)
+
+ggqqplot(G, x = "days", facet.by = "treatment") +
+  labs(title = "Days Normality: Data are approximately normal")
+G %>%
+  group_by(treatment) %>%
+  shapiro_test(days)
+G %>%
+  levene_test(days ~ treatment) %>%
+  mutate(variable = "days")
+
+G_test %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "T-Test Results of Vertical Extension") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+
+G %>%
+  cohens_d(days ~ treatment, var.equal=T) %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "Effect Size Results of Vertical Extension") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+```
+
+The mean days in experiment of the HCO2 group was `r round(mean(G$days[which(G$treatment=='HCO2')] ,na.rm=T),2)` days (SD = `r round(sd(G$days[which(G$treatment=='HCO2')] ,na.rm=T),2)`), whereas the mean in LCO2 group was `r round(mean(G$days[which(G$treatment=='LCO2')] ,na.rm=T),2)` days (SD = `r round(sd(G$days[which(G$treatment=='LCO2')] ,na.rm=T),2)`). A Student's two-samples t-test showed that the difference was statistically significant, t(6) = 3.65, p < 0.05, d = 2.582. 
+
+# Growth Data Summarized
+
+In summary, standardized vertical extension data was not signifcantly different among treatment groups. However, calcification rates were significantly different, with acidified groups having significantly less calcification rates.
+
+Most importantly, the length of observation was significantly different with control corals observed in the experiment significantly less than acidified treatment corals. This is critical for phenotypically plastic corals such as *A. cervicornis* (Kuffner *et al.* 2017), where the corals' morphology and bulk density will be shaped by its environment over short amounts of time. Thus, the longer exposure of corals in lab conditions will artificially increase its bulk density compared to corals held in the lab over much shorter time frames. This is because nursery grown corals grow in the midwater column and are highly porous compared to corals grown in a lab which are affixed to a tag and held stationary in an aquarium. Over time, the density will increase, and the amount of this density increase is directly proportional to time in the lab and any experimental conditions (acidified treatment). Since there is a difference in these two variables (length of time and control/treatment), we are unable to parse apart the relative significance of each of these factors, particularly with the small sample size present.
+
+# Skeletal Density Analysis
+![Segmentation of CT-Scan](/notebook/images/LangdonCorals/ctSegmentation.jpg)
+
+Skeletal density of the corals was measured by CT scanning with a Siemens
+Somatom Volume Zoom CT scanner at a resolution of $0.1 \text{mm} \text{ scan}^{-1}$. The three dimensional reconstruction was digitally bisected using the software Amira (ThermoFischer Scientific) at the distance of new growth from the most distal slice of the apical branch.  Materials were first assigned 'Old Growth' (red) and 'New Growth' (blue), where 'Old Growth' denotes the portion of the skeleton that was present at the beginning of the experiment and 'New Growth' denotes the portion of the skeleton that is grown under treatment conditions. The 'New Growth' section was then further segmented into 'apical' (purple) and 'distal' (green), where 'apical' and 'distal' denote 7.5mm sections of new growth. These standardized subsections permit additional analyses of the skeletal densities. Finally, 'Old Growth' and 'New Growth' were combined to do bulk scale analyses on the complete coral.
+
+Because coral growth has vertical and lateral components, the 'Old Growth' material contains the initial skeleton and laterally grown calcium carbonate. However, we are unable to accurately parse apart these two growth forms in this material. Thus, 'New Growth', or the portion of the skeleton that grew above the maximum height of the initial skeleton, is the only section of the coral we can accurately analyze for treatment effect on skeletal density.
+
+$$
+\text{Bisected Slice} = \text{Distal Slice} - [(H_f-H_i)*10]
+$$
+where $H$ is measured in mm, and slices represent 0.1mm of the skeleton's reconstruction.
+
+Then, holes were filled of the reconstruction to enclose the volume of the skeleton to be comparable with methods that determine skeletal density using the buoyant weight technique of wax sealed coral fragments. Finally, the mean brightness of the entire volume of new growth was converted to real-world skeletal density using aragonite density phantoms.
+
+Two different material thresholds were selected for further comparison. The lab standard is to use -250, but I additionally tested -800 to prevent the clipping of low brightness data that may occur near the columella, apical tip, and the edge of the thecas. The result is the increased volume of the reconstruction and a slight increase in the brightness cumulative sum count, resulting in a overall reduction in average determined density. I compare the different values of the new growth at each of these thresholds in more depth below. 
+
+## Old Growth v New Growth
+
+```{r}
+ct %>%
+  select(material, density, coral, treatment) %>%
+  pivot_wider(names_from = material,
+              values_from = density) %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "Density of bisected coral skeletons in g/cm^3, analyzed at standard -250 thresholding") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+ct %>%
+  ggplot(aes(material,density, fill=treatment)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(title = "Material Skeletal Density ~ Treatment",
+       y = expression(paste("Skeletal Density (g ", cm^-3,")")))
+```
+
+
+Across all materials, corals grown under LCO2 (control) are less dense than treatment corals. Further, New Growth is less dense than Old Growth which makes sense as the Old Growth contains the initial skeleton present at the beginning of the experiment with the addition of lateral thickening. Further, New Growth contains the fast growing apical branch which is less dense than the basal portion of the colony.
+
+The decreased density in control corals compared to acidified corals is surprising, and does not agree with previous OA literature (Tambutte *et al.* 2015; Mollica *et al.* 2018). One interpretation is that the treatment group had significant effect on both the vertical extension and the lateral thickening of coral growth, and thus treatment effect is apparent in both the 'New Growth' and 'Old Growth' materials. As mentioned before, this was to be expected, however we cannot parse apart skeleton grown under treatment conditions in the Old Growth section. **More likely, the differences in density is a factor of the amount of time held in the experiment.**
+
+### Statistical Testing
+
+```{r}
+ct_test <- ct %>%
+  group_by(material) %>%
+  t_test(density ~ treatment, var.equal=T)
+
+ggqqplot(ct, x = "density", facet.by = "treatment") +
+  labs(title = "Data are approximately normal")
+ct %>%
+  group_by(treatment, material) %>%
+  shapiro_test(density)
+ct %>%
+  group_by(material) %>%
+  levene_test(density ~ treatment) %>%
+  mutate(variable = "density")
+
+ct_test %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "Student's T-Test Results of Standardized Density of Both Materials") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+ct %>%
+  group_by(material) %>%
+  cohens_d(density ~ treatment, var.equal=T) %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "Effect Size Results of Standardized Density of Both Materials") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+```
+
+A Student's two-samples t-test only showed statistically significant differences for the OldGrowth material, t(6) = 2.783, p < 0.05, d = 1.968. The New Growth material and the complete coral was just outside our significance threshold. There exist three interpretations: 1) The skeletons were significantly different prior to the experiment and the treatment did not alter the densities, or 2) the control treatment precluded the lateral thickening of the corals while maintaining  the linear extension as evidenced by the similiar producitivty values and densities of new growth, yet old growth (existing + latral thickening) was diminished. This interpretation would be characteristic of growth patterns seen in the literature for acidified groups, and not ambient control groups. Or 3) the increase in density (although only significant at the old growth) is a factor of the length of time in the treatment with the theory explained above. Again, it is important to place these interpretations alongside the small samples size. 
+
+
+## Thresholding Differences
+
+As mentioned in the overview, the lab standard for analysis of coral CT Scans is to set the lower threshold limit at -250. This clips some brightness data and shrinks the calculated volume of the reconstruction with the benefit of definitively selecting coral material only and not air or other non-coral material. Since we are exploring low density growth patterns in a controlled experiment, I sought to forgoe the benefits of the conservative thresholding and employed a liberal thresholding of -800.
+
+Here, I am comparing the different determinations of the two settings. In the image below you can see two identical slices at the different thresholding limits. It is barely noticeable at this scale to the naked eye, but there is slightly more material included in the -800 thresholding with the width of the columella being less than the width of the columella in the -250. Thus, the increased thresholding permits the region of interest (skeletal material) to penetrate into this low density portion of the skeleton.
+
+![CT-Scan Analysis Threshold Compare](/notebook/images/LangdonCorals/thresholdCompare.jpg)
+
+```{r}
+lapply(ctDataString, function(x) {
+  read.csv(x, skip = 1) %>%
+    filter(Material != 'Coral') %>%
+    select(2, 4, 5, 9,14) %>%
+    slice(2,3) %>%
+    mutate(coral = case_when(
+                    str_detect(x,
+                              '(?<=REDDOT_)(.*)(?=_f|_h)') ~ 
+                        str_extract(x,'(?<=REDDOT_)(.*)(?=_f|_h)'),
+                    TRUE ~ str_extract(x,'(?<=REDDOT_)(.*)(?=.M)')))
+                             
+}) %>%
+  bind_rows() %>%
+  magrittr::set_names(c("material",
+                        "count",
+                        "volume",
+                        "density",
+                        "cumsum",
+                        "coral")) %>%
+  mutate(threshold = 250,
+         density = density*0.0007+0.6174) %>%
+  filter(material == 'NewGrowth') %>%
+  select(-material) %>%
+  bind_rows(
+#800 thresholding 
+  lapply(ctDataSubString, function(x) {
+  read.csv(x, skip = 1) %>%
+    filter(Material %in% c('NewGrowth','sub', 'apical')) %>%
+    select(2, 4, 5, 9, 14) %>%
+    mutate(coral = case_when(
+                    str_detect(x,
+                              '(?<=REDDOT_)(.*)(?=_f|_h)') ~ 
+                        str_extract(x,'(?<=REDDOT_)(.*)(?=_f|_h)'),
+                    TRUE ~ str_extract(x,'(?<=REDDOT_)(.*)(?=.M)')))
+                             
+}) %>%
+  bind_rows() %>%
+  magrittr::set_names(c("material",
+                        "count",
+                        "volume",
+                        "density",
+                        "cumsum",
+                        "coral")) %>%
+  group_by(coral) %>%
+  summarise(material = 'NewGrowth',
+            threshold = 800,
+            count = sum(count),
+            volume = sum(volume),
+            cumsum = sum(cumsum),
+            #change mean brightness to real world density values
+            density = (cumsum/count)*0.0007+0.6174) %>%
+  ungroup() %>%
+  select(-material)) %>%
+  pivot_longer(-c(coral,threshold),
+               names_to = "metric") %>%
+  group_by(coral,metric) %>%
+  summarise(diff = diff(value)/value[threshold==250]*100) %>%
+  group_by(metric) %>%
+  summarise( mean = mean(diff),
+             sd = sd(diff)) %>%
+  filter(metric %in% c('density','volume')) %>%
+   kbl(align = 'c',
+    digits = 1,
+    caption = "Average % Differences between -800 and -250 Thresholding") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+  
+```
+
+On average, the -800 thresholded reconstruction has a volume 17.2% greater than the -250 reconstruction by including more low density material, resulting in an average determined density 14% less than the -250 reconstruction. This lines up well with our theory of segmentation. Certainly, a -250 reconstruction should not be compared to a -800 reconstruction, but the variability between the two is fairly uniform among the group.
+
+With that in mind, I will proceed with the -800 reconstruction and subseciton out materials in the New Growth material. These densities will be differen than the New Growth shown above and will only be compared to other -800 reconstructions. 
+
+## Subsectioning New Growth
+
+```{r}
+ctSub %>%
+  ggplot(aes(material,density, fill=treatment)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(title = "Material Skeletal Density ~ Treatment, Threshold = -800",
+       y = expression(paste("Skeletal Density (g ", cm^-3,")")))
+```
+
+### Statistical Testing
+
+```{r}
+ctSub_test <- ctSub %>%
+  group_by(material) %>%
+  t_test(density ~ treatment, var.equal=F)
+
+ggqqplot(ctSub, x = "density", facet.by = "treatment") +
+  labs(title = "Data are approximately normal")
+ctSub %>%
+  group_by(treatment, material) %>%
+  shapiro_test(density)
+ctSub %>%
+  group_by(material) %>%
+  levene_test(density ~ treatment) %>%
+  mutate(variable = "density")
+
+ctSub_test %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "Student's T-Test Results of Standardized Density of Both Materials") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+ctSub %>%
+  group_by(material) %>%
+  cohens_d(density ~ treatment, var.equal=F) %>%
+  kbl(align = 'c',
+    digits = 3,
+    caption = "Effect Size Results of Standardized Density of Both Materials") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+```
+
+A Welch's two-sample t-test only showed statistically significant differences for the distal material, t(4.13) = 2.91, p < 0.05, d = 2.061. The remainder material and the new growth material analyzed as a whole was just outside our significance threshold, and the apical matrial was highly variable and not significantly different, p > 0.33. Thus, from the distal to apical regions of the new growth, variability within treatment group increases and the ability to detect treatment effect decreases. This falls in line with our understanding of coral growth in the highly variable, fast growing apical tips. Further, this closely aligns with the prior analysis of new growth v old growth, where new growth was not signifcantly different between control and treatment, but old growth was different between the groups. Finally, the trend of denser skeletons in the control group compared to the treatment group aligns with the previous analysis with the likely cause being the amount of days grown in the lab. 
+
+## Estimating Mass Gain
+
+Calcification can also be determined by multiplying the volume of the new growth section by the average density of this material. We can compare this calculated mass to to the buoyant weight data. We can further see which thresholding has a better fit with the buoyant weight data to add to our comparison of thesholding differnces. 
+
+```{r}
+newMass <- lapply(ctDataString, function(x) {
+  read.csv(x, skip = 1) %>%
+    filter(Material != 'Coral') %>%
+    select(2, 4, 5, 9,14) %>%
+    slice(2,3) %>%
+    mutate(coral = case_when(
+                    str_detect(x,
+                              '(?<=REDDOT_)(.*)(?=_f|_h)') ~ 
+                        str_extract(x,'(?<=REDDOT_)(.*)(?=_f|_h)'),
+                    TRUE ~ str_extract(x,'(?<=REDDOT_)(.*)(?=.M)')))
+                             
+}) %>%
+  bind_rows() %>%
+  magrittr::set_names(c("material",
+                        "count",
+                        "volume",
+                        "density",
+                        "cumsum",
+                        "coral")) %>%
+  mutate(density = density*0.0007+0.6174,
+         threshold = 250) %>%
+  filter(material == 'NewGrowth') %>%
+  bind_rows(
+#800 thresholding 
+  lapply(ctDataSubString, function(x) {
+  read.csv(x, skip = 1) %>%
+    filter(Material %in% c('NewGrowth','sub', 'apical')) %>%
+    select(2, 4, 5, 9, 14) %>%
+    mutate(coral = case_when(
+                    str_detect(x,
+                              '(?<=REDDOT_)(.*)(?=_f|_h)') ~ 
+                        str_extract(x,'(?<=REDDOT_)(.*)(?=_f|_h)'),
+                    TRUE ~ str_extract(x,'(?<=REDDOT_)(.*)(?=.M)')))
+                             
+}) %>%
+  bind_rows() %>%
+  magrittr::set_names(c("material",
+                        "count",
+                        "volume",
+                        "density",
+                        "cumsum",
+                        "coral")) %>%
+  ungroup() %>%
+  group_by(coral) %>%
+  summarise(density = (sum(cumsum)/sum(count))*0.0007+0.6174,
+            volume = sum(volume),
+            threshold = 800) %>%
+  ungroup()) %>%
+  select(coral,density,volume, threshold) %>%
+  #left_join(LE, by=c("coral"="Coral")) %>%
+  left_join(G, by=c("coral")) %>%
+  drop_na(newMass) %>%
+  mutate(calcMass = density*volume/1000)
+
+newMass %>%
+  ggplot(aes(newMass,calcMass, color=as.factor(threshold))) +
+  geom_point(aes(shape=treatment)) +
+  geom_smooth(method="lm", formula = y ~x,
+              se=F) +
+  labs(color = "Threshold", 
+       x = "Buoyant Weight Mass Gain (g)",
+       y = "CT Scan Derived Mass Gain (g)",
+       title = "CT Scan v Buoyant Weight") +
+  theme_bw() +
+  coord_cartesian(ylim = c(0,4),xlim=c(0,4)) +
+  geom_abline(slope = 1, intercept = 0)
+
+lm(calcMass~newMass,data=newMass) %>%
+  summary()
+
+newMass %>%
+  filter(coral!="157") %>%
+  mutate(per=calcMass/newMass*100) %>%
+  pull(per) %>% boxplot()
+```
+
+Multiplying ct scan density and volume underestimates the derived mass gain as compared to buoyant weight data. To some extent, this was to be expected. Calcification takes place not only in the new growth, but also in the lateral thickening of the old growth section which was not included in the CT Scan derived mass. Except for one data point which nearly has a 1:1 relationship (85%), the other 7 corals have their calculated mass gain at about 43% of mass gain as measured by buoyant weight.
+
+There was no observable difference in calculation of mass between the 250 and 800 thresholded reconstructions. Again, this was to be expected as calculated gain in mass is the product of volume and density. The two different reconstructions have nearly equal and opposite determinations of each, balacing out the equation and resulting in nearly similar mass; ($\text{vol}_{250} < \text{vol}_{800}, \rho_{250} > \rho_{800}, \text{mass}_{250} \approx \text{mass}_{800},$
+
+## Standardization Metrics
+
+### Number of Days in Treatment
+Due to the different number of days in treatment and control groups, I am tempted to standardize the density of the corals to its number of days in treatment. This should standardize the number of days an individual coral was able to fill in its skeleton in the laboratory at its specified treatment. 
+
+There are multiple caveats: 1) we have already sectoned out the new growth in the treatment, 2) units will be expressed in density/days which is an arbitrary unit without a real-world meaning, and 3) the range of the days are fairly large (>150 days difference between group means), and the data may just be incomparable.
+
+```{r}
+G %>%
+  ggplot(aes(x=days,color=treatment, fill=treatment))+
+  geom_density() +
+  labs(title="Density Plot of the # of Days in Treatment")
+
+G %>%
+  ggplot(aes(treatment, days)) +
+  geom_boxplot()
+```
+
+Nevertheless, here is the data standardized to the number of days in treatment.
+
+```{r}
+ct %>%
+  left_join(G, by=c("coral","treatment")) %>%
+  mutate(density = density/days) %>%
+  ggplot(aes(material,density, fill=treatment)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(title = "Standardized Material Skeletal Density ~ Treatment",
+       y = expression(paste("Skeletal Density (g ", cm^-3, " ",day^-1,")")))
+
+ctSub %>%
+  left_join(G, by=c("coral","treatment")) %>%
+  mutate(density = density/days) %>%
+  ggplot(aes(material,density, fill=treatment)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(title = "Standardized Material Skeletal Density ~ Treatment",
+       y = expression(paste("Skeletal Density (g ", cm^-3, " ",day^-1,")")))
+```
+
+Now, there are significant differences with LCO2 corals being denser than OA corals. However, the differences across sectioned materials and different thresholds is nearly uniform, suggesting that the driving force is not the difference in densities of each material (as shown above in the normal data and backed with theory), but rather the standardizing metric. Furher, the differences reflect the boxplot above showing the difference in number of days
+
+I conclude that standardizing to the number of days in treatment is not an appropriate metric.
+
+### Initial Height of Coral
+
+Just as we standardized total vertical extension to initial height of the coral, we can standardize density of the coral to its initial height. However, this shares many of the same caveats from above, namely that density/height is an arbitrary, potentially meaningless unit.
+
+```{r}
+LE %>%
+  ggplot(aes(x=initialH,color=treatment, fill=treatment))+
+  geom_density() +
+  labs(title="Density Plot of the Initial Height of Corals")
+
+LE %>%
+  ggplot(aes(treatment, initialH)) +
+  geom_boxplot() +
+  labs(title="Initial Height ~ Treatment",
+       y = "Initial Height (mm)")
+
+ct %>%
+  left_join(LE, by=c("coral"="Coral","treatment")) %>%
+  mutate(density = density/initialH) %>%
+  ggplot(aes(material,density, fill=treatment)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(title = "Standardized Material Skeletal Density ~ Treatment",
+       y = expression(paste("Skeletal Density (g ", cm^-3, " ",mm^-1,")")))
+
+ctSub %>%
+  left_join(LE, by=c("coral"="Coral","treatment")) %>%
+  mutate(density = density/initialH) %>%
+  ggplot(aes(material,density, fill=treatment)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(title = "Standardized Material Skeletal Density ~ Treatment",
+       y = expression(paste("Skeletal Density (g ", cm^-3, " ",mm^-1,")")))
+
+ct %>%
+  left_join(LE, by=c("coral"="Coral","treatment")) %>%
+  mutate(density = density/initialH) %>%
+  group_by(material) %>%
+  t_test(density ~ treatment, var.equal = T)
+
+ctSub %>%
+  left_join(LE, by=c("coral"="Coral","treatment")) %>%
+  mutate(density = density/initialH) %>%
+  group_by(material) %>%
+  t_test(density ~ treatment, var.equal = T)
+```
+
+Here, we see the same initial pattern with OA corals generally more dense than control corals. However, significant differences between any material has been lost. HCO2 corals had more variable initial height but the mean value did not differ significantly.
+
+### Initial Mass of Coral
+
+Same concept, but using initial mass to standardize just as we did for calcification.
+
+```{r}
+G %>%
+  ggplot(aes(x=initial,color=treatment, fill=treatment))+
+  geom_density() +
+  labs(title="Density Plot of the Initial Mass")
+
+G %>%
+  ggplot(aes(treatment, initial)) +
+  geom_boxplot() +
+  labs(title="Initial Mass ~ Treatment",
+       y = "Initial Mass (g)")
+
+ct %>%
+  left_join(G, by=c("coral","treatment")) %>%
+  mutate(density = density/initial) %>%
+  ggplot(aes(material,density, fill=treatment)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(title = "Standardized Material Skeletal Density ~ Treatment",
+       y = expression(paste("Skeletal Density (g ", cm^-3, " ",g^-1,")")))
+
+ctSub %>%
+  left_join(G, by=c("coral","treatment")) %>%
+  mutate(density = density/initial) %>%
+  ggplot(aes(material,density, fill=treatment)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(title = "Standardized Material Skeletal Density ~ Treatment",
+       y = expression(paste("Skeletal Density (g ", cm^-3, " ",g^-1,")")))
+
+ct %>%
+ left_join(G, by=c("coral","treatment")) %>%
+  mutate(density = density/initial) %>%
+  group_by(material) %>%
+  t_test(density ~ treatment, var.equal = T)
+
+ctSub %>%
+ left_join(G, by=c("coral","treatment")) %>%
+  mutate(density = density/initial) %>%
+  group_by(material) %>%
+  t_test(density ~ treatment, var.equal = T)
+```
+
+Again, the same initial pattern with significant differences between any material lost.
+
+# Genotype Variability
+
+Finally, it is important to compare the variability of the population to the variability of a genoype within that population to begin to understand genotype-specific sensitivities. Here, I compare 3 ramets of P-Lirman grown under LCO2 conditions and compare it to all LCO2 corals
+
+```{r}
+
+genos <- ct_complete %>%
+  mutate(genotype = "total pop") %>%
+  bind_rows(ct %>%
+             filter(treatment=='LCO2') %>%
+             mutate(genotype = "Everything Else")) %>%
+  bind_rows(ct_complete %>%
+  left_join(genotype,
+            by=c("coral"="coral.id")) %>%
+  filter(genotype=='P-Lirman'))
+
+genos %>%
+  ggplot(aes(genotype,density, fill=material)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  scale_fill_brewer(palette="Spectral") +
+  labs(title = "Skeletal Density ~ Genotype",
+       y = expression(paste("Skeletal Density (g ", cm^-3,")"))) 
+
+genosSub <- ctSub_complete %>%
+  mutate(genotype = "total pop") %>%
+  bind_rows(ctSub %>%
+             filter(treatment=='LCO2') %>%
+             mutate(genotype = "Everything Else")) %>%
+  bind_rows(ctSub_complete %>%
+  left_join(genotype,
+            by=c("coral"="coral.id")) %>%
+  filter(genotype=='P-Lirman'))
+
+genosSub %>%
+  ggplot(aes(genotype,density, fill=material)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  scale_fill_brewer(palette="Spectral") +
+  labs(title = "Skeletal Density ~ Genotype",
+       y = expression(paste("Skeletal Density (g ", cm^-3,")"))) 
+
+genos %>%
+  group_by(material) %>%
+  do({bartlett.test(density ~ genotype, data = .) %>% tidy()}) %>%
+  mutate(threshold= 250, .after="material")
+
+mod1 <- genos %>%
+  aov(density ~ genotype, data=.) 
+
+par(mfrow=c(2,2))
+plot(mod1)
+par(mfrow=c(1,1))
+
+mod1 %>% TukeyHSD()
+
+```
+
+From this data, there are significant differences of skeletal density among the genotype P-Lirman as compared to the rest of the population (p<0.05). However, when grouped together, there is no difference of P-Lirman (p=0.386). This could suggest that there is significant genotypic variability, shown here with only 3 corals compared to the 8 other corals. Certainly, more analysis needs to be done.
+
+
+</div>

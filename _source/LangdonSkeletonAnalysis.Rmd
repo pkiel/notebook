@@ -73,7 +73,7 @@ LE <- read_excel("~/Grad School/ULink 2022/LangdonCorals/coral_ID_linearGrowth.x
 ```
 
 ```{r load CT data}
-ctDataString <- list.files('~/Grad School/ULink 2022/LangdonCorals/materialData/', full.names = T)
+ctDataString <- list.files('~/Grad School/ULink 2022/LangdonCorals/materialData/', pattern = '.csv', full.names = T)
 
 ct <- lapply(ctDataString, function(x) {
   read.csv(x, skip = 1) %>%
@@ -105,6 +105,45 @@ ct <- lapply(ctDataString, function(x) {
                 ~ .x*0.0007+0.6174),
          variance = deviation^2) %>%
   filter(holes == 'filled')
+
+#800 thresholding w/ 7.5mm subsection of new growth
+ctDataSubString <- list.files('~/Grad School/ULink 2022/LangdonCorals/materialData/800Threshold/', pattern = '.csv', full.names = T)
+
+ctSub <- lapply(ctDataSubString, function(x) {
+  read.csv(x, skip = 1) %>%
+    filter(Material %in% c('NewGrowth','sub')) %>%
+    select(2, 4,5, 9,14) %>%
+    slice(1:3) %>%
+    mutate(coral = case_when(
+                    str_detect(x,
+                              '(?<=REDDOT_)(.*)(?=_f|_h)') ~ 
+                        str_extract(x,'(?<=REDDOT_)(.*)(?=_f|_h)'),
+                    TRUE ~ str_extract(x,'(?<=REDDOT_)(.*)(?=.M)')))
+                             
+}) %>%
+  bind_rows() %>%
+  magrittr::set_names(c("material",
+                        "count",
+                        "volume",
+                        "density",
+                        "cumsum",
+                        "coral")) %>%
+  left_join(treatment, 
+            by=c("coral"="Coral.ID")) %>%
+  mutate(density = density*0.0007+0.6174)
+
+ctSub <- ctSub %>%
+  group_by(coral, treatment) %>%
+  summarise(material = 'NewGrowth',
+            count = sum(count),
+            volume = sum(volume),
+            cumsum = sum(cumsum),
+            density = (cumsum/count)*0.0007+0.6174) %>%
+  bind_rows(ctSub %>%
+              filter(material != 'NewGrowth')) %>%
+  arrange(coral) %>%
+  select(-c(count, cumsum))
+  
 
 ```
 
@@ -229,6 +268,53 @@ ct %>%
        y = expression(paste("Standardized Skeletal Density (g ", cm^-3, day^-1, ")"))) 
 
 ```
+
+## CT Sub
+```{r}
+ctSub %>%
+  ggplot(aes(material,density, fill=treatment)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(title = "Material Skeletal Density ~ Treatment",
+       y = expression(paste("Skeletal Density (g ", cm^-3,")")))
+
+
+ctSub %>%
+  mutate(mass = density*volume) %>%
+  left_join(LE, by=c("coral"="Coral", "treatment")) %>%
+  mutate(density =density/initialH) %>%
+  filter(material == 'sub') %>%
+  ggplot(aes(material,density, fill=treatment)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(title = "Mass ~ Treatment",
+       y = expression(paste("Skeletal Density (g ", cm^-3,")")))
+
+```
+
+## Comparing Threshold
+```{r}
+comp <- ctSub %>%
+  filter(material == 'NewGrowth') %>%
+  mutate(threshold=-800) %>%
+  bind_rows(ct %>%
+              filter(material == 'NewGrowth') %>%
+              select(material:density,coral,treatment) %>%
+              mutate(threshold = -250)) %>%
+  pivot_longer(cols = c(volume,density),
+              names_to = "metric")
+
+
+comp %>%
+  mutate(threshold = as.factor(threshold)) %>%
+  ggplot(aes(threshold, value, fill=treatment)) +
+  geom_boxplot() +
+  facet_wrap(~metric, scales = "free")
+  
+```
+
 
 New Growth is less dense than Old Growth which makes sense as the Old Growth contains the initial skeleton present at the beginning of the experiment with the addition of lateral thickening. Further, New Growth contains the fast growing apical branch which is less dense than the basal portion of the colony.
 
