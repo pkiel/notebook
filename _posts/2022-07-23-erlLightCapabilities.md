@@ -22,13 +22,13 @@ always_allow_html: true
 
 # Overview
 
-The [Experimental Reef Lab at the University of
-Miami](https://www.aoml.noaa.gov/experimental-reef-lab/){:target="\_blank“}
-uses [Ecotech Marine’s Radion XR30
-Pro](https://ecotechmarine.com/radion){:target=”\_blank"} lights to
-illuminate our corals. Here I will outline our capabilities to mimic
-natural light regimes in our aquaria including seasonal variation and
-moonlight.
+The
+<a href="https://www.aoml.noaa.gov/experimental-reef-lab/" target="_blank">Experimental
+Reef Lab at the University of Miami</a> uses
+<a href="https://ecotechmarine.com/radion" target="_blank">Ecotech
+Marine’s Radion XR30 Pro</a> lights to illuminate our corals. Here I
+will outline our capabilities to mimic natural light regimes in our
+aquaria including seasonal variation and moonlight.
 
 # Light Performance
 
@@ -39,7 +39,7 @@ Morgan has shown, we can lower the light closer to the water to reach
 PAR levels exceeding 800.
 
 <img src="/notebook/images/ERLLights/unnamed-chunk-1-1.png" width="80%" />
-\*Note - All values were converted to our lab standard by dividing
+- Note - All values were converted to our lab standard by dividing
 Apogee readings by 1.2 to be equal to values we see from Seabird EcoPAR.
 
 ![Mobius Day Light Settings](/notebook/images/ERLLights/mobiusDay.png)
@@ -53,47 +53,21 @@ the subtraction.
 
 ## Light Spectra
 
-    ## [[1]]
-
 <img src="/notebook/images/ERLLights/day spectra-1.png" width="80%" />
-
-    ## 
-    ## [[2]]
 
 <img src="/notebook/images/ERLLights/day spectra-2.png" width="80%" />
 
-    ## 
-    ## [[3]]
-
 <img src="/notebook/images/ERLLights/day spectra-3.png" width="80%" />
-
-    ## 
-    ## [[4]]
 
 <img src="/notebook/images/ERLLights/day spectra-4.png" width="80%" />
 
-    ## 
-    ## [[5]]
-
 <img src="/notebook/images/ERLLights/day spectra-5.png" width="80%" />
-
-    ## 
-    ## [[6]]
 
 <img src="/notebook/images/ERLLights/day spectra-6.png" width="80%" />
 
-    ## 
-    ## [[7]]
-
 <img src="/notebook/images/ERLLights/day spectra-7.png" width="80%" />
 
-    ## 
-    ## [[8]]
-
 <img src="/notebook/images/ERLLights/day spectra-8.png" width="80%" />
-
-    ## 
-    ## [[9]]
 
 <img src="/notebook/images/ERLLights/day spectra-9.png" width="80%" />
 
@@ -105,17 +79,9 @@ and lunar cycle. At maximum intensity, the light is only outputting 2
 PAR. Below are 3 spectra of the lights set at 100% Moonlight, 100%
 Moonlight Blue, and 50% for each Moonlight and Moonlight Blue.
 
-    ## [[1]]
-
 <img src="/notebook/images/ERLLights/moon-1.png" width="80%" />
 
-    ## 
-    ## [[2]]
-
 <img src="/notebook/images/ERLLights/moon-2.png" width="80%" />
-
-    ## 
-    ## [[3]]
 
 <img src="/notebook/images/ERLLights/moon-3.png" width="80%" />
 
@@ -133,7 +99,7 @@ day.
 ## Seasonal
 
 To mimic seasonal changes in the light regime, Mobius has a tool called
-[Insolation](/notebook/images/ERLLights/InsolationExplainer.pdf){:target="\_blank"}
+<a href="/notebook/images/ERLLights/InsolationExplainer.pdf" target="blank">Insolation</a>
 which permits dynamic daily adjustments of the light schedule. One
 imports a table that specifies the sunrise, sunset, sun intensity,
 moonrise, moonset, and moon intensity. This tool allows users to upload
@@ -171,26 +137,9 @@ choose.
 Light data comes from NOAA’s Global Monitoring Laboratory set at the
 coordinates for the Key Biscayne UM Nursery (25.676,-80.110).
 
-    ## [[1]]
-    ## [1] "Time of sunrise is at: 06:15:44"
-    ## 
-    ## [[2]]
-    ## [1] "Time of sunset is at: 18:25:07"
-    ## 
-    ## [[3]]
-    ## [1] "Time of solar noon is at: 12:20:26"
-
-    ## [[1]]
-
 <img src="/notebook/images/ERLLights/solar time from NOAA-1.png" width="80%" />
 
-    ## 
-    ## [[2]]
-
 <img src="/notebook/images/ERLLights/solar time from NOAA-2.png" width="80%" />
-
-    ## 
-    ## [[3]]
 
 <img src="/notebook/images/ERLLights/solar time from NOAA-3.png" width="80%" />
 <img src="/notebook/images/ERLLights/solar time from NOAA-4.png" width="80%" />
@@ -218,15 +167,19 @@ published spectra:
 
 # Relevant Publications
 
-1.  [Slagel et
-    al.](https://doi.org/10.1002/zoo.21589){:target="\_blank"} Compared
-    growth of *Acropora cervicornis* at FLAQ grown under LED v natural
-    sunlight. LED corals had greater G than natural light corals, but
-    TLE did not differ. However, photosynthetic efficiency was greater
-    in natural light corals.
+1.  <a href="https://doi.org/10.1002/zoo.21589" target="_blank">Slagel
+    et al.</a> Compared growth of *Acropora cervicornis* at FLAQ grown
+    under LED v natural sunlight. LED corals had greater G than natural
+    light corals, but TLE did not differ. However, photosynthetic
+    efficiency was greater in natural light corals.
 
-2.  [Wijgerde et
-    al.](https://doi.org/10.1371/journal.pone.0092781){:target="\_blank"}
-    Observed greater survivorship under blue light, no real observable
-    differences in symbiont health/density. No replication of treatments
-    across multiple papers by the same authors.
+2.  <a href="https://doi.org/10.1371/journal.pone.0092781" target="_blank">Wijgerde
+    et al.</a> Observed greater survivorship under blue light, no real
+    observable differences in symbiont health/density. No replication of
+    treatments across multiple papers by the same authors.
+    Intro/discussion well cited for further investigations
+
+3.  Martinez-Rugerio et al. *ICRS Talk* Experimentally demonstrated
+    dissepiments are formed by a moon cue. Observed no differences in G
+    between simulated moon and no moon treatment groups, but observed
+    reduced extension and greater skeletal bulk density.
