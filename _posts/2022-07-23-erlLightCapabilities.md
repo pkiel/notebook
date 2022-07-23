@@ -20,6 +20,18 @@ knit: (function(inputFile, encoding) {
 always_allow_html: true
 ---
 
+``` css
+img {
+  margin: 0 auto;
+}
+```
+
+<style type="text/css">
+img {
+  margin: 0 auto;
+}
+</style>
+
 # Overview
 
 The
@@ -38,7 +50,7 @@ spectrum set to 100% and the point intensity varying from 0-100%. As
 Morgan has shown, we can lower the light closer to the water to reach
 PAR levels exceeding 800.
 
-<img src="/notebook/images/ERLLights/unnamed-chunk-1-1.png" width="80%" />
+<img src="/notebook/images/ERLLights/unnamed-chunk-2-1..png" width="80%" />
 - Note - All values were converted to our lab standard by dividing
 Apogee readings by 1.2 to be equal to values we see from Seabird EcoPAR.
 
@@ -49,27 +61,27 @@ captured a spectrum with the light off to create an ambient spectrum
 that I will subtract from all other spectrums. Below is an example of
 the subtraction.
 
-<img src="/notebook/images/ERLLights/spectra diff example-1.png" width="80%" /><img src="/notebook/images/ERLLights/spectra diff example-2.png" width="80%" />
+<img src="/notebook/images/ERLLights/spectra diff example-1..png" width="80%" /><img src="/notebook/images/ERLLights/spectra diff example-2..png" width="80%" />
 
 ## Light Spectra
 
-<img src="/notebook/images/ERLLights/day spectra-1.png" width="80%" />
+<img src="/notebook/images/ERLLights/day spectra-1..png" width="80%" />
 
-<img src="/notebook/images/ERLLights/day spectra-2.png" width="80%" />
+<img src="/notebook/images/ERLLights/day spectra-2..png" width="80%" />
 
-<img src="/notebook/images/ERLLights/day spectra-3.png" width="80%" />
+<img src="/notebook/images/ERLLights/day spectra-3..png" width="80%" />
 
-<img src="/notebook/images/ERLLights/day spectra-4.png" width="80%" />
+<img src="/notebook/images/ERLLights/day spectra-4..png" width="80%" />
 
-<img src="/notebook/images/ERLLights/day spectra-5.png" width="80%" />
+<img src="/notebook/images/ERLLights/day spectra-5..png" width="80%" />
 
-<img src="/notebook/images/ERLLights/day spectra-6.png" width="80%" />
+<img src="/notebook/images/ERLLights/day spectra-6..png" width="80%" />
 
-<img src="/notebook/images/ERLLights/day spectra-7.png" width="80%" />
+<img src="/notebook/images/ERLLights/day spectra-7..png" width="80%" />
 
-<img src="/notebook/images/ERLLights/day spectra-8.png" width="80%" />
+<img src="/notebook/images/ERLLights/day spectra-8..png" width="80%" />
 
-<img src="/notebook/images/ERLLights/day spectra-9.png" width="80%" />
+<img src="/notebook/images/ERLLights/day spectra-9..png" width="80%" />
 
 ## Moonlight
 
@@ -79,11 +91,11 @@ and lunar cycle. At maximum intensity, the light is only outputting 2
 PAR. Below are 3 spectra of the lights set at 100% Moonlight, 100%
 Moonlight Blue, and 50% for each Moonlight and Moonlight Blue.
 
-<img src="/notebook/images/ERLLights/moon-1.png" width="80%" />
+<img src="/notebook/images/ERLLights/moon-1..png" width="80%" />
 
-<img src="/notebook/images/ERLLights/moon-2.png" width="80%" />
+<img src="/notebook/images/ERLLights/moon-2..png" width="80%" />
 
-<img src="/notebook/images/ERLLights/moon-3.png" width="80%" />
+<img src="/notebook/images/ERLLights/moon-3..png" width="80%" />
 
 We can also enable lunar cycle which creates a 28 day cycle with each
 day resulting in a scaled brightness. For instance, if the full moon is
@@ -137,12 +149,12 @@ choose.
 Light data comes from NOAA’s Global Monitoring Laboratory set at the
 coordinates for the Key Biscayne UM Nursery (25.676,-80.110).
 
-<img src="/notebook/images/ERLLights/solar time from NOAA-1.png" width="80%" />
+<img src="/notebook/images/ERLLights/solar time from NOAA-1..png" width="80%" />
 
-<img src="/notebook/images/ERLLights/solar time from NOAA-2.png" width="80%" />
+<img src="/notebook/images/ERLLights/solar time from NOAA-2..png" width="80%" />
 
-<img src="/notebook/images/ERLLights/solar time from NOAA-3.png" width="80%" />
-<img src="/notebook/images/ERLLights/solar time from NOAA-4.png" width="80%" />
+<img src="/notebook/images/ERLLights/solar time from NOAA-3..png" width="80%" />
+<img src="/notebook/images/ERLLights/solar time from NOAA-4..png" width="80%" />
 
 From this data, we can extract daily setpoints to upload to the
 Insolation table. We are unable to control solar noon with the current
@@ -151,7 +163,7 @@ important than other setpoints.
 
 ## Nursery PAR Data
 
-<img src="/notebook/images/ERLLights/nursery PAR-1.png" width="80%" /><img src="/notebook/images/ERLLights/nursery PAR-2.png" width="80%" />
+<img src="/notebook/images/ERLLights/nursery PAR-1..png" width="80%" /><img src="/notebook/images/ERLLights/nursery PAR-2..png" width="80%" />
 
 PAR data collected by Morgan Chakraborty and Nathan Formel
 
@@ -182,4 +194,6 @@ published spectra:
 3.  Martinez-Rugerio et al. *ICRS Talk* Experimentally demonstrated
     dissepiments are formed by a moon cue. Observed no differences in G
     between simulated moon and no moon treatment groups, but observed
-    reduced extension and greater skeletal bulk density.
+    reduced extension and greater skeletal bulk density. There’s a
+    DeCarlo and Cohen paper in Coral Reefs which looked at dissepiments
+    under ct scan in field corals and observed a lunar cue too.

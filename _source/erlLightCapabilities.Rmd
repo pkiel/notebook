@@ -20,6 +20,12 @@ knit: (function(inputFile, encoding) {
 always_allow_html: true
 ---
 
+```{css}
+img {
+  margin: 0 auto;
+}
+```
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 
@@ -29,6 +35,7 @@ library(kableExtra)
 library(rvest)
 library(lubridate)
 library(scales)
+library(Cairo)
 
 base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
 base_url <- "/notebook/" # subdirectory of patrickmkiel.com
@@ -42,8 +49,7 @@ knitr::opts_chunk$set(fig.path = fig_path,
                     cache.path = '../cache/',
                     message=FALSE, warning=FALSE,
                     cache = FALSE, fig.width = 7, out.width = "80%",
-                    dev = "png",
-                    dev.args = list(type = "cairo-png"))
+                    dev = "Cairo", dpi=300, fig.ext = ".png")
 
 def <- knitr::knit_hooks$get("output")
 knitr::knit_hooks$set(output = function(x, options) {
@@ -395,4 +401,4 @@ Compared growth of *Acropora cervicornis* at FLAQ grown under LED v natural sunl
 Observed greater survivorship under blue light, no real observable differences in symbiont health/density. No replication of treatments across multiple papers by the same authors. Intro/discussion well cited for further investigations
 
 3) Martinez-Rugerio et al. *ICRS Talk*
-Experimentally demonstrated dissepiments are formed by a moon cue. Observed no differences in G between simulated moon and no moon treatment groups, but observed reduced extension and greater skeletal bulk density.
+Experimentally demonstrated dissepiments are formed by a moon cue. Observed no differences in G between simulated moon and no moon treatment groups, but observed reduced extension and greater skeletal bulk density. There's a DeCarlo and Cohen paper in Coral Reefs which looked at dissepiments under ct scan in field corals and observed a lunar cue too.
