@@ -20,12 +20,6 @@ knit: (function(inputFile, encoding) {
 always_allow_html: true
 ---
 
-``` css
-img {
-  margin: 0 auto;
-}
-```
-
 <style type="text/css">
 img {
   margin: 0 auto;
