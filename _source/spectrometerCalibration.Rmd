@@ -1,0 +1,413 @@
+---
+layout: post
+title:  "Spectrometer and Apogee PAR Meter Calibration"
+author: "Patrick M Kiel"
+date: '`r Sys.Date()`'
+categories: [research]
+description: "Using the iraddiance standard of the Physics Department, I calibrated the Ocean Insights spectrometer and the Apogee underwater PAR reader."
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, 
+  encoding = encoding, 
+  output_file = paste0(Sys.Date(), "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
+  output_dir = "../_posts") })
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#load packages
+library(tidyverse)
+library(kableExtra)
+library(readxl)
+library(ggpubr)
+library(rstatix)
+
+base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
+fig_path <- "images/" #add a new folder if you want to group output into a single foder
+
+# Set base directories
+knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
+
+# Set figure directories
+knitr::opts_chunk$set(fig.path = fig_path,
+                    cache.path = '../cache/',
+                    message=FALSE, warning=FALSE,
+                    cache = FALSE)
+```
+
+```{js}
+function verify() {
+  <!-- set the password here -->
+  if (document.getElementById('password').value === 'lumos') {
+    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
+    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
+  } else {
+    alert('Invalid Password! You cannot view this content.');
+    password.setSelectionRange(0, password.value.length);
+  }
+  return false;
+}
+```
+
+```{css}
+/*Change content Display */
+.hidden {
+  display: none;
+}
+```
+
+```{r, load data}
+#Light Source Stds
+calib <- read.csv('C:/users/pkiel/NOAA-ACCRETE/EcoPARs/PhysicsCalibration/physicsCalibrationLamp_91793.csv')
+
+#Apogee MQ510 Readings
+apogee <- data.frame(distance = rep(c("E50", "E100", "E200"),each=2),
+                     PAR = c(244, 8, 64, 4, 15, 1),
+                     type = rep(c("direct", "shadow"),3)) %>%
+  group_by(distance) %>%
+  #subtract the shadow reading from direct reading
+  summarise(PAR = PAR[type=="direct"]-PAR[type=="shadow"])
+
+
+#spectrometer data
+specDataString <- list.files('C:/users/pkiel/NOAA-ACCRETE/EcoPARs/PhysicsCalibration/Calib06222022/',
+                             full.names = T,
+                             pattern = ".txt") %>%
+  #correctly sorts the string based on the numeric identifier
+  str_sort(., numeric = TRUE)
+#50cm
+E50Direct <- lapply(specDataString[1:5], function(x) {
+  read.table(x,skip = 14) %>%
+    magrittr::set_names(c("wavelength",
+                        "i"))
+}) %>%
+  bind_rows() %>%
+  group_by(wavelength) %>%
+  summarise(intensity = mean(i),
+            sd = sd(i))
+
+E50Shadow <- lapply(specDataString[6:10], function(x) {
+  read.table(x,skip = 14) %>%
+    magrittr::set_names(c("wavelength",
+                        "i"))
+}) %>%
+  bind_rows() %>%
+  group_by(wavelength) %>%
+  summarise(intensity = mean(i),
+            sd = sd(i))
+
+#100cm
+E100Direct <- lapply(specDataString[11:15], function(x) {
+  read.table(x,skip = 14) %>%
+    magrittr::set_names(c("wavelength",
+                        "i"))
+}) %>%
+  bind_rows() %>%
+  group_by(wavelength) %>%
+  summarise(intensity = mean(i),
+            sd = sd(i))
+
+E100Shadow <- lapply(specDataString[16:20], function(x) {
+  read.table(x,skip = 14) %>%
+    magrittr::set_names(c("wavelength",
+                        "i"))
+}) %>%
+  bind_rows() %>%
+  group_by(wavelength) %>%
+  summarise(intensity = mean(i),
+            sd = sd(i))
+
+#200cm
+E200Direct <- lapply(specDataString[21:25], function(x) {
+  read.table(x,skip = 14) %>%
+    magrittr::set_names(c("wavelength",
+                        "i"))
+}) %>%
+  bind_rows() %>%
+  group_by(wavelength) %>%
+  summarise(intensity = mean(i),
+            sd = sd(i))
+
+E200Shadow <- lapply(specDataString[26:30], function(x) {
+  read.table(x,skip = 14) %>%
+    magrittr::set_names(c("wavelength",
+                        "i"))
+}) %>%
+  bind_rows() %>%
+  group_by(wavelength) %>%
+  summarise(intensity = mean(i),
+            sd = sd(i))
+
+
+#Spectrometer Values
+intT = 0.1 # integration time in s
+ca_cm = pi*(0.39/2)^2 # collection area in cm
+
+#light constants
+plank = 6.626E-34 #Plank's Constant in J*s
+c = 299792458 #speed of light in m/s
+avo = 6.022E23 #avogadro's number
+```
+
+
+<!-- The password box -->
+<div id="credentials">
+  <input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
+  <br/>
+  <input id="button" type="button" value="Show Content" onclick="verify()" />
+</div>
+
+<!-- The content we want to show after password -->
+<div id="HIDDENDIV" class="hidden" markdown="1">
+<!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
+
+# Overview
+
+The NOAA AOML Coral Program uses Seabrid's Eco-PAR, Apogee's MQ510 underwater PAR meter, and Ocean Insight's Flame UV-VIS spectrometer. Each tool is used for distinct data products, and we want to ensure we have cross-platform continuity, with data from one tool being comparable and informative of data from another. For instance, we may collect PAR readings from the coral nursery with the Eco-PAR, and we want to accurately replicate this natural light irradiance in the Experimental Reef Laboratory which we measure with the Apogee MQ510. The spectrometer can work in both settings to ensure our artificial LED's are producing a spectra similar to natural sunlight.
+
+# Spectrometer Data
+
+The spectrometer has a spectral resolution of: `r round(mean(E50Direct$wavelength-lag(E50Direct$wavelength), na.rm=T),3)` nm, and captures intensity values between `r round(min(E50Direct$wavelength, na.rm=T),3` and `r round(max(E50Direct$wavelength, na.rm=T),3`. 
+
+The NIST-traceable quartz tungesten-halogen calibration lamp (lamp #94458) has a reference spectrum captured with an Optronics 740 Pyroelectric Detector. This reference spectrum is given in a resolution of 10 nm from 250-1100. 
+
+To enable comparison of spectrums, I calculate the abslute intensity from the spectrometer in 3 different ways which are compared below:
+1. The wavelength closest to the target is selected and defined as the target
+  + e.g. uses intensity for 529.854 and calls it 530
+2. Selects the wavelengths which become rounded to the target when rounded to ones digit and averages the intensities.
+  + e.g. averages intensities for 529.512, 529.854, 530.195 and calls it 530
+3. Rounds all wavelengths to tens and averages
+  + e.g. averages intensities for 20 wavelengths between 525,534 and calls it 530
+
+```{r, spectrometer}
+E50 <- E50Direct %>%
+  left_join(E50Shadow, by="wavelength",
+            suffix=c(".direct",".shadow")) %>%
+  mutate(intensity = intensity.direct-intensity.shadow,
+         distance = "E50",
+         .after="wavelength")
+
+E100 <- E100Direct %>%
+  left_join(E100Shadow, by="wavelength",
+            suffix=c(".direct",".shadow")) %>%
+  mutate(intensity = intensity.direct-intensity.shadow,
+         distance = "E100",
+         .after="wavelength")
+
+E200 <- E200Direct %>%
+  left_join(E200Shadow, by="wavelength",
+            suffix=c(".direct",".shadow")) %>%
+  mutate(intensity = intensity.direct-intensity.shadow,
+         distance = "E200",
+         .after="wavelength")
+
+spec <- E50 %>%
+  bind_rows(E100,E200) %>%
+  select(wavelength:distance) %>%
+  pivot_wider(names_from = distance,
+              values_from = intensity)
+
+#method 1
+#selects the wavelength closest to the target
+#e.g. uses intensities for 529.854 and calls it 530
+specCalib <- spec %>%
+  group_by(grouping = round(wavelength,-1)) %>%
+  filter(abs(wavelength-grouping) == min(abs(wavelength-grouping))) %>%
+  ungroup() %>%
+  mutate(wavelength=grouping) %>%
+  select(-grouping) %>%
+  pivot_longer(`E50`:`E200`,
+               names_to = "distance",
+               values_to = "intensity") %>%
+  full_join(calib %>%
+              pivot_longer(`E50`:`E200`,
+               names_to = "distance",
+               values_to = "std"),
+            by=c("wavelength", "distance")) %>%
+  mutate(percentDiff = (intensity-std)/std*100,
+         distance = factor(distance, levels=c("E50","E100", "E200")))
+
+specCalib %>%
+  ggplot(aes(x=wavelength)) +
+  geom_line(aes(y=intensity, color="Spectrometer")) +
+  geom_line(aes(y=std, color="Light Standard")) +
+  facet_wrap(~distance) +
+  scale_color_manual(values = c("Spectrometer"="blue",
+                                 "Light Standard" = "red")) +
+    annotate("rect", xmin = 400, xmax = 700, ymin = -Inf, ymax = Inf,
+           alpha = .2, fill="green") +
+  labs(title = "Method 1: Light Standard v Spectrometer",
+       y = expression(paste("Light Intensity (",
+                            W, " ",
+                            cm^-2, " ",
+                            nm^-1,")")),
+       x = "Wavelength (nm)",
+       color = "Spectrum") +
+  theme(legend.position = "bottom")
+
+specCalib %>%
+  drop_na(intensity) %>% 
+  #filter to the PAR Spectrum
+  filter(between(wavelength,400,700)) %>%
+  group_by(distance) %>%
+  summarise(mean = mean(abs(percentDiff), na.rm=T),
+            max = max(abs(percentDiff), na.rm=T),
+            min = min(abs(percentDiff), na.rm=T)) %>%
+   kbl(align = 'c',
+    digits = 3,
+    caption = "Method 1: Percent Diffeence of Spectrometer to Standard") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+#method 2
+#selects the wavelengths that gets rounded to the target and averages, generally about 3
+#e.g. averages intensities for 529.512, 529.854, 530.195 and calls it 530
+specCalib <- spec %>%
+  filter(round(wavelength,0)%%10 == 0) %>%
+  group_by(wavelength = round(wavelength,-1)) %>%
+  summarise(across(everything(), ~mean(.x,na.rm=T))) %>%
+  ungroup() %>%
+  pivot_longer(`E50`:`E200`,
+               names_to = "distance",
+               values_to = "intensity") %>%
+  full_join(calib %>%
+              pivot_longer(`E50`:`E200`,
+               names_to = "distance",
+               values_to = "std"),
+            by=c("wavelength", "distance")) %>%
+  mutate(percentDiff = (intensity-std)/std*100,
+         distance = factor(distance, levels=c("E50","E100", "E200")))
+
+specCalib %>%
+  ggplot(aes(x=wavelength)) +
+  geom_line(aes(y=intensity, color="Spectrometer")) +
+  geom_line(aes(y=std, color="Light Standard")) +
+  facet_wrap(~distance) +
+  scale_color_manual(values = c("Spectrometer"="blue",
+                                 "Light Standard" = "red")) +
+  annotate("rect", xmin = 400, xmax = 700, ymin = -Inf, ymax = Inf,
+           alpha = .2, fill="green") +
+  labs(title = "Method 2: Light Standard v Spectrometer",
+       y = expression(paste("Light Intensity (",
+                            W, " ",
+                            cm^-2, " ",
+                            nm^-1,")")),
+       x = "Wavelength (nm)",
+       color = "Spectrum") +
+  theme(legend.position = "bottom")
+
+specCalib %>%
+  drop_na(intensity) %>% 
+  #filter to the PAR Spectrum
+  filter(between(wavelength,400,700)) %>%
+  group_by(distance) %>%
+  summarise(mean = mean(abs(percentDiff), na.rm=T),
+            max = max(abs(percentDiff), na.rm=T),
+            min = min(abs(percentDiff), na.rm=T)) %>%
+   kbl(align = 'c',
+    digits = 3,
+    caption = "Method 2: Percent Diffeence of Spectrometer to Standard") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+#method 3
+#rounds all wavelengths to tens and averages all intensities
+#e.g. averages intensities for 20 wavelengths between 525,534 and calls it 530
+  specCalib <- spec %>%
+  group_by(wavelength = round(wavelength,-1)) %>%
+  summarise(across(everything(), ~mean(.x,na.rm=T))) %>%
+  ungroup() %>%
+  pivot_longer(`E50`:`E200`,
+               names_to = "distance",
+               values_to = "intensity") %>%
+  full_join(calib %>%
+              pivot_longer(`E50`:`E200`,
+               names_to = "distance",
+               values_to = "std"),
+            by=c("wavelength", "distance")) %>%
+  mutate(percentDiff = (intensity-std)/std*100,
+         distance = factor(distance, levels=c("E50","E100", "E200")))
+
+
+specCalib %>%
+  ggplot(aes(x=wavelength)) +
+  geom_line(aes(y=intensity, color="Spectrometer")) +
+  geom_line(aes(y=std, color="Light Standard")) +
+  facet_wrap(~distance) +
+    annotate("rect", xmin = 400, xmax = 700, ymin = -Inf, ymax = Inf,
+           alpha = .2, fill="green") +
+  scale_color_manual(values = c("Spectrometer"="blue",
+                                 "Light Standard" = "red")) +
+  labs(title = "Method 3: Light Standard v Spectrometer",
+       y = expression(paste("Light Intensity (",
+                            W, " ",
+                            cm^-2, " ",
+                            nm^-1,")")),
+       x = "Wavelength (nm)",
+       color = "Spectrum") +
+  theme(legend.position = "bottom")
+
+specCalib %>%
+  drop_na(intensity) %>% 
+  #filter to the PAR Spectrum
+  filter(between(wavelength,400,700)) %>%
+  group_by(distance) %>%
+  summarise(mean = mean(abs(percentDiff), na.rm=T),
+            max = max(abs(percentDiff), na.rm=T),
+            min = min(abs(percentDiff), na.rm=T)) %>%
+   kbl(align = 'c',
+    digits = 3,
+    caption = "Method 3: Percent Diffeence of Spectrometer to Standard") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+```
+
+All 3 methods of calculating the absolute radiance at a given wavelength from the spectrum collected by the spectrometer have a mean % deviation > 5% when looking at the PAR wavelengths (400-700 nm), indicating that our spectrum needs to be calibrated to the reference spectrum. **How one does that, I do not know.** Spectrum calibration seems like a worm hole. I think we should show this data to Art and co (their PhD student may be able to help us remotely) and ask how they calibrate. Since we used their setup it should hopefully be an easy protocol or script they could share, or maybe a meeting is necessary. Either way, once we know what they do, I can make a script for us for easy replication in the future.
+
+# Calculating PAR from Spectrometer
+
+The spectrometer (and light calibration file) produces a spectrum with absolute irradiance intensities per wavelength in units $\mu\text{Watts } cm^{-2} nm^{-1}$. We can integrate over the PAR region and convert to $\mu \text{mol } m^{-2} s^{-1}$
+
+$$
+
+PAR = \frac{\sum_{n=400}^{700} (\frac{I_n \times CA \times t \times n \times 10^{-9}}{hc \times A})}{ CA \times t \div 10000}
+
+$$
+where,
+  - I = absolute intensity
+  - CA = collection area of cosine corrector in cm (0.119459061 cm)
+  - t = integration time of spectrum (0.1s)
+  - h = Planck's constant
+  - c = speed of light
+  - A = Avogadro's number
+
+
+```{r}
+spec %>%
+  filter(between(wavelength,400,700)) %>%
+  pivot_longer(E50:E200,
+               names_to = "distance",
+               values_to = "intensity") %>%
+  mutate(intensity = ((intensity*ca_cm*intT*(wavelength*10^-9))/(plank*c*avo))) %>%
+  group_by(distance) %>%
+  summarise(PAR = sum(intensity)) %>%
+  ungroup() %>%
+  mutate(PAR = PAR/(ca_cm/10000)/intT) %>%
+  left_join(apogee,
+            by = "distance",
+            suffix = c(".spec", ".apogee")) %>%
+  mutate(PAR.apogee.air = PAR.apogee/1.25)
+```
+
+
+
+</div>

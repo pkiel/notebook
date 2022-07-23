@@ -244,11 +244,15 @@ LE <- LE %>%
 
 ve %>%
   filter(Coral %in% ct$coral) %>%
-  ggplot(aes(Date, Height_mm, color=Coral, linetype=treatment)) +
+  mutate(prod = Height_mm/first(Height_mm)) %>%
+  pivot_longer(c(prod,Height_mm),
+               names_to = "metric") %>%
+  ggplot(aes(Date, value, color=Coral)) +
   geom_line() +
   theme_bw() +
   labs(title = "Vertical Extension Data",
-       y = "Vertical Extension (mm)")
+       y = "Vertical Extension (mm)") +
+  facet_wrap(~metric, scales = "free")
 
 LE %>%
   ggplot(aes(treatment,initialH)) +
@@ -467,12 +471,12 @@ G <- G %>%
   filter(coral %in% ct$coral)
 
 G %>%
-  ggplot(aes(treatment,G)) +
+  ggplot(aes(treatment,newMass)) +
   geom_boxplot() +
   scale_y_continuous(expand = c(0,0)) +
   theme_bw() +
-  labs(y = expression(paste("Calcification Rate (mg ", g^-1,day^-1,")")),
-       title = "Calcification rates of acidified group significantly less")
+  labs(y = "Mass Gain (g)",
+       title = "OA Corals grew more")
 
 G %>%
   ggplot(aes(treatment,days)) +
@@ -480,6 +484,16 @@ G %>%
   scale_y_continuous(expand = c(0,0)) +
   theme_bw() +
   labs(title = "Corals in acidified treatment were held in experiment significantly longer")
+
+G %>%
+  ggplot(aes(treatment,G)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() +
+  labs(y = expression(paste("Calcification Rate (mg ", g^-1,day^-1,")")),
+       title = "Yet, calcification rates of acidified group significantly less")
+
+
 ```
 
 Due to the different number of days, I am trimming the observation of the OA corals to approximately equal the number of days of the control corals. 
@@ -633,6 +647,19 @@ ct %>%
 Across all materials, corals grown under LCO2 (control) are less dense than treatment corals. Further, New Growth is less dense than Old Growth which makes sense as the Old Growth contains the initial skeleton present at the beginning of the experiment with the addition of lateral thickening. Further, New Growth contains the fast growing apical branch which is less dense than the basal portion of the colony.
 
 The decreased density in control corals compared to acidified corals is surprising, and does not agree with previous OA literature (Tambutte *et al.* 2015; Mollica *et al.* 2018). One interpretation is that the treatment group had significant effect on both the vertical extension and the lateral thickening of coral growth, and thus treatment effect is apparent in both the 'New Growth' and 'Old Growth' materials. As mentioned before, this was to be expected, however we cannot parse apart skeleton grown under treatment conditions in the Old Growth section. **More likely, the differences in density is a factor of the amount of time held in the experiment, with corals held in the experiment longer have signifcantly more time to thicken the skeleton.**
+
+### Correcting with calcification rates
+
+If we assume that the rate of densification is equal to that of calcifiction, we can use the calcification rate, along with the final density of the new growth to compare corals.
+
+```{r}
+densityTest <- G %>%
+  left_join(ct %>%
+              filter(material=="NewGrowth") %>%
+              select(coral,volume,density),
+            by="coral")
+```
+
 
 ### Statistical Testing
 

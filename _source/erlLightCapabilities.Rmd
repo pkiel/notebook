@@ -1,0 +1,390 @@
+---
+layout: post
+title:  "Incorporating Seasonality into ERL"
+author: "Patrick M Kiel"
+date: '`r Sys.Date()`'
+categories: [research]
+description: "NOAA AOML Coral Program uses Radion XR30 Pro in its Experimental Reef Laboratory. Here we discuss our capabilities to incorporate seasonal changes of light duration and spectra into our aquariums."
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, 
+  encoding = encoding, 
+  output_file = paste0(Sys.Date(), "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
+  output_dir = "../_posts") })
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#load packages
+library(tidyverse)
+library(kableExtra)
+library(rvest)
+library(lubridate)
+library(scales)
+
+base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
+fig_path <- "images/ERLLights/" #add a new folder if you want to group output into a single foder
+
+# Set base directories
+knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
+
+# Set figure directories
+knitr::opts_chunk$set(fig.path = fig_path,
+                    cache.path = '../cache/',
+                    message=FALSE, warning=FALSE,
+                    cache = FALSE, fig.width = 7, out.width = "80%",
+                    dev = "png",
+                    dev.args = list(type = "cairo-png"))
+
+# ggplot theme
+theme_pkiel <- function(base_size = 14) {
+  theme_bw(base_size = base_size) %+replace%
+    theme(
+      plot.title = element_text(size = rel(1), face = "bold",
+                                margin = margin(0,0,5,0), hjust = 0),
+      panel.grid.minor = element_blank(),
+      panel.border = element_blank(),
+      axis.title = element_text(size = rel(0.85), face = "bold"),
+      axis.text = element_text(size = rel(0.70), face = "bold"),
+      axis.line = element_line(color = "black",
+                               arrow = arrow(length = unit(0.3,
+                                                           "lines"),
+                                             type = "closed")),
+      legend.title = element_text(size = rel(0.85), face = "bold"),
+      legend.text = element_text(size = rel(0.70), face = "bold"),
+      legend.key = element_rect(fill = "transparent", colour = NA),
+      legend.key.size = unit(1.5, "lines"),
+      legend.background = element_rect(fill = "transparent", colour = NA),
+      strip.background = element_rect(fill = "#17252D", color = "#17252D"),
+      strip.text = element_text(size = rel(0.85),
+                                face = "bold",
+                                color = "white",
+                                margin = margin(5,0,5,0))
+    )
+}
+theme_set(theme_pkiel())
+
+```
+
+# Overview
+
+The [Experimental Reef Lab at the University of Miami](https://www.aoml.noaa.gov/experimental-reef-lab/){:target="_blank"} uses [Ecotech Marine's Radion XR30 Pro](https://ecotechmarine.com/radion){:target="_blank"} lights to illuminate our corals. Here I will outline our capabilities to mimic natural light regimes in our aquaria including seasonal variation and moonlight.
+
+
+# Light Performance
+
+The standard setup we have places the light 50cm above the bottom of the aquarium. This results in the following light curve based on full spectrum set to 100% and the point intensity varying from 0-100%. As Morgan has shown, we can lower the light closer to the water to reach PAR levels exceeding 800. 
+
+```{r}
+lightData <- data.frame(intensity = c(seq(from=0, to=90,by=15),100),
+                 PAR = (c(5, 99, 177,254,319,387,444,478)-5)/1.2)
+lightData %>%
+  ggplot(aes(intensity,PAR)) +
+  geom_point(size=3) +
+  geom_line() +
+  labs(title = "PAR across Intensities")
+```
+ *Note - All values were converted to our lab standard by dividing Apogee readings by 1.2 to be equal to values we see from Seabird EcoPAR.
+
+![Mobius Day Light Settings](/notebook/images/ERLLights/mobiusDay.png)
+
+I collected light spectra for each setting in the Mobius app. I also captured a spectrum with the light off to create an ambient spectrum that I will subtract from all other spectrums. Below is an example of the subtraction.
+
+```{r spectra diff example}
+tankLight <- read.table("../images/ERLLights/ledTest/moon1.txt",
+                       quote="\"",
+                       skip = 14)
+tankLight <- tankLight %>%
+  mutate(V2 = V2/max(tankLight$V2,na.rm=T))
+tankDark <- read.table("../images/ERLLights/ledTest/tankDark.txt",
+                       quote="\"",
+                       skip = 14)
+tankDark <- tankDark %>%
+  mutate(V2 = V2/max(tankDark$V2,na.rm=T))
+
+#substract the two
+diff <- tankLight - tankDark
+diff$V1 <- tankDark$V1
+
+#manual legend
+manLegend <- c("Ambient Light" = "black",
+               "Example Light" = "blue",
+               "Spectra Difference" = "red")
+#
+tankDark %>%
+  ggplot(aes(V1,V2)) +
+  geom_line(color="black") + 
+  coord_cartesian(xlim = c(250,850),
+                  ylim = c(0,NA)) +
+  scale_x_continuous(breaks = seq(from=200, to=800, by=100)) +
+  #scale_color_manual(values = manLegend) +
+  theme(legend.position = "bottom") +
+  labs(title = "Spectrum of Ambient Light",
+       x = "Spectra",
+       y = "Intensity")
+
+#plot diff
+tankDark %>%
+  ggplot(aes(V1,V2)) +
+  geom_line(aes(color="Ambient Light")) + 
+  geom_line(data = tankLight,
+            aes(V1,V2,
+            color="Example Light")) +
+  geom_line(data = diff,
+            aes(V1,V2,
+            color="Spectra Difference")) +
+  coord_cartesian(xlim = c(250,850),
+                  ylim = c(0,NA)) +
+  scale_x_continuous(breaks = seq(from=200, to=800, by=100)) +
+  scale_color_manual(values = manLegend) +
+  theme(legend.position = "bottom") +
+  labs(title = "Spectrum Subtraction",
+       x = "Spectra",
+       y = "Intensity")
+
+```
+
+
+## Light Spectra
+
+```{r day spectra}
+dayFiles <- grep(list.files(path = "../images/ERLLights/ledTest/",
+                            full.names = T),
+                 pattern = "(moon)|(Dark)",
+                 invert = T,
+                 value = T)
+
+lapply(dayFiles, function(x) {
+  y<- read.table(x,
+             quote="\"",
+             skip = 14) %>%
+    mutate(V2 = V2 - tankDark$V2)
+  y %>%
+    mutate(V2 = V2/max(y$V2, na.rm=T)) %>%
+    ggplot(aes(V1,V2)) +
+    geom_line(color="black") + 
+    coord_cartesian(xlim = c(250,850),
+                  ylim = c(0,NA)) +
+    scale_x_continuous(breaks = seq(from=200, to=800, by=100)) +
+    theme(legend.position = "bottom") +
+    labs(title = paste("Spectrum of",
+                       str_to_title(gsub("([[:upper:]])",
+                                         " \\1",
+                                         sub(".txt", "", basename(x)))),
+                  "Light"),
+         x = "Spectra",
+         y = "Intensity")
+
+})
+
+```
+
+
+## Moonlight
+
+Through the Mobius app, we can adjust 4 parameters to mimic moonlight: intensity, color channel balance (Moonlight/Moonlight Blue), set times, and lunar cycle. At maximum intensity, the light is only outputting 2 PAR. Below are 3 spectra of the lights set at 100% Moonlight, 100% Moonlight Blue, and 50% for each Moonlight and Moonlight Blue. 
+
+```{r moon}
+moonFiles <- list.files(path = "../images/ERLLights/ledTest/",
+                            full.names = T,
+                            pattern = "moon")
+
+moonNames <- c("Moonlight Blue",
+               "Moonlight",
+               "50/50 Moonlight")
+
+lapply(moonFiles, function(x) {
+  y<- read.table(x,
+             quote="\"",
+             skip = 14) %>%
+    mutate(V2 = V2 - tankDark$V2)
+  y %>%
+    mutate(V2 = V2/max(y$V2, na.rm=T)) %>%
+    ggplot(aes(V1,V2)) +
+    geom_line(color="black") + 
+    coord_cartesian(xlim = c(250,850),
+                  ylim = c(0,NA)) +
+    scale_x_continuous(breaks = seq(from=200, to=800, by=100)) +
+    theme(legend.position = "bottom") +
+    labs(title = paste("Spectrum of",
+                       moonNames[as.numeric(str_extract(basename(x),
+                                              "[[:digit:]]"))],
+                  "Light"),
+         x = "Spectra",
+         y = "Intensity")
+
+})
+```
+
+We can also enable lunar cycle which creates a 28 day cycle with each day resulting in a scaled brightness. For instance, if the full moon is day 0 and point brightness is set to 100%, then on day 0 the brightness will be 100%. On day 7 (last quarter) the brightness would be 50%. On day 14 (new moon), the light will not come on at all. This cycles through and scales to whatever one sets as the full moon settings. If lunar cycle is disabled, then the full settings will be applied each day.
+
+![Mobius Moon Light Settings](/notebook/images/ERLLights/mobiusMoon.png)
+
+## Seasonal
+
+To mimic seasonal changes in the light regime, Mobius has a tool called [Insolation](/notebook/images/ERLLights/InsolationExplainer.pdf){:target="_blank"} which permits dynamic daily adjustments of the light schedule. One imports a table that specifies the sunrise, sunset, sun intensity, moonrise, moonset, and moon intensity. This tool allows users to upload a csv of setpoints for an entire year.
+
+This table will work together with the setpoints one sets to create a unique light curve for each day. You set the shape of the curve which is proportionally changed by the specific times set in the Insolation table. 
+
+Insolation is a beta feature and needs further testing. I've started a line of communication with the EcoTech Marine team to get this tool working for us, and I will keep you updated on that progress. If this tool works as advertised, it will permit experimentation on light seasonality.
+
+## Day Curves
+
+Finally, we can change how the light changes throughout the day. Currently we have been using 4 set points to create a rhombus shaped curve with a 3 hour linear ramp of sunrise and sunset and a linear hold at maximum PAR for 6 hours. In the user template window, there is a tool to help create setpoints to mimic a sine or parabolic curve. This effectively creates a handful of linear setpoints giving a best fit to the aforementioned curves. 
+
+
+# Data to Inform Settings
+
+Since most of the corals we analyze in the lab come from coral nurseries or reefs around Miami, I will use this data to inform the set points we choose.
+
+## Light Set Points
+
+Light data comes from NOAA's Global Monitoring Laboratory set at the coordinates for the Key Biscayne UM Nursery (25.676,-80.110). 
+
+```{r solar time from NOAA}
+#download table from NOAA GML
+url<- "https://gml.noaa.gov/grad/solcalc/table.php?lat=25.676267&lon=-80.109067&year=2022"
+
+file<-read_html(url)
+tables<-html_nodes(file, "table")
+data <- html_table(tables,fill=T)
+names(data) <- c("Sunrise", "Sunset", "Solar Noon")
+
+rm(url, file, tables)
+
+dataLong <- lapply(data, function(x) {
+  x %>%
+    rename(day = Day) %>%
+    pivot_longer(Jan:Dec,
+                 names_to = "month",
+                 values_to = "time",
+                 values_drop_na = T) %>%
+    filter(time!="") %>%
+    mutate(month = factor(month, levels = month.abb)) %>%
+    arrange(month, day) %>%
+    mutate(time = case_when(str_count(time,":")== 1 ~ paste(time,"00",sep=":"),
+                            T ~ time),
+           localTime = parse_datetime(paste(month,
+                                           day,
+                                           time,
+                                           "2022"),
+                                     format = "%b %d %H:%M:%S %Y",
+                                     locale = locale(tz="America/New_York")),
+           estTime = with_tz(localTime,"EST"),
+           utcTime = with_tz(localTime,"UTC"),
+           hour = hour(estTime),
+           minute = minute(estTime),
+           hms = as.POSIXct(format(estTime,
+                           format="%H:%M:%S"), 
+                           format = "%H:%M:%S",
+                           tz = "EST")) %>%
+    select(-time)
+})
+
+sunrise <- dataLong$Sunrise
+sunset <-  dataLong$Sunset
+solarNoon <-  dataLong$`Solar Noon`
+
+#mean times
+lapply(seq_along(dataLong), function(x) {
+  paste("Time of", tolower(names(dataLong)[x]), "is at:",
+        format(mean(dataLong[[x]]$hms),
+               format = "%H:%M:%S"))
+})
+
+#graph
+lapply(seq_along(dataLong), function(x) {
+  dataLong[[x]] %>%
+    ggplot(aes(estTime,hms)) +
+    geom_line() +
+    scale_x_datetime(labels = date_format("%b")) +
+    scale_y_datetime(labels = date_format("%H:%M",
+                                          tz="EST")) +
+    labs(x = "Month",
+         y = "Time (Daylight Savings Corrected)",
+         title = names(dataLong)[x])
+})
+
+data.frame(date = date(sunrise$estTime),
+                        lod = sunset$hms- sunrise$hms) %>%
+  ggplot(aes(date,lod)) +
+  geom_line() +
+  scale_x_date(labels = date_format("%b")) +
+  labs(x = "Month",
+         y = "Length of Day (Hours)",
+         title = "Day Length")
+```
+
+From this data, we can extract daily setpoints to upload to the Insolation table. We are unable to control solar noon with the current Insolation tool. However, this has a narrow range and is arguably less important than other setpoints.
+
+## Nursery PAR Data
+
+```{r nursery PAR}
+nurseryPAR <- read.csv('../images/ERLLights/nurseryEcoPARdeployment.csv') %>%
+  mutate(dateTimeEST = parse_datetime(dateTimeEST,
+                                       format = "%m/%d/%y %H:%M",
+                                       locale = locale(tz="America/New_York"))) %>%
+  drop_na(dateTimeEST) %>%
+  group_by(dateTimeEST) %>%
+  summarise(adjPAR = mean(adjPAR, na.rm=T)) %>%
+  ungroup() %>%
+  #remove the last bit of data when it was being collected
+  filter(dateTimeEST<as.POSIXct("2022-06-22 13:00:00",
+                                tz="America/New_York"))
+  
+nurseryPAR %>%
+  ggplot(aes(dateTimeEST,adjPAR)) +
+  geom_line() +
+  labs(x = "Date",
+       y= "PAR",
+       title = "Monitoring of Nursery PAR")
+
+nurseryPAR %>%
+  mutate(hms = as.POSIXct(format(round_date(dateTimeEST,"10 minutes"),
+                           format="%H:%M:%S"), 
+                           format = "%H:%M:%S",
+                           tz = "America/New_York"),
+         hour = hour(hms),
+         minute = minute(hms)) %>%
+  group_by(hms) %>%
+  summarise(adjPAR = mean(adjPAR, na.rm=T)) %>%
+  ggplot(aes(hms,adjPAR)) +
+  geom_line() +
+  geom_smooth(se=F) +
+  scale_x_datetime(labels = date_format("%H:%M",
+                                          tz="America/New_York")) +
+  scale_y_continuous(limits = c(0,NA)) +
+  labs(x = "Time of Day",
+       y = "PAR",
+       title = "10-Minute Averaged Daily Light Levels")
+
+```
+
+PAR data collected by Morgan Chakraborty and Nathan Formel
+
+It most approximates a sine wave with a peak at solar noon. 
+
+## Natural Spectrums
+
+We have not yet collected natural light spectrums. Here is some published spectra:
+
+![Light spectrum from Slagel et al. 2021, doi:10.1002/zoo.21589](/notebook/images/ERLLights/slagelSpectrum.jpg)
+
+
+# Relevant Publications
+
+1) [Slagel et al.](https://doi.org/10.1002/zoo.21589){:target="_blank"}
+Compared growth of *Acropora cervicornis* at FLAQ grown under LED v natural sunlight. LED corals had greater G than natural light corals, but TLE did not differ. However, photosynthetic efficiency was greater in natural light corals.
+
+2) [Wijgerde et al.](https://doi.org/10.1371/journal.pone.0092781){:target="_blank"}
+Observed greater survivorship under blue light, no real observable differences in symbiont health/density. No replication of treatments across multiple papers by the same authors.
+
