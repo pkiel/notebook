@@ -29,6 +29,9 @@ library(kableExtra)
 library(rvest)
 library(lubridate)
 library(scales)
+library(httr)
+library(jsonlite)
+library(readxl)
 
 base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
 base_url <- "/notebook/" # subdirectory of patrickmkiel.com
@@ -88,27 +91,34 @@ img {
 
 # Overview
 
-The <a href="https://www.aoml.noaa.gov/experimental-reef-lab/" target="_blank">Experimental Reef Lab at the University of Miami</a> uses <a href="https://ecotechmarine.com/radion" target="_blank">Ecotech Marine's Radion XR30 Pro</a> lights to illuminate our corals. Here I will outline our capabilities to mimic natural light regimes in our aquaria including seasonal variation and moonlight.
+The <a href="https://www.aoml.noaa.gov/experimental-reef-lab/" target="_blank">Experimental Reef Lab at the University of Miami</a> uses <a href="https://ecotechmarine.com/radion" target="_blank">Ecotech Marine's Radion XR30 Pro</a> lights to illuminate our experimental aquariums. Here I will outline our capabilities to mimic natural light regimes in our aquaria including seasonal variation and moonlight.
+
+
+We can incorporate seasonal changes of light exposure with daily changes in exposure duration and intensity. Further, we can add simulated moonlight into our system, fully equipped with changing moonrise and moonset times and lunar phases.
 
 
 # Light Performance
 
-The standard setup we have places the light 50cm above the bottom of the aquarium. This results in the following light curve based on full spectrum set to 100% and the point intensity varying from 0-100%. As Morgan has shown, we can lower the light closer to the water to reach PAR levels exceeding 800. 
+The standard setup we have places the light 50cm above the bottom of the aquarium. This results in the following light curve based on full spectrum set to 100% and the point intensity varying from 0-100%. As Morgan has shown, we can lower the light closer to the water to reach PAR levels exceeding 800 $\mu mol \space m^{-2} \space s^{-1}$. 
+
+![Mobius Day Light Settings set to 100% intensity](/notebook/images/ERLLights/mobiusDay.png)
 
 ```{r}
-lightData <- data.frame(intensity = c(seq(from=0, to=90,by=15),100),
+lightData <- data.frame(intensity = c(seq(from=0, to=.9,by=.15),1),
                  PAR = (c(5, 99, 177,254,319,387,444,478)-5)/1.2)
 lightData %>%
   ggplot(aes(intensity,PAR)) +
   geom_point(size=3) +
   geom_line() +
-  labs(title = "PAR across Intensities")
+  scale_x_continuous(labels = scales::percent) +
+  labs(title = "PAR across Intensities",
+       y = expression(paste("PAR (", mu," ", mol^-2, " ", s^-1,")")))
 ```
  - Note - All values were converted to our lab standard by dividing Apogee readings by 1.2 to be equal to values we see from Seabird EcoPAR.
 
-![Mobius Day Light Settings](/notebook/images/ERLLights/mobiusDay.png)
+## Light Spectra
 
-I collected light spectra for each setting in the Mobius app. I also captured a spectrum with the light off to create an ambient spectrum that I will subtract from all other spectrums. Below is an example of the subtraction.
+I collected a light spectrum for each setting in the Mobius app. I also captured a spectrum with the light off to create an ambient spectrum that I will subtract from all other spectra. Below is an example of the subtraction.
 
 ```{r spectra diff example}
 tankLight <- read.table("../images/ERLLights/ledTest/moon1.txt",
@@ -140,7 +150,7 @@ tankDark %>%
   #scale_color_manual(values = manLegend) +
   theme(legend.position = "bottom") +
   labs(title = "Spectrum of Ambient Light",
-       x = "Spectra",
+       x = "Wavelength (nm)",
        y = "Intensity")
 
 #plot diff
@@ -159,13 +169,12 @@ tankDark %>%
   scale_color_manual(values = manLegend) +
   theme(legend.position = "bottom") +
   labs(title = "Spectrum Subtraction",
-       x = "Spectra",
+       x = "Wavelength (nm)",
        y = "Intensity")
 
 ```
 
-
-## Light Spectra
+### Spectra
 
 ```{r day spectra, suppress = T}
 dayFiles <- grep(list.files(path = "../images/ERLLights/ledTest/",
@@ -186,23 +195,23 @@ lapply(dayFiles, function(x) {
     coord_cartesian(xlim = c(250,850),
                   ylim = c(0,NA)) +
     scale_x_continuous(breaks = seq(from=200, to=800, by=100)) +
-    theme(legend.position = "bottom") +
     labs(title = paste("Spectrum of",
                        str_to_title(gsub("([[:upper:]])",
                                          " \\1",
                                          sub(".txt", "", basename(x)))),
                   "Light"),
-         x = "Spectra",
+         x = "Wavelength (nm)",
          y = "Intensity")
-
 })
-
 ```
 
+We can leverage these spectra to create the simulated sunlight we desire.
 
 ## Moonlight
 
-Through the Mobius app, we can adjust 4 parameters to mimic moonlight: intensity, color channel balance (Moonlight/Moonlight Blue), set times, and lunar cycle. At maximum intensity, the light is only outputting 2 PAR. Below are 3 spectra of the lights set at 100% Moonlight, 100% Moonlight Blue, and 50% for each Moonlight and Moonlight Blue. 
+Through the Mobius app, we can adjust 4 parameters to mimic moonlight: intensity, color channel balance (Moonlight/Moonlight Blue), set times, and lunar cycle. **At maximum intensity, the light is only outputting 2 PAR.** Below are 3 spectra of the lights set at 100% Moonlight, 100% Moonlight Blue, and 50% for each Moonlight and Moonlight Blue. 
+
+![Mobius Moon Light Settings](/notebook/images/ERLLights/mobiusMoon.png)
 
 ```{r moon, suppress = T}
 moonFiles <- list.files(path = "../images/ERLLights/ledTest/",
@@ -230,19 +239,17 @@ lapply(moonFiles, function(x) {
                        moonNames[as.numeric(str_extract(basename(x),
                                               "[[:digit:]]"))],
                   "Light"),
-         x = "Spectra",
+         x = "Wavelength (nm)",
          y = "Intensity")
 
 })
 ```
 
-We can also enable lunar cycle which creates a 28 day cycle with each day resulting in a scaled brightness. For instance, if the full moon is day 0 and point brightness is set to 100%, then on day 0 the brightness will be 100%. On day 7 (last quarter) the brightness would be 50%. On day 14 (new moon), the light will not come on at all. This cycles through and scales to whatever one sets as the full moon settings. If lunar cycle is disabled, then the full settings will be applied each day.
-
-![Mobius Moon Light Settings](/notebook/images/ERLLights/mobiusMoon.png)
+**We can also enable lunar cycle which creates a 28 day cycle with each day resulting in a scaled brightness.** For instance, if the full moon is day 0 and point brightness is set to 100%, then on day 0 the brightness will be 100%. On day 7 (last quarter) the brightness would be 50%. On day 14 (new moon), the light will not come on at all. This cycles through and scales to whatever one sets as the full moon settings. If lunar cycle is disabled, then the full settings will be applied each day.
 
 ## Seasonal
 
-To mimic seasonal changes in the light regime, Mobius has a tool called <a href="/notebook/images/ERLLights/InsolationExplainer.pdf" target="blank">Insolation</a> which permits dynamic daily adjustments of the light schedule. One imports a table that specifies the sunrise, sunset, sun intensity, moonrise, moonset, and moon intensity. This tool allows users to upload a csv of setpoints for an entire year.
+**To mimic seasonal changes in the light regime, Mobius has a tool called <a href="/notebook/images/ERLLights/InsolationExplainer.pdf" target="blank">Insolation</a> which permits dynamic daily adjustments of the light schedule.** One imports a table that specifies the sunrise, sunset, sun intensity, moonrise, moonset, and moon intensity. This tool allows users to upload a csv of setpoints for an entire year.
 
 This table will work together with the setpoints one sets to create a unique light curve for each day. You set the shape of the curve which is proportionally changed by the specific times set in the Insolation table. 
 
@@ -250,16 +257,15 @@ Insolation is a beta feature and needs further testing. I've started a line of c
 
 ## Day Curves
 
-Finally, we can change how the light changes throughout the day. Currently we have been using 4 set points to create a rhombus shaped curve with a 3 hour linear ramp of sunrise and sunset and a linear hold at maximum PAR for 6 hours. In the user template window, there is a tool to help create setpoints to mimic a sine or parabolic curve. This effectively creates a handful of linear setpoints giving a best fit to the aforementioned curves. 
-
+Finally, we can change how the light changes throughout the day. Currently we have been using 4 set points to create a rhombus shaped curve with a 3 hour linear ramp of sunrise and sunset and a linear hold at maximum PAR for 6 hours. **In the user template window, there is a tool to help create setpoints to mimic a sine or parabolic curve which more closely follows natural lighting regimes.** 
 
 # Data to Inform Settings
 
-Since most of the corals we analyze in the lab come from coral nurseries or reefs around Miami, I will use this data to inform the set points we choose.
+Since most of the organisms we analyze in the lab come from reefs around Miami, I will use this data to inform the set points we choose.
 
-## Light Set Points
+## Sun Rise and Set Times
 
-Light data comes from NOAA's Global Monitoring Laboratory set at the coordinates for the Key Biscayne UM Nursery (25.676,-80.110). 
+Sunrise and sunset data comes from NOAA's Global Monitoring Laboratory set at the coordinates for the Key Biscayne UM Nursery (25.676,-80.110). 
 
 ```{r solar time from NOAA, suppress = T}
 #download table from NOAA GML
@@ -335,7 +341,75 @@ data.frame(date = date(sunrise$estTime),
          title = "Day Length")
 ```
 
-From this data, we can extract daily setpoints to upload to the Insolation table. We are unable to control solar noon with the current Insolation tool. However, this has a narrow range and is arguably less important than other setpoints.
+From this data, we can extract daily setpoints to upload to the Insolation table. We are unable to control solar noon with the current Insolation tool. However, this has a narrow range and is arguably less critical than other setpoints.
+
+## Moon Rise and Set Times
+
+Moonrise and Moonset are defined as times when the moon passes through the horizon <a href="https://en.wikipedia.org/wiki/Moonrise_and_moonset#Time" target="_blank">which changes with the phases.</a> Data was collected from the <a href="https://aa.usno.navy.mil/data/api" target="_blank">US Naval Observatory's Astronomical Applications Department API</a>.
+
+Since the light provided by the moon is better modeled as a percentage of brightness supplied by the full moon (rise at sunset and set at sunrise), the precise timing of the moonrise and moonset does not matter. Rather, changing the brightness on a schedule that tracks the lunar phases is prudent with 0% occuring at a New Moon and 100% at a full moon. I just think this data is cool.
+
+```{r moon time}
+moonTimes <- function(date,lat,long) {
+  url <- paste0(
+    "https://aa.usno.navy.mil/api/rstt/oneday?date=",
+    #YYYY-MM-DD
+    date,
+    "&coords=",
+    lat,
+    ",",
+    long,
+    "&tz=-5")
+  
+  fromJSON(content(httr::GET(url),
+                   "text",
+                   encoding = "UTF-8"))$properties$data$moondata  %>%
+    pivot_wider(names_from = "phen",
+                values_from = "time") %>%
+    mutate(date = date)
+}
+
+moonRiseSet <- lapply(seq(as.Date("2022-01-01"),as.Date("2022-12-31"),"day"),
+    FUN = moonTimes,
+    lat = 25.676267,
+    long = -80.109067) %>%
+  bind_rows() %>%
+  rename_with(tolower) %>%
+  mutate(set = as.POSIXct(set, format = "%H:%M",
+                           tz = "EST"),
+         rise = as.POSIXct(rise, format = "%H:%M",
+                           tz = "EST"))
+
+#moonrise
+moonRiseSet %>%
+    ggplot(aes(date,rise)) +
+    geom_line() +
+    scale_x_date(labels = date_format("%b")) +
+    scale_y_datetime(labels = date_format("%H:%M",
+                                          tz="EST")) +
+    labs(x = "Month",
+         y = "Time (Daylight Savings Corrected)",
+         title = "Time of Moonrise")
+
+
+#moonset
+moonRiseSet %>%
+    ggplot(aes(date,set)) +
+    geom_line() +
+    scale_x_date(labels = date_format("%b")) +
+    scale_y_datetime(labels = date_format("%H:%M",
+                                          tz="EST")) +
+    labs(x = "Month",
+         y = "Time (Daylight Savings Corrected)",
+         title = "Time of Moonset")
+```
+
+## Solar Intensity
+
+To investigate seasonal trends in light, I plan to use the PAR data extracted from <a href="https://oceancolor.gsfc.nasa.gov/l3/" target="_blank">NASA's MODIS Level-3 Data.</a> This data is supplied as mean daily exposure ($mol \space m^{-2} \space day^{-1}$) and has a 4km resolution. I plan to calculate a daily average value for the last 10 years and construct a seasonal light exposure plot. Assuming that the attenuation of light in a water column is constant throughout the year, then we can extract seasonal light exposure curves to aid in our construction of modeled light exposure for our experiments. The exact brightness, however, will be informed by PAR data collected *in situ*.
+
+I have not yet conducted this analysis.
+
 
 ## Nursery PAR Data
 
@@ -367,10 +441,11 @@ nurseryPAR %>%
          hour = hour(hms),
          minute = minute(hms)) %>%
   group_by(hms) %>%
-  summarise(adjPAR = mean(adjPAR, na.rm=T)) %>%
-  ggplot(aes(hms,adjPAR)) +
+  summarise(adjPAR.mean = mean(adjPAR, na.rm=T),
+            adjPAR.se = sd(adjPAR, na.rm=T)/sqrt(n())) %>%
+  ggplot(aes(hms,adjPAR.mean)) +
   geom_line() +
-  geom_smooth(se=F) +
+  geom_smooth(se=T) +
   scale_x_datetime(labels = date_format("%H:%M",
                                           tz="America/New_York")) +
   scale_y_continuous(limits = c(0,NA)) +
@@ -383,6 +458,73 @@ nurseryPAR %>%
 PAR data collected by Morgan Chakraborty and Nathan Formel
 
 It most approximates a sine wave with a peak at solar noon. 
+
+## NCEI Data
+
+I found this dataset on NCEI for one of the C-MAN stations located at Molasses Reef (25.012, -80.376). Need to look more into this PAR data and compare to the MODIS derived data from above, but it provides a long term seasonal trend with a maximum PAR in late June approximately equal to the summer solstice.
+
+```{r Molasses Data}
+molasses <- lapply(list.files(path = "../images/ERLLights/MolassesPAR",
+                              full.names = T),
+                   function (x) {
+    read_excel(x, guess_max = 1048576) %>%
+    select('Julian Day', 'Hour', 'PARS', 'PAR1m') %>%
+    filter(`Julian Day`<=366 & `Julian Day`>0) %>%
+    mutate(across(everything(), ~as.character(.)),
+           across(everything(), ~as.numeric(.)),
+           year =  as.numeric(str_extract(basename(x), '[[:digit:]]+')))
+}) %>%
+  bind_rows() %>%
+  drop_na(`Julian Day`, Hour)
+
+seasonalLight <- molasses %>%
+  group_by(`Julian Day`, Hour) %>%
+  summarise(PARS = mean(PARS, na.rm=T),
+            PAR1m = mean(PAR1m, na.rm=T)) %>%
+  ungroup() %>%
+  mutate(date = as.POSIXct(paste(as.Date(`Julian Day`,
+                   origin = as.Date("2022-01-01")),
+                   Hour),
+                   format = "%Y-%m-%d %H"))
+
+seasonalLight %>%
+  group_by(date = date(date)) %>%
+  summarise(PARS.mean = mean(PARS, na.rm=T),
+            PARS.max = max(PARS, na.rm=T),
+            PARS.min = min(PARS, na.rm=T),
+            PARS.se = sd(PARS, na.rm=T)/sqrt(n())) %>%
+  ggplot(aes(date, PARS.mean)) +
+  geom_line() +
+  geom_ribbon(aes(ymin=PARS.mean-PARS.se,
+                  ymax=PARS.mean+PARS.se),
+              alpha=0.3, fill="red") +
+  scale_x_date(labels = date_format("%b")) +
+    geom_smooth() +
+  labs(title = "Average Daily Mean Surface PAR\nMolasses Reef 1994-2007",
+       x = "Month",
+       y= expression(paste("PAR (", mu," ", mol^-2, " ", s^-1,")")))
+
+seasonalLight %>%
+  group_by(date = date(date)) %>%
+  summarise(PARS.mean = mean(PAR1m, na.rm=T),
+            PARS.max = max(PAR1m, na.rm=T),
+            PARS.min = min(PAR1m, na.rm=T),
+            PARS.se = sd(PAR1m, na.rm=T)/sqrt(n())) %>%
+  ggplot(aes(date, PARS.mean)) +
+  geom_line() +
+  geom_ribbon(aes(ymin=PARS.mean-PARS.se,
+                  ymax=PARS.mean+PARS.se),
+              alpha=0.3, fill="red") +
+  geom_smooth() +
+  scale_x_date(labels = date_format("%b")) +
+  labs(title = "Average Daily Mean 1m PAR\nMolasses Reef 1994-2007",
+       x = "Month",
+       y= expression(paste("PAR (", mu," ", mol^-2, " ", s^-1,")")))
+
+
+```
+
+Don't really trust the subsurface (1m) dataset. My guess is that it's right below the buoy and thus it is partly shaded by said buoy, and the odd pattern may align with prevailing winds as that may move the buoy around. Not sure if it's a moored buoy. Shot in the dark though :)
 
 ## Natural Spectrums
 
