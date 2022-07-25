@@ -47,7 +47,7 @@ The standard setup we have places the light 50cm above the bottom of the
 aquarium. This results in the following light curve based on full
 spectrum set to 100% and the point intensity varying from 0-100%. As
 Morgan has shown, we can lower the light closer to the water to reach
-PAR levels exceeding 800 $\\mu mol \\space m^{-2} \\space s^{-1}$ .
+PAR levels exceeding 800 $ mol m^{-2} s^{-1} $.
 
 ![Mobius Day Light Settings set to 100%
 intensity](/notebook/images/ERLLights/mobiusDay.png)
@@ -188,14 +188,14 @@ full moon. I just think this data is cool.
 To investigate seasonal trends in light, I plan to use the PAR data
 extracted from
 <a href="https://oceancolor.gsfc.nasa.gov/l3/" target="_blank">NASA’s
-MODIS Level-3 Data.</a> This data is supplied as mean daily exposure (
-$mol \\space m^{-2} \\space day^{-1}$ ) and has a 4km resolution. I plan
-to calculate a daily average value for the last 10 years and construct a
-seasonal light exposure plot. Assuming that the attenuation of light in
-a water column is constant throughout the year, then we can extract
-seasonal light exposure curves to aid in our construction of modeled
-light exposure for our experiments. The exact brightness, however, will
-be informed by PAR data collected *in situ*.
+MODIS Level-3 Data.</a> This data is supplied as mean daily exposure ( $
+mol m^{-2} day^{-1} $) and has a 4km resolution. I plan to calculate a
+daily average value for the last 10 years and construct a seasonal light
+exposure plot. Assuming that the attenuation of light in a water column
+is constant throughout the year, then we can extract seasonal light
+exposure curves to aid in our construction of modeled light exposure for
+our experiments. The exact brightness, however, will be informed by PAR
+data collected *in situ*.
 
 I have not yet conducted this analysis.
 
