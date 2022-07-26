@@ -453,6 +453,29 @@ nurseryPAR %>%
   labs(x = "Time of Day",
        y = "PAR",
        title = "10-Minute Averaged Daily Light Levels")
+
+# #daily dose calculation
+# nurseryPAR %>%
+#   mutate(hms = as.POSIXct(format(round_date(dateTimeEST,"10 minutes"),
+#                            format="%H:%M:%S"),
+#                            format = "%H:%M:%S",
+#                            tz = "America/New_York")) %>%
+#   group_by(hms) %>%
+#   summarise(adjPAR.mean = mean(adjPAR, na.rm=T)) %>%
+#   ungroup() %>%
+#   drop_na() %>%
+#   mutate(fitted = loess(adjPAR.mean~as.numeric(hms),
+#                         data=.,
+#                         span=0.5)$fitted,
+#          hour = hour(hms)) %>%
+#   filter(between(hour,10,15)) %>%
+#   group_by(hour) %>%
+#   summarise(par = mean(fitted)*3600) %>%
+#   ungroup() %>%
+#   pull(par) %>%
+#   sum()/1000000
+
+  
 ```
 
 To investigate seasonal trends in light, I am using PAR data extracted from <a href="https://oceancolor.gsfc.nasa.gov/l3/" target="_blank">NASA's MODIS Level-3 Data.</a> This data is supplied as mean daily exposure (mol m^-2 day^-1 ) and has a 4km resolution. I extracted data from 2002 to 2012 and calculated a daily average to construct a seasonal light exposure plot. Assuming that the attenuation of light in a water column is constant throughout the year, then we can extract seasonal light exposure curves to aid in our construction of modeled light exposure for our experiments. The exact brightness, however, will be informed by PAR data collected *in situ* from above.
@@ -555,6 +578,24 @@ Don't really trust the subsurface (1m) dataset. My guess is that it's right belo
 The seasonal curve follows as expected with a peak around the summer solstice and a minima around the winter solstice. A peak of 550 micromol at the summer solstice with a decrease proportional to the seasonality from the MODIS data is presented here:
 
 ```{r composite data analysis}
+data.frame(hour = seq(0,23,1),
+           light = c(rep(6.735335e-14,6),
+                     550*sin(pi*seq(0,12,1)/12)+6.735335e-14,
+                     rep(6.735335e-14,5))) %>%
+  ggplot(aes(hour, light)) +
+  geom_line() +
+  scale_y_continuous(breaks = seq(from=0,
+                                  to=600,
+                                  by=200),
+                     limits = c(0,600)) +
+  scale_x_continuous(breaks = seq(from=0,
+                                  to=24,
+                                  by=6),
+                     limits = c(0,24)) +
+  labs(x = "Time of Day",
+       y = "PAR",
+       title = "Suggested Diel PAR Curve")
+
 modisPAR.summary %>%
   drop_na() %>%
   mutate(fitted = loess(par ~ as.numeric(date),
@@ -563,7 +604,7 @@ modisPAR.summary %>%
   ggplot(aes(date, prop)) +
   geom_line() +
   scale_x_date(labels = date_format("%b")) +
-  labs(title = "Calculated Seasonal PAR",
+  labs(title = "Suggested Seasonal PAR",
        x = "Month",
        y= expression(paste("PAR (", mu," ", mol^-2, " ", s^-1,")")))
 ```

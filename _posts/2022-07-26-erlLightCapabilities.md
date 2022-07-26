@@ -234,7 +234,7 @@ solstice and a minima around the winter solstice. A peak of 550 micromol
 at the summer solstice with a decrease proportional to the seasonality
 from the MODIS data is presented here:
 
-<img src="/notebook/images/ERLLights/composite data analysis-1..png" width="80%" />
+<img src="/notebook/images/ERLLights/composite data analysis-1..png" width="80%" /><img src="/notebook/images/ERLLights/composite data analysis-2..png" width="80%" />
 
 ## Natural Spectrums
 
