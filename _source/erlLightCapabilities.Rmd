@@ -99,7 +99,7 @@ We can incorporate seasonal changes of light exposure with daily changes in expo
 
 # Light Performance
 
-The standard setup we have places the light 50cm above the bottom of the aquarium. This results in the following light curve based on full spectrum set to 100% and the point intensity varying from 0-100%. As Morgan has shown, we can lower the light closer to the water to reach PAR levels exceeding 800 $ \mu mol \space m^{-2} \space s^{-1} $ . 
+The standard setup we have places the light 50cm above the bottom of the aquarium. This results in the following light curve based on full spectrum set to 100% and the point intensity varying from 0-100%. As Morgan has shown, we can lower the light closer to the water to reach PAR levels exceeding 800 micromol m^-2 s^-1 . 
 
 ![Mobius Day Light Settings set to 100% intensity](/notebook/images/ERLLights/mobiusDay.png)
 
@@ -406,25 +406,29 @@ moonRiseSet %>%
 
 ## Solar Intensity
 
-To investigate seasonal trends in light, I plan to use the PAR data extracted from <a href="https://oceancolor.gsfc.nasa.gov/l3/" target="_blank">NASA's MODIS Level-3 Data.</a> This data is supplied as mean daily exposure ( $ mol \space m^{-2} \space day^{-1} $ ) and has a 4km resolution. I plan to calculate a daily average value for the last 10 years and construct a seasonal light exposure plot. Assuming that the attenuation of light in a water column is constant throughout the year, then we can extract seasonal light exposure curves to aid in our construction of modeled light exposure for our experiments. The exact brightness, however, will be informed by PAR data collected *in situ*.
+To map out the intensities we want to simulate in our aquariums, I am looking at a few different datasets collected in situ at a coral nursery in Miami, a long term C-MAN buoy in the Florida Keys, and satellite data.
 
-I have not yet conducted this analysis.
+### Nursery PAR Data
 
-
-## Nursery PAR Data
+PAR data collected by Morgan Chakraborty and Nathan Formel. It most closely approximates a sine wave with a peak at solar noon. This data was also collected right around the summer solstice, giving us the peak of the seasonal light curve. From the smoothed data, our yearly peaked data is thus around 550 micromol m^-2 s^-1.
 
 ```{r nursery PAR}
 nurseryPAR <- read.csv('../images/ERLLights/nurseryEcoPARdeployment.csv') %>%
   mutate(dateTimeEST = parse_datetime(dateTimeEST,
-                                       format = "%m/%d/%y %H:%M",
-                                       locale = locale(tz="America/New_York"))) %>%
-  drop_na(dateTimeEST) %>%
-  group_by(dateTimeEST) %>%
-  summarise(adjPAR = mean(adjPAR, na.rm=T)) %>%
-  ungroup() %>%
+                                    format = "%m/%d/%y %H:%M",
+                                    locale = locale(tz="America/New_York"))) %>%
   #remove the last bit of data when it was being collected
   filter(dateTimeEST<as.POSIXct("2022-06-22 13:00:00",
-                                tz="America/New_York"))
+                                tz="America/New_York") &
+           dateTimeEST >as.POSIXct("2022-06-15 10:15:00",
+                                tz="America/New_York")) %>%
+  drop_na(dateTimeEST) %>%
+  #data captured 10 at a time, average these values
+  group_by(group = ceiling(row_number()/10)) %>%
+  summarise(dateTimeEST = ceiling_date(mean(dateTimeEST), "1 minute"),
+      adjPAR = mean(adjPAR, na.rm=T)) %>%
+  ungroup() %>%
+  select(-group)
   
 nurseryPAR %>%
   ggplot(aes(dateTimeEST,adjPAR)) +
@@ -437,31 +441,51 @@ nurseryPAR %>%
   mutate(hms = as.POSIXct(format(round_date(dateTimeEST,"10 minutes"),
                            format="%H:%M:%S"), 
                            format = "%H:%M:%S",
-                           tz = "America/New_York"),
-         hour = hour(hms),
-         minute = minute(hms)) %>%
+                           tz = "America/New_York")) %>%
   group_by(hms) %>%
-  summarise(adjPAR.mean = mean(adjPAR, na.rm=T),
-            adjPAR.se = sd(adjPAR, na.rm=T)/sqrt(n())) %>%
+  summarise(adjPAR.mean = mean(adjPAR, na.rm=T)) %>%
   ggplot(aes(hms,adjPAR.mean)) +
   geom_line() +
-  geom_smooth(se=T) +
+  geom_smooth(se=T, span=0.5) +
   scale_x_datetime(labels = date_format("%H:%M",
                                           tz="America/New_York")) +
   scale_y_continuous(limits = c(0,NA)) +
   labs(x = "Time of Day",
        y = "PAR",
        title = "10-Minute Averaged Daily Light Levels")
-
 ```
 
-PAR data collected by Morgan Chakraborty and Nathan Formel
+To investigate seasonal trends in light, I am using PAR data extracted from <a href="https://oceancolor.gsfc.nasa.gov/l3/" target="_blank">NASA's MODIS Level-3 Data.</a> This data is supplied as mean daily exposure (mol m^-2 day^-1 ) and has a 4km resolution. I extracted data from 2002 to 2012 and calculated a daily average to construct a seasonal light exposure plot. Assuming that the attenuation of light in a water column is constant throughout the year, then we can extract seasonal light exposure curves to aid in our construction of modeled light exposure for our experiments. The exact brightness, however, will be informed by PAR data collected *in situ* from above.
 
-It most approximates a sine wave with a peak at solar noon. 
+```{r MODIS data}
+modisPAR <- read_csv('../images/ERLLights/modisPAR.csv')
+
+
+modisPAR.summary <- modisPAR %>%
+  #calculate mean value for each month-day
+  group_by(date = as.Date(paste("2022",format(date,
+                                 format="%m-%d"),
+                                sep="-"))) %>%
+  summarise(par= mean(par.mean, na.rm = T),
+            par.se = sd(par.mean,na.rm=T)/sqrt(n())) %>%
+  ungroup()
+
+modisPAR.summary %>%
+  ggplot(aes(date, par)) +
+  geom_line() +
+  geom_ribbon(aes(ymin=par-par.se,
+                  ymax=par+par.se),
+              alpha=0.3, fill="red") +
+  geom_smooth() +
+  scale_x_date(labels = date_format("%b")) +
+  labs(title = "Average Daily Mean Surface PAR\nMODIS 2002-2012",
+       x = "Month",
+       y= expression(paste("PAR (", mu," ", mol^-2, " ", s^-1,")")))
+```
 
 ## NCEI Data
 
-I found this dataset on NCEI for one of the C-MAN stations located at Molasses Reef (25.012, -80.376). Need to look more into this PAR data and compare to the MODIS derived data from above, but it provides a long term seasonal trend with a maximum PAR in late June approximately equal to the summer solstice.
+I found this dataset on NCEI for one of the C-MAN stations located at Molasses Reef (25.012, -80.376). This data complements the MODIS derived data from above.
 
 ```{r Molasses Data}
 molasses <- lapply(list.files(path = "../images/ERLLights/MolassesPAR",
@@ -525,6 +549,25 @@ seasonalLight %>%
 ```
 
 Don't really trust the subsurface (1m) dataset. My guess is that it's right below the buoy and thus it is partly shaded by said buoy, and the odd pattern may align with prevailing winds as that may move the buoy around. Not sure if it's a moored buoy. Shot in the dark though :)
+
+### Takeaways
+
+The seasonal curve follows as expected with a peak around the summer solstice and a minima around the winter solstice. A peak of 550 micromol at the summer solstice with a decrease proportional to the seasonality from the MODIS data is presented here:
+
+```{r composite data analysis}
+modisPAR.summary %>%
+  drop_na() %>%
+  mutate(fitted = loess(par ~ as.numeric(date),
+                        data=.)$fitted,
+         prop = fitted/max(fitted)*550) %>%
+  ggplot(aes(date, prop)) +
+  geom_line() +
+  scale_x_date(labels = date_format("%b")) +
+  labs(title = "Calculated Seasonal PAR",
+       x = "Month",
+       y= expression(paste("PAR (", mu," ", mol^-2, " ", s^-1,")")))
+```
+
 
 ## Natural Spectrums
 
