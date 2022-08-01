@@ -236,6 +236,15 @@ from the MODIS data is presented here:
 
 <img src="/notebook/images/ERLLights/composite data analysis-1..png" width="80%" /><img src="/notebook/images/ERLLights/composite data analysis-2..png" width="80%" />
 
+#### Moonlight Intensity
+
+The estimated moonlight intensity during the days of PAR collection on
+the nursery is 57%. The average PAR experienced at the nursery during
+that time was 0.045. Thus, the estimated Full Moon par is 0.08 PAR. To
+achieve this illumination, the point intensity of the moonlight should
+be set to 40%. The moonphase will then dynamically alter this intensity
+between 0-40% based on that day’s estimated intensity.
+
 ## Natural Spectrums
 
 We have not yet collected natural light spectrums. Here is some
