@@ -300,16 +300,16 @@ mod %>%
                         'LCO2:MB-C-HCO2:MB-C',
                         'LCO2:SI-A-HCO2:SI-A')) %>%
   select(term,contrast,adj.p.value) %>%
-  mutate(significance = case_when(adj.p.value <0.001 ~ "***",
-                                  adj.p.value <0.01 ~ "**",
-                                  adj.p.value <0.05 ~ "*",
+  mutate(significance = case_when(adj.p.value <0.001 ~ "xxx",
+                                  adj.p.value <0.01 ~ "xx",
+                                  adj.p.value <0.05 ~ "x",
                                   TRUE ~ "NS"),
          adj.p.value = round(adj.p.value, digits=4)) %>%
   arrange(adj.p.value) %>%
     kbl(align = 'c',
     digits = 4,
     caption = "TukeyHSD Results of Anova",
-    escape = F) %>%
+    escape = TRUE) %>%
   kable_classic() %>%
   row_spec(0, bold = T)
   
@@ -454,9 +454,9 @@ mod %>%
                         'LCO2:MB-C-HCO2:MB-C',
                         'LCO2:SI-A-HCO2:SI-A')) %>%
   select(term,contrast,adj.p.value) %>%
-  mutate(significance = case_when(adj.p.value <0.001 ~ "***",
-                                  adj.p.value <0.01 ~ "**",
-                                  adj.p.value <0.05 ~ "*",
+  mutate(significance = case_when(adj.p.value <0.001 ~ "xxx",
+                                  adj.p.value <0.01 ~ "xx",
+                                  adj.p.value <0.05 ~ "x",
                                   TRUE ~ "NS"),
          adj.p.value = round(adj.p.value, digits=4)) %>%
   arrange(adj.p.value) %>%
