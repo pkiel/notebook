@@ -1,0 +1,262 @@
+---
+layout: post
+title:  "Title"
+author: "Patrick M Kiel"
+date: '`r Sys.Date()`'
+categories: [research]
+description: "Description"
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, 
+  encoding = encoding, 
+  output_file = paste0(Sys.Date(), "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
+  output_dir = "../_posts") })
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#load packages
+library(tidyverse)
+library(kableExtra)
+library(googlesheets4)
+library(seacarb)
+library(emmeans)
+library(ggpubr)
+library(rstatix)
+
+#selet the authorized tokens
+googledrive::drive_auth("p.kiel98@gmail.com")
+gs4_auth("p.kiel98@gmail.com")
+
+
+base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
+fig_path <- "images/ulinkGrowth2022/" #add a new folder if you want to group output into a single foder
+
+# Set base directories
+knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
+
+# Set figure directories
+knitr::opts_chunk$set(fig.path = fig_path,
+                    cache.path = '../cache/',
+                    message=FALSE, warning=FALSE,
+                    cache = FALSE)
+```
+
+```{js}
+function verify() {
+  <!-- set the password here -->
+  if (document.getElementById('password').value === 'ulink') {
+    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
+    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
+  } else {
+    alert('Invalid Password! You cannot view this content.');
+    password.setSelectionRange(0, password.value.length);
+  }
+  return false;
+}
+```
+
+```{css}
+/*Change content Display */
+.hidden {
+  display: none;
+}
+```
+
+<!-- The password box -->
+<div id="credentials">
+  <input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
+  <br/>
+  <input id="button" type="button" value="Show Content" onclick="verify()" />
+</div>
+
+<!-- The content we want to show after password -->
+<div id="HIDDENDIV" class="hidden" markdown="1">
+
+<!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
+
+# Overview
+
+# Calcification Analysis
+
+```{r load buoyant weight data}
+#load data from google drive
+bw <- googledrive::drive_ls(path = "~/GradSchool/ULink_OAxGenotype/",
+                            pattern = "buoyantWeight$") %>%
+  read_sheet(col_types = "Dcdddc") %>%
+  mutate(tag = as.character(tag)) %>%
+  drop_na(mass)
+
+#load tank assignment + genotype data
+assignment <- read.csv('~/Grad School/ULink 2022/tankAssignment.csv') %>%
+  filter(treatment != "") %>%
+  mutate(tag = as.character(tag),
+         tank = as.factor(tank))
+
+bw <- bw %>%
+  left_join(assignment, by="tag") %>%
+  arrange(tank, genotype,tag,date)
+  
+
+#calculate weight in air
+bw <- bw %>%
+  mutate(
+    #calculate sw density (g/cm3) from YSI, p taken as std atm p
+    density = rho(S = salinity,
+                          T = temp)/1000) %>%
+  mutate(
+    #calculate weight in air using Jokiel et al. 1978 eqn
+    mass_a = mass/(1-density/2.93)) %>%
+  select(-c(mass,temp,salinity, density))
+
+#calculate weekly growth rate for QA/QC
+weeklyGrowth <- bw %>%
+  #week of 05/27/2022 had lots of QC issues, removing data
+  filter(!date %in% c(as.Date('2022-05-27'))) %>%
+  drop_na(genotype, mass_a) %>%
+  group_by(tag = as.numeric(tag),tank = as.factor(tank)) %>%
+  mutate(weekNum = as.numeric(date-first(date))/(60*60*24*7),
+            newGrowth.mg = ifelse(mass_a!=first(mass_a),
+                                  (mass_a - lag(mass_a))*1000,
+                                  NA),
+            weeklyG.day = ifelse(mass_a!=first(mass_a),
+                                  #average daily growth for the week
+                                  #mg/g/day, normalized to initial mass
+                                  newGrowth.mg /
+                                    first(mass_a)/as.numeric(date-lag(date)),
+                                  NA),
+            weeklyG.week = ifelse(mass_a!=first(mass_a),
+                                      #average weekly growth
+                                      #mg/g/week, normalized to initial mass
+                                      newGrowth.mg/
+                                 first(mass_a)/(as.numeric(date-lag(date))/7),
+                                      NA)) %>%
+  #remove tags that have no weekly growth, i.e. died early on
+  group_by(tag) %>%
+  filter(!all(is.na(weeklyG.day)))
+
+#corals to check
+#weird growth
+#10, 63, 103,
+#likely broke
+#120, 49
+
+#calculate total growth
+totalGrowth <- bw %>%
+  #set starting date
+  filter(date > as.Date("2022-04-10")) %>%
+  #remove standards
+  drop_na(genotype,mass_a) %>%
+  group_by(tag,genotype,tank, treatment) %>%
+  summarise(days = as.numeric(last(date)-first(date)),
+            newGrowth.mg = (last(mass_a) - first(mass_a))*1000,
+            initMass = first(mass_a),
+            dailyG = #mg/g/day, normalized to initial mass
+                           newGrowth.mg/initMass/days,
+            .groups="drop")
+
+ totalGrowth %>% filter(genotype=="AC-2" & treatment=="LCO2") %>% View()
+```
+
+```{r calcification graphs}
+totalGrowth %>%
+  ggplot(aes(treatment, dailyG)) +
+  geom_boxplot() +
+  geom_point() +
+  labs(x = "Treatment",
+       y = "Avg Daily Growth Rate (mg/g/day)",
+       title = "Avg Daily Growth byTreatment") +
+  theme_classic()
+
+
+totalGrowth %>%
+  ggplot(aes(genotype, dailyG)) +
+  geom_boxplot(aes(fill=treatment)) +
+              #if quantile lines desired: draw_quantiles = c(0.25, 0.5, 0.75)) +
+  labs(x = "Genotype",
+       y = "Avg Daily Growth Rate (mg/g/day)",
+       title = "Avg Daily Growth by Genotype and Treatment") +
+  theme_classic()
+```
+
+There is some obvious genet-specific responses.
+
+1. Cheetos-B calcification rate was nearly identical across HCO2 and LCO2 groups. This genet also had high initial mortality and the worst survivorship rate throughout the experiment. It is entirely possible that this genotype did not do well in the aquariums and its diminished calcification rate is an effect of overall health and not treatment.
+
+2. SI-A and AC-2 had the highest average calcification rates and there was no significant difference between these two genotypes. 
+
+3. When looking at just controls, the only significant different genotype is Cheetos-B. Thus, there is a difference in sensitivity to OA but no observable differences in ambient conditions. 
+
+```{r calcification stats}
+
+groupMeans <- totalGrowth %>%
+  group_by(treatment) %>%
+  get_summary_stats(dailyG, type = "mean_sd")
+
+groupMeans
+
+tTestResults <- totalGrowth %>% 
+  t_test(dailyG ~ treatment, var.equal = T) %>%
+  add_significance()
+
+tTestResults
+
+cohensResults <- totalGrowth %>% 
+  cohens_d(dailyG ~ treatment, var.equal = T) 
+
+cohensResults
+
+totalGrowth %>%
+  filter(treatment!='HCO2') %>%
+  aov(dailyG ~ genotype,
+                 data=.) %>%
+  TukeyHSD()
+
+#fixed effects model
+mod <- totalGrowth %>%
+  #filter(genotype!='Cheetos-B') %>%
+  aov(dailyG ~ treatment*genotype,
+                 data=.) 
+
+mod %>%
+  TukeyHSD() %>%
+  broom::tidy() %>%
+  select(term,contrast,adj.p.value) %>%
+  mutate(significance = case_when(adj.p.value <0.001 ~ "***",
+                                  adj.p.value <0.01 ~ "**",
+                                  adj.p.value <0.05 ~ "*",
+                                  TRUE ~ "NS"),
+         adj.p.value = round(adj.p.value, digits=4)) %>%
+  arrange(adj.p.value) %>%
+    kbl(align = 'c',
+    digits = 4,
+    caption = "TukeyHSD Results of Anova") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+  
+multcomp::cld(emmeans(mod,
+                      list(pairwise ~ treatment*genotype),
+                      adjust = "tukey"),
+              Letters = letters) %>%
+    kbl(align = 'c',
+    digits = 4,
+    caption = "TukeyHSD Results of Anova") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+```
+
+The mean calcification rate in the HCO2 group was mean `r round(mean(totalGrowth$dailyG[which(totalGrowth$treatment=='HCO2')]),3)`  (SD = `r round(sd(totalGrowth$dailyG[which(totalGrowth$treatment=='HCO2')]),3)`) mg/g/day, whereas the mean in the LCO2 group was `r round(mean(totalGrowth$dailyG[which(totalGrowth$treatment=='LCO2')]),3)` (SD = `r round(sd(totalGrowth$dailyG[which(totalGrowth$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p < 0.0001, d = `r round(cohensResults$effsize,3)`. Thus, the ocean acidification group saw on average a `r round((groupMeans$mean[2]-groupMeans$mean[1])/groupMeans$mean[2],0)`% reduction in calcification rates.
+
+# Linear Extension
+
+
+</div>
