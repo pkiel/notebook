@@ -288,6 +288,17 @@ mod <- totalGrowth %>%
 mod %>%
   TukeyHSD() %>%
   broom::tidy() %>%
+    filter(contrast %in% c('LCO2-HCO2',
+                        'Cheetos-B-AC-2',
+                        'MB-C-AC-2,',
+                        'SI-A-AC-2',
+                        'MB-C-Cheetos-B',
+                        'SI-A-Cheetos-B',
+                        'SI-A-MB-C',
+                        'LCO2:AC-2-HCO2:AC-2',
+                        'LCO2:Cheetos-B-HCO2:Cheetos-B',
+                        'LCO2:MB-C-HCO2:MB-C',
+                        'LCO2:SI-A-HCO2:SI-A')) %>%
   select(term,contrast,adj.p.value) %>%
   mutate(significance = case_when(adj.p.value <0.001 ~ "***",
                                   adj.p.value <0.01 ~ "**",
@@ -431,6 +442,17 @@ mod <- height %>%
 mod %>%
   TukeyHSD() %>%
   broom::tidy() %>%
+  filter(contrast %in% c('LCO2-HCO2',
+                        'Cheetos-B-AC-2',
+                        'MB-C-AC-2,',
+                        'SI-A-AC-2',
+                        'MB-C-Cheetos-B',
+                        'SI-A-Cheetos-B',
+                        'SI-A-MB-C',
+                        'LCO2:AC-2-HCO2:AC-2',
+                        'LCO2:Cheetos-B-HCO2:Cheetos-B',
+                        'LCO2:MB-C-HCO2:MB-C',
+                        'LCO2:SI-A-HCO2:SI-A')) %>%
   select(term,contrast,adj.p.value) %>%
   mutate(significance = case_when(adj.p.value <0.001 ~ "***",
                                   adj.p.value <0.01 ~ "**",
@@ -457,7 +479,7 @@ multcomp::cld(emmeans(mod,
   row_spec(0, bold = T)
 ```
 
-The mean linear extension rate in the HCO2 group was mean `r round(mean(height$prod[which(height$treatment=='HCO2')]),3)`  (SD = `r round(sd(height$prod[which(height$treatment=='HCO2')]),3)`) mm/cm/day, whereas the mean in the LCO2 group was `r round(mean(height$prod[which(height$treatment=='LCO2')]),3)` (SD = `r round(sd(height$prod[which(height$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was not statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p < 0.0001, d = `r round(cohensResults$effsize,3)`. 
+The mean linear extension rate in the HCO2 group was mean `r round(mean(height$prod[which(height$treatment=='HCO2')]),3)`  (SD = `r round(sd(height$prod[which(height$treatment=='HCO2')]),3)`) mm/cm/day, whereas the mean in the LCO2 group was `r round(mean(height$prod[which(height$treatment=='LCO2')]),3)` (SD = `r round(sd(height$prod[which(height$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was not statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p =0.124, d = `r round(cohensResults$effsize,3)`. 
 
 
 </div>

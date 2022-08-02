@@ -296,62 +296,6 @@ LCO2-HCO2
 treatment:genotype
 </td>
 <td style="text-align:center;">
-HCO2:Cheetos-B-LCO2:AC-2
-</td>
-<td style="text-align:center;">
-0.0000
-</td>
-<td style="text-align:center;">
-\*\*\*
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-treatment:genotype
-</td>
-<td style="text-align:center;">
-HCO2:MB-C-LCO2:AC-2
-</td>
-<td style="text-align:center;">
-0.0000
-</td>
-<td style="text-align:center;">
-\*\*\*
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-treatment:genotype
-</td>
-<td style="text-align:center;">
-LCO2:SI-A-HCO2:Cheetos-B
-</td>
-<td style="text-align:center;">
-0.0000
-</td>
-<td style="text-align:center;">
-\*\*\*
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-treatment:genotype
-</td>
-<td style="text-align:center;">
-LCO2:SI-A-HCO2:MB-C
-</td>
-<td style="text-align:center;">
-0.0000
-</td>
-<td style="text-align:center;">
-\*\*\*
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-treatment:genotype
-</td>
-<td style="text-align:center;">
 LCO2:AC-2-HCO2:AC-2
 </td>
 <td style="text-align:center;">
@@ -391,34 +335,6 @@ Cheetos-B-AC-2
 </tr>
 <tr>
 <td style="text-align:center;">
-treatment:genotype
-</td>
-<td style="text-align:center;">
-LCO2:SI-A-HCO2:AC-2
-</td>
-<td style="text-align:center;">
-0.0016
-</td>
-<td style="text-align:center;">
-\*\*
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-treatment:genotype
-</td>
-<td style="text-align:center;">
-LCO2:Cheetos-B-LCO2:AC-2
-</td>
-<td style="text-align:center;">
-0.0020
-</td>
-<td style="text-align:center;">
-\*\*
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
 genotype
 </td>
 <td style="text-align:center;">
@@ -436,10 +352,10 @@ SI-A-MB-C
 treatment:genotype
 </td>
 <td style="text-align:center;">
-HCO2:SI-A-LCO2:AC-2
+LCO2:MB-C-HCO2:MB-C
 </td>
 <td style="text-align:center;">
-0.0102
+0.0122
 </td>
 <td style="text-align:center;">
 
@@ -450,325 +366,59 @@ HCO2:SI-A-LCO2:AC-2
     treatment:genotype
     </td>
     <td style="text-align:center;">
-    LCO2:MB-C-HCO2:MB-C
+    LCO2:SI-A-HCO2:SI-A
     </td>
     <td style="text-align:center;">
-    0.0122
+    0.0797
     </td>
     <td style="text-align:center;">
-
-    -   </td>
-        </tr>
-        <tr>
-        <td style="text-align:center;">
-        treatment:genotype
-        </td>
-        <td style="text-align:center;">
-        LCO2:SI-A-LCO2:Cheetos-B
-        </td>
-        <td style="text-align:center;">
-        0.0137
-        </td>
-        <td style="text-align:center;">
-
-        -   </td>
-            </tr>
-            <tr>
-            <td style="text-align:center;">
-            genotype
-            </td>
-            <td style="text-align:center;">
-            MB-C-AC-2
-            </td>
-            <td style="text-align:center;">
-            0.0154
-            </td>
-            <td style="text-align:center;">
-
-            -   </td>
-                </tr>
-                <tr>
-                <td style="text-align:center;">
-                treatment:genotype
-                </td>
-                <td style="text-align:center;">
-                LCO2:MB-C-HCO2:Cheetos-B
-                </td>
-                <td style="text-align:center;">
-                0.0179
-                </td>
-                <td style="text-align:center;">
-
-                -   </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    LCO2:SI-A-HCO2:SI-A
-                    </td>
-                    <td style="text-align:center;">
-                    0.0797
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    HCO2:SI-A-HCO2:MB-C
-                    </td>
-                    <td style="text-align:center;">
-                    0.0963
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    LCO2:MB-C-LCO2:AC-2
-                    </td>
-                    <td style="text-align:center;">
-                    0.1123
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    HCO2:SI-A-HCO2:Cheetos-B
-                    </td>
-                    <td style="text-align:center;">
-                    0.1193
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    LCO2:MB-C-HCO2:AC-2
-                    </td>
-                    <td style="text-align:center;">
-                    0.4454
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    LCO2:SI-A-LCO2:MB-C
-                    </td>
-                    <td style="text-align:center;">
-                    0.4752
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    LCO2:MB-C-LCO2:Cheetos-B
-                    </td>
-                    <td style="text-align:center;">
-                    0.5636
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    genotype
-                    </td>
-                    <td style="text-align:center;">
-                    MB-C-Cheetos-B
-                    </td>
-                    <td style="text-align:center;">
-                    0.6143
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    HCO2:MB-C-HCO2:AC-2
-                    </td>
-                    <td style="text-align:center;">
-                    0.7184
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    HCO2:Cheetos-B-HCO2:AC-2
-                    </td>
-                    <td style="text-align:center;">
-                    0.7334
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    HCO2:SI-A-HCO2:AC-2
-                    </td>
-                    <td style="text-align:center;">
-                    0.9118
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    HCO2:SI-A-LCO2:Cheetos-B
-                    </td>
-                    <td style="text-align:center;">
-                    0.9190
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    LCO2:Cheetos-B-HCO2:Cheetos-B
-                    </td>
-                    <td style="text-align:center;">
-                    0.9514
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    HCO2:MB-C-LCO2:Cheetos-B
-                    </td>
-                    <td style="text-align:center;">
-                    0.9545
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    LCO2:SI-A-LCO2:AC-2
-                    </td>
-                    <td style="text-align:center;">
-                    0.9836
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    HCO2:SI-A-LCO2:MB-C
-                    </td>
-                    <td style="text-align:center;">
-                    0.9905
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    genotype
-                    </td>
-                    <td style="text-align:center;">
-                    SI-A-AC-2
-                    </td>
-                    <td style="text-align:center;">
-                    0.9917
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    LCO2:Cheetos-B-HCO2:AC-2
-                    </td>
-                    <td style="text-align:center;">
-                    1.0000
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:center;">
-                    treatment:genotype
-                    </td>
-                    <td style="text-align:center;">
-                    HCO2:MB-C-HCO2:Cheetos-B
-                    </td>
-                    <td style="text-align:center;">
-                    1.0000
-                    </td>
-                    <td style="text-align:center;">
-                    NS
-                    </td>
-                    </tr>
-                    </tbody>
-                    </table>
+    NS
+    </td>
+    </tr>
+    <tr>
+    <td style="text-align:center;">
+    genotype
+    </td>
+    <td style="text-align:center;">
+    MB-C-Cheetos-B
+    </td>
+    <td style="text-align:center;">
+    0.6143
+    </td>
+    <td style="text-align:center;">
+    NS
+    </td>
+    </tr>
+    <tr>
+    <td style="text-align:center;">
+    treatment:genotype
+    </td>
+    <td style="text-align:center;">
+    LCO2:Cheetos-B-HCO2:Cheetos-B
+    </td>
+    <td style="text-align:center;">
+    0.9514
+    </td>
+    <td style="text-align:center;">
+    NS
+    </td>
+    </tr>
+    <tr>
+    <td style="text-align:center;">
+    genotype
+    </td>
+    <td style="text-align:center;">
+    SI-A-AC-2
+    </td>
+    <td style="text-align:center;">
+    0.9917
+    </td>
+    <td style="text-align:center;">
+    NS
+    </td>
+    </tr>
+    </tbody>
+    </table>
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
@@ -1098,7 +748,7 @@ small
 </tr>
 </tbody>
 </table>
-<table class=" lightable-classic" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;'>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
 TukeyHSD Results of Anova
 </caption>
@@ -1135,483 +785,132 @@ LCO2:SI-A-HCO2:SI-A
 </tr>
 <tr>
 <td style="text-align:center;">
+treatment
+</td>
+<td style="text-align:center;">
+LCO2-HCO2
+</td>
+<td style="text-align:center;">
+0.0943
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+genotype
+</td>
+<td style="text-align:center;">
+MB-C-Cheetos-B
+</td>
+<td style="text-align:center;">
+0.3472
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+genotype
+</td>
+<td style="text-align:center;">
+SI-A-MB-C
+</td>
+<td style="text-align:center;">
+0.4989
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+genotype
+</td>
+<td style="text-align:center;">
+Cheetos-B-AC-2
+</td>
+<td style="text-align:center;">
+0.5543
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+genotype
+</td>
+<td style="text-align:center;">
+SI-A-AC-2
+</td>
+<td style="text-align:center;">
+0.7510
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
 treatment:genotype
 </td>
 <td style="text-align:center;">
-HCO2:SI-A-HCO2:AC-2
+LCO2:AC-2-HCO2:AC-2
 </td>
 <td style="text-align:center;">
-0.0268
+0.9477
 </td>
 <td style="text-align:center;">
-
--   </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    HCO2:SI-A-HCO2:MB-C
-    </td>
-    <td style="text-align:center;">
-    0.0611
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    HCO2:SI-A-LCO2:MB-C
-    </td>
-    <td style="text-align:center;">
-    0.0642
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment
-    </td>
-    <td style="text-align:center;">
-    LCO2-HCO2
-    </td>
-    <td style="text-align:center;">
-    0.0943
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:SI-A-LCO2:Cheetos-B
-    </td>
-    <td style="text-align:center;">
-    0.2873
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:SI-A-HCO2:Cheetos-B
-    </td>
-    <td style="text-align:center;">
-    0.2966
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    genotype
-    </td>
-    <td style="text-align:center;">
-    MB-C-Cheetos-B
-    </td>
-    <td style="text-align:center;">
-    0.3472
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:SI-A-LCO2:AC-2
-    </td>
-    <td style="text-align:center;">
-    0.3869
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    HCO2:SI-A-LCO2:AC-2
-    </td>
-    <td style="text-align:center;">
-    0.4436
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    genotype
-    </td>
-    <td style="text-align:center;">
-    SI-A-MB-C
-    </td>
-    <td style="text-align:center;">
-    0.4989
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    genotype
-    </td>
-    <td style="text-align:center;">
-    Cheetos-B-AC-2
-    </td>
-    <td style="text-align:center;">
-    0.5543
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    genotype
-    </td>
-    <td style="text-align:center;">
-    SI-A-AC-2
-    </td>
-    <td style="text-align:center;">
-    0.7510
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    HCO2:SI-A-HCO2:Cheetos-B
-    </td>
-    <td style="text-align:center;">
-    0.7845
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:Cheetos-B-HCO2:AC-2
-    </td>
-    <td style="text-align:center;">
-    0.8172
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    HCO2:Cheetos-B-HCO2:AC-2
-    </td>
-    <td style="text-align:center;">
-    0.8632
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    HCO2:MB-C-LCO2:Cheetos-B
-    </td>
-    <td style="text-align:center;">
-    0.8937
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:MB-C-LCO2:Cheetos-B
-    </td>
-    <td style="text-align:center;">
-    0.8996
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:SI-A-LCO2:MB-C
-    </td>
-    <td style="text-align:center;">
-    0.9150
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:SI-A-HCO2:MB-C
-    </td>
-    <td style="text-align:center;">
-    0.9210
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    HCO2:MB-C-HCO2:Cheetos-B
-    </td>
-    <td style="text-align:center;">
-    0.9314
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    HCO2:SI-A-LCO2:Cheetos-B
-    </td>
-    <td style="text-align:center;">
-    0.9351
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:MB-C-HCO2:Cheetos-B
-    </td>
-    <td style="text-align:center;">
-    0.9363
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:AC-2-HCO2:AC-2
-    </td>
-    <td style="text-align:center;">
-    0.9477
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:SI-A-HCO2:AC-2
-    </td>
-    <td style="text-align:center;">
-    0.9511
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    genotype
-    </td>
-    <td style="text-align:center;">
-    SI-A-Cheetos-B
-    </td>
-    <td style="text-align:center;">
-    0.9671
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    genotype
-    </td>
-    <td style="text-align:center;">
-    MB-C-AC-2
-    </td>
-    <td style="text-align:center;">
-    0.9730
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    HCO2:MB-C-LCO2:AC-2
-    </td>
-    <td style="text-align:center;">
-    0.9818
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:MB-C-LCO2:AC-2
-    </td>
-    <td style="text-align:center;">
-    0.9838
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:Cheetos-B-LCO2:AC-2
-    </td>
-    <td style="text-align:center;">
-    0.9995
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    HCO2:MB-C-HCO2:AC-2
-    </td>
-    <td style="text-align:center;">
-    1.0000
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:MB-C-HCO2:AC-2
-    </td>
-    <td style="text-align:center;">
-    1.0000
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    HCO2:Cheetos-B-LCO2:AC-2
-    </td>
-    <td style="text-align:center;">
-    1.0000
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:Cheetos-B-HCO2:Cheetos-B
-    </td>
-    <td style="text-align:center;">
-    1.0000
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">
-    treatment:genotype
-    </td>
-    <td style="text-align:center;">
-    LCO2:MB-C-HCO2:MB-C
-    </td>
-    <td style="text-align:center;">
-    1.0000
-    </td>
-    <td style="text-align:center;">
-    NS
-    </td>
-    </tr>
-    </tbody>
-    </table>
-
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+genotype
+</td>
+<td style="text-align:center;">
+SI-A-Cheetos-B
+</td>
+<td style="text-align:center;">
+0.9671
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+treatment:genotype
+</td>
+<td style="text-align:center;">
+LCO2:Cheetos-B-HCO2:Cheetos-B
+</td>
+<td style="text-align:center;">
+1.0000
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+treatment:genotype
+</td>
+<td style="text-align:center;">
+LCO2:MB-C-HCO2:MB-C
+</td>
+<td style="text-align:center;">
+1.0000
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+</tbody>
+</table>
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
 Significance Letter Groups
@@ -1750,6 +1049,6 @@ b
 The mean linear extension rate in the HCO2 group was mean 0.005 (SD =
 0.004) mm/cm/day, whereas the mean in the LCO2 group was 0.006 (SD =
 0.004). A Student two-samples t-test showed that the difference was not
-statistically significant, t(82) = -1.556, p &lt; 0.0001, d = -0.34.
+statistically significant, t(82) = -1.556, p =0.124, d = -0.34.
 
 </div>
