@@ -47,7 +47,7 @@ knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
 # Set figure directories
 knitr::opts_chunk$set(fig.path = fig_path,
                     cache.path = '../cache/',
-                    fig.align = 'center', out.width = '40%',
+                    fig.align = 'center', out.width = '60%',
                     message=FALSE, warning=FALSE,
                     cache = FALSE)
 ```
@@ -124,8 +124,8 @@ weeklyGrowth <- bw %>%
   #week of 05/27/2022 had lots of QC issues, removing data
   filter(!date %in% c(as.Date('2022-05-27'))) %>%
   drop_na(genotype, mass_a) %>%
-  group_by(tag = as.numeric(tag),tank = as.factor(tank)) %>%
-  mutate(weekNum = as.numeric(date-first(date))/(60*60*24*7),
+  group_by(tag = as.numeric(tag)) %>%
+  mutate(weekNum = as.numeric(date-first(date))/7,
             newGrowth.mg = ifelse(mass_a!=first(mass_a),
                                   (mass_a - lag(mass_a))*1000,
                                   NA),
@@ -164,9 +164,56 @@ totalGrowth <- bw %>%
             dailyG = #mg/g/day, normalized to initial mass
                            newGrowth.mg/initMass/days,
             .groups="drop")
-
- totalGrowth %>% filter(genotype=="AC-2" & treatment=="LCO2") %>% View()
 ```
+
+
+```{r growth graphs}
+weeklyGrowth %>%
+  group_by(weekNum,genotype) %>%
+  summarise(weeklyG = mean(weeklyG.week, na.rm = T),
+            se = sd(weeklyG.week, na.rm = T)/sqrt(n())) %>%
+  filter(!is.nan(weeklyG)) %>%
+  ggplot(aes(weekNum,weeklyG)) +
+  geom_line(aes(color=genotype)) +
+  geom_ribbon(aes(ymin = weeklyG - se,
+                    ymax = weeklyG + se,
+                    fill=genotype),
+                alpha=0.3) + 
+  labs(title = "Avg Weekly Growth Per Week by Genotype ± se") +
+  scale_x_continuous("Week",
+                     breaks = c(seq(1,
+                                    max(weeklyGrowth$weekNum, na.rm = T),
+                                    by=1))) +
+  scale_y_continuous("Avg Weekly Growth Rate (mg/g/week)",
+                     limits = c(0,40),
+                     breaks = c(seq(0,40,by=10)),
+                     expand = c(0, 0)) +
+  theme_classic()
+
+weeklyGrowth %>%
+  group_by(weekNum,treatment) %>%
+  summarise(weeklyG = mean(weeklyG.week, na.rm = T),
+            se = sd(weeklyG.week, na.rm = T)/sqrt(n())) %>%
+  filter(!is.nan(weeklyG)) %>%
+  ggplot(aes(as.integer(weekNum),weeklyG)) +
+  geom_line(aes(color=treatment)) +
+  geom_ribbon(aes(ymin = weeklyG - se,
+                    ymax = weeklyG + se,
+                    fill=treatment),
+                alpha=0.3) + 
+  labs(title = "Avg Weekly Growth Per Week by Treatment Group ± se") +
+  scale_x_continuous("Week",
+                     breaks = c(seq(1,
+                                    max(weeklyGrowth$weekNum, na.rm = T),
+                                    by=1))) +
+  scale_y_continuous("Avg Weekly Growth Rate (mg/g/week)",
+                     limits = c(0,40),
+                     breaks = c(seq(0,40,by=10)),
+                     expand = c(0, 0)) +
+  theme_classic()
+```
+
+Following April 15 (Weeky 7), the declining health of the corals stabilized and began to split amongst treatment groups.
 
 ```{r calcification graphs}
 totalGrowth %>%
@@ -192,7 +239,7 @@ There is some obvious genet-specific responses.
 
 1. Cheetos-B calcification rate was nearly identical across HCO2 and LCO2 groups. This genet also had high initial mortality and the worst survivorship rate throughout the experiment. It is entirely possible that this genotype did not do well in the aquariums and its diminished calcification rate is an effect of overall health and not treatment.
 
-2. SI-A and AC-2 had the highest average calcification rates and there was no significant difference between these two genotypes. 
+2. SI-A and AC-2 had the highest average calcification rates and there was no significant difference between these two genotypes. However, when you look at the effect of treatment within these genotypes, there is significant differences between them.
 
 3. When looking at just controls, the only significant different genotype is Cheetos-B. Thus, there is a difference in sensitivity to OA but no observable differences in ambient conditions. 
 
@@ -203,6 +250,7 @@ groupMeans <- totalGrowth %>%
   get_summary_stats(dailyG, type = "mean_sd")
 
 groupMeans %>%
+  select(-variable) %>%
       kbl(align = 'c',
     digits = 4,
     caption = "Means of Treatment") %>%
@@ -216,7 +264,8 @@ tTestResults <- totalGrowth %>%
 tTestResults %>%
   kbl(align = 'c',
     digits = 4,
-    caption = "Stats of Treatment") %>%
+    caption = "Stats of Treatment",
+    escape=F) %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 
@@ -240,15 +289,16 @@ mod %>%
   TukeyHSD() %>%
   broom::tidy() %>%
   select(term,contrast,adj.p.value) %>%
-  mutate(significance = case_when(adj.p.value <0.001 ~ "\\*\\*\\*",
-                                  adj.p.value <0.01 ~ "\\*\\*",
-                                  adj.p.value <0.05 ~ "\\*",
+  mutate(significance = case_when(adj.p.value <0.001 ~ "***",
+                                  adj.p.value <0.01 ~ "**",
+                                  adj.p.value <0.05 ~ "*",
                                   TRUE ~ "NS"),
          adj.p.value = round(adj.p.value, digits=4)) %>%
   arrange(adj.p.value) %>%
     kbl(align = 'c',
     digits = 4,
-    caption = "TukeyHSD Results of Anova") %>%
+    caption = "TukeyHSD Results of Anova",
+    escape = F) %>%
   kable_classic() %>%
   row_spec(0, bold = T)
   
@@ -265,6 +315,22 @@ multcomp::cld(emmeans(mod,
 ```
 
 The mean calcification rate in the HCO2 group was mean `r round(mean(totalGrowth$dailyG[which(totalGrowth$treatment=='HCO2')]),3)`  (SD = `r round(sd(totalGrowth$dailyG[which(totalGrowth$treatment=='HCO2')]),3)`) mg/g/day, whereas the mean in the LCO2 group was `r round(mean(totalGrowth$dailyG[which(totalGrowth$treatment=='LCO2')]),3)` (SD = `r round(sd(totalGrowth$dailyG[which(totalGrowth$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p < 0.0001, d = `r round(cohensResults$effsize,3)`. Thus, the ocean acidification group saw on average a `r round((groupMeans$mean[2]-groupMeans$mean[1])/groupMeans$mean[2]*100,0)`% reduction in calcification rates.
+
+## Powder Available
+
+```{r powder available}
+totalGrowth %>%
+  ggplot(aes(x=genotype, y=newGrowth.mg)) +
+  geom_point() +
+  scale_y_continuous(limits = c(0,1000)) +
+  geom_hline(yintercept = 50, color="red") +
+  geom_hline(yintercept = 120, color="orange") +
+  geom_hline(yintercept = 500, color="green") +
+  labs(title = "Amount of New CaCO3 Precipated",
+       y = "Precipated Skeleton (mg)")
+```
+
+The amount of new aragonite precipated is visualized above. Horizontal lines denote thresholds for tests: >500mg = green (complete suite including XRD), >120 mg = orange (complete suite sans XRD), >50mg = red (TGA and isotope only).
 
 # Linear Extension
 
