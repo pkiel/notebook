@@ -50,7 +50,6 @@ function verify() {
 </div>
 
 <!-- The content we want to show after password -->
-
 <div id="HIDDENDIV" class="hidden" markdown="1">
 
 <!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
@@ -257,7 +256,7 @@ large
 </tr>
 </tbody>
 </table>
-<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<table class=" lightable-classic" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;'>
 <caption>
 TukeyHSD Results of Anova
 </caption>
@@ -359,67 +358,68 @@ LCO2:MB-C-HCO2:MB-C
 0.0122
 </td>
 <td style="text-align:center;">
-\*
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-treatment:genotype
-</td>
-<td style="text-align:center;">
-LCO2:SI-A-HCO2:SI-A
-</td>
-<td style="text-align:center;">
-0.0797
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-genotype
-</td>
-<td style="text-align:center;">
-MB-C-Cheetos-B
-</td>
-<td style="text-align:center;">
-0.6143
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-treatment:genotype
-</td>
-<td style="text-align:center;">
-LCO2:Cheetos-B-HCO2:Cheetos-B
-</td>
-<td style="text-align:center;">
-0.9514
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-genotype
-</td>
-<td style="text-align:center;">
-SI-A-AC-2
-</td>
-<td style="text-align:center;">
-0.9917
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-</tbody>
-</table>
+
+-   </td>
+    </tr>
+    <tr>
+    <td style="text-align:center;">
+    treatment:genotype
+    </td>
+    <td style="text-align:center;">
+    LCO2:SI-A-HCO2:SI-A
+    </td>
+    <td style="text-align:center;">
+    0.0797
+    </td>
+    <td style="text-align:center;">
+    NS
+    </td>
+    </tr>
+    <tr>
+    <td style="text-align:center;">
+    genotype
+    </td>
+    <td style="text-align:center;">
+    MB-C-Cheetos-B
+    </td>
+    <td style="text-align:center;">
+    0.6143
+    </td>
+    <td style="text-align:center;">
+    NS
+    </td>
+    </tr>
+    <tr>
+    <td style="text-align:center;">
+    treatment:genotype
+    </td>
+    <td style="text-align:center;">
+    LCO2:Cheetos-B-HCO2:Cheetos-B
+    </td>
+    <td style="text-align:center;">
+    0.9514
+    </td>
+    <td style="text-align:center;">
+    NS
+    </td>
+    </tr>
+    <tr>
+    <td style="text-align:center;">
+    genotype
+    </td>
+    <td style="text-align:center;">
+    SI-A-AC-2
+    </td>
+    <td style="text-align:center;">
+    0.9917
+    </td>
+    <td style="text-align:center;">
+    NS
+    </td>
+    </tr>
+    </tbody>
+    </table>
+
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
 Significance Letter Groups
