@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "Title"
+title:  "ULink 2022 Genotype x OA Growth Analysis"
 author: "Patrick M Kiel"
 date: '`r Sys.Date()`'
 categories: [research]
-description: "Description"
+description: "Growth analysis of corals in the University of Miami ULINK Genotype x ocean acidifcation experiment to test for mechanisms of resilience to global change within the critically endangered Acropora cervicornis."
 output:
   md_document:
     variant: gfm
@@ -47,6 +47,7 @@ knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
 # Set figure directories
 knitr::opts_chunk$set(fig.path = fig_path,
                     cache.path = '../cache/',
+                    fig.align = 'center', out.width = '40%',
                     message=FALSE, warning=FALSE,
                     cache = FALSE)
 ```
@@ -171,7 +172,6 @@ totalGrowth <- bw %>%
 totalGrowth %>%
   ggplot(aes(treatment, dailyG)) +
   geom_boxplot() +
-  geom_point() +
   labs(x = "Treatment",
        y = "Avg Daily Growth Rate (mg/g/day)",
        title = "Avg Daily Growth byTreatment") +
@@ -202,24 +202,33 @@ groupMeans <- totalGrowth %>%
   group_by(treatment) %>%
   get_summary_stats(dailyG, type = "mean_sd")
 
-groupMeans
+groupMeans %>%
+      kbl(align = 'c',
+    digits = 4,
+    caption = "Means of Treatment") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
 
 tTestResults <- totalGrowth %>% 
   t_test(dailyG ~ treatment, var.equal = T) %>%
   add_significance()
 
-tTestResults
+tTestResults %>%
+  kbl(align = 'c',
+    digits = 4,
+    caption = "Stats of Treatment") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
 
 cohensResults <- totalGrowth %>% 
   cohens_d(dailyG ~ treatment, var.equal = T) 
 
-cohensResults
-
-totalGrowth %>%
-  filter(treatment!='HCO2') %>%
-  aov(dailyG ~ genotype,
-                 data=.) %>%
-  TukeyHSD()
+cohensResults %>%
+      kbl(align = 'c',
+    digits = 4,
+    caption = "Effect Size of Treatment") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
 
 #fixed effects model
 mod <- totalGrowth %>%
@@ -231,9 +240,9 @@ mod %>%
   TukeyHSD() %>%
   broom::tidy() %>%
   select(term,contrast,adj.p.value) %>%
-  mutate(significance = case_when(adj.p.value <0.001 ~ "***",
-                                  adj.p.value <0.01 ~ "**",
-                                  adj.p.value <0.05 ~ "*",
+  mutate(significance = case_when(adj.p.value <0.001 ~ "\\*\\*\\*",
+                                  adj.p.value <0.01 ~ "\\*\\*",
+                                  adj.p.value <0.05 ~ "\\*",
                                   TRUE ~ "NS"),
          adj.p.value = round(adj.p.value, digits=4)) %>%
   arrange(adj.p.value) %>%
@@ -247,14 +256,15 @@ multcomp::cld(emmeans(mod,
                       list(pairwise ~ treatment*genotype),
                       adjust = "tukey"),
               Letters = letters) %>%
+  select(-1) %>%
     kbl(align = 'c',
     digits = 4,
-    caption = "TukeyHSD Results of Anova") %>%
+    caption = "Significance Letter Groups") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 ```
 
-The mean calcification rate in the HCO2 group was mean `r round(mean(totalGrowth$dailyG[which(totalGrowth$treatment=='HCO2')]),3)`  (SD = `r round(sd(totalGrowth$dailyG[which(totalGrowth$treatment=='HCO2')]),3)`) mg/g/day, whereas the mean in the LCO2 group was `r round(mean(totalGrowth$dailyG[which(totalGrowth$treatment=='LCO2')]),3)` (SD = `r round(sd(totalGrowth$dailyG[which(totalGrowth$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p < 0.0001, d = `r round(cohensResults$effsize,3)`. Thus, the ocean acidification group saw on average a `r round((groupMeans$mean[2]-groupMeans$mean[1])/groupMeans$mean[2],0)`% reduction in calcification rates.
+The mean calcification rate in the HCO2 group was mean `r round(mean(totalGrowth$dailyG[which(totalGrowth$treatment=='HCO2')]),3)`  (SD = `r round(sd(totalGrowth$dailyG[which(totalGrowth$treatment=='HCO2')]),3)`) mg/g/day, whereas the mean in the LCO2 group was `r round(mean(totalGrowth$dailyG[which(totalGrowth$treatment=='LCO2')]),3)` (SD = `r round(sd(totalGrowth$dailyG[which(totalGrowth$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p < 0.0001, d = `r round(cohensResults$effsize,3)`. Thus, the ocean acidification group saw on average a `r round((groupMeans$mean[2]-groupMeans$mean[1])/groupMeans$mean[2]*100,0)`% reduction in calcification rates.
 
 # Linear Extension
 
