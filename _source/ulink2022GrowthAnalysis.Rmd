@@ -154,7 +154,7 @@ weeklyGrowth <- bw %>%
 #calculate total growth
 totalGrowth <- bw %>%
   #set starting date
-  filter(date > as.Date("2022-04-10")) %>%
+  filter(date > as.Date("2022-04-15")) %>%
   #remove standards
   drop_na(genotype,mass_a) %>%
   group_by(tag,genotype,tank, treatment) %>%
@@ -239,7 +239,7 @@ There is some obvious genet-specific responses.
 
 1. Cheetos-B calcification rate was nearly identical across HCO2 and LCO2 groups. This genet also had high initial mortality and the worst survivorship rate throughout the experiment. It is entirely possible that this genotype did not do well in the aquariums and its diminished calcification rate is an effect of overall health and not treatment.
 
-2. SI-A and AC-2 had the highest average calcification rates and there was no significant difference between these two genotypes. However, when you look at the effect of treatment within these genotypes, there is significant differences between them.
+2. SI-A and AC-2 had the highest average calcification rates and there was no significant difference between these two genotypes. However, when you look at the effect of treatment within these genotypes (sensitivity), there is significant differences between them.
 
 3. When looking at just controls, the only significant different genotype is Cheetos-B. Thus, there is a difference in sensitivity to OA but no observable differences in ambient conditions. 
 
@@ -306,7 +306,7 @@ multcomp::cld(emmeans(mod,
                       list(pairwise ~ treatment*genotype),
                       adjust = "tukey"),
               Letters = letters) %>%
-  select(-1) %>%
+  select(treatment, genotype, significance = .group) %>%
     kbl(align = 'c',
     digits = 4,
     caption = "Significance Letter Groups") %>%
@@ -327,12 +327,137 @@ totalGrowth %>%
   geom_hline(yintercept = 120, color="orange") +
   geom_hline(yintercept = 500, color="green") +
   labs(title = "Amount of New CaCO3 Precipated",
-       y = "Precipated Skeleton (mg)")
+       y = "Precipated Skeleton (mg)") +
+  theme_classic()
 ```
 
 The amount of new aragonite precipated is visualized above. Horizontal lines denote thresholds for tests: >500mg = green (complete suite including XRD), >120 mg = orange (complete suite sans XRD), >50mg = red (TGA and isotope only).
 
 # Linear Extension
+
+```{r import LE data}
+height <- read.csv('~/Grad School/ULink 2022/initialHeights.csv') %>%
+  mutate(date=as.Date("2022-02-25")) %>%
+  select(tag,height=height.mm,date) %>%
+  left_join(read.csv('~/Grad School/ULink 2022/height06102022.csv') %>%
+              mutate(date=as.Date("2022-06-10"),
+                     .after="height"),
+            by="tag") %>%
+  select(tag:date.y) %>%
+  left_join(read.csv('~/Grad School/ULink 2022/height07152022.csv'),
+            by="tag") %>%
+  mutate(height.z=height,
+         date.z=as.Date("2022-07-15")) %>%
+  select(-height) %>%
+  pivot_longer(!tag,
+               names_to = '.value',
+               names_pattern = '(.*)\\.',
+               values_drop_na = T) %>%
+  drop_na() %>%
+  arrange(tag,date) %>%
+  group_by(tag) %>%
+  summarise(init.mm = min(height),
+            fin.mm = max(height),
+            days = as.numeric(date[which.max(height)]-first(date))) %>%
+  filter(days!=0) %>%
+  mutate(prod = (fin.mm-init.mm)/(init.mm/10)/days) %>%
+  left_join(assignment %>%
+              mutate(tag = as.numeric(tag)),
+            by="tag")
+
+```
+
+```{r LE graphs}
+height %>%
+  ggplot(aes(treatment, prod)) +
+  geom_boxplot() +
+  labs(x = "Treatment",
+       y = "Avg Daily LE Rate (mm/cm/day)",
+       title = "Avg Daily Linear Extension by Treatment") +
+  theme_classic()
+
+
+height %>%
+  ggplot(aes(genotype, prod)) +
+  geom_boxplot(aes(fill=treatment)) +
+              #if quantile lines desired: draw_quantiles = c(0.25, 0.5, 0.75)) +
+  labs(x = "Genotype",
+       y = "Avg Daily LE Rate (mm/cm/day)",
+       title = "Avg Daily Linear Extension by Genotype and Treatment") +
+  theme_classic()
+```
+
+```{r LE stats}
+
+groupMeans <- height %>%
+  group_by(treatment) %>%
+  get_summary_stats(prod, type = "mean_sd")
+
+groupMeans %>%
+  select(-variable) %>%
+      kbl(align = 'c',
+    digits = 4,
+    caption = "Means of Treatment") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+tTestResults <- height %>% 
+  t_test(prod ~ treatment, var.equal = T) %>%
+  add_significance()
+
+tTestResults %>%
+  kbl(align = 'c',
+    digits = 4,
+    caption = "Stats of Treatment",
+    escape=F) %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+cohensResults <- height %>% 
+  cohens_d(prod ~ treatment, var.equal = T) 
+
+cohensResults %>%
+      kbl(align = 'c',
+    digits = 4,
+    caption = "Effect Size of Treatment") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+#fixed effects model
+mod <- height %>%
+  aov(prod ~ treatment*genotype,
+                 data=.) 
+
+mod %>%
+  TukeyHSD() %>%
+  broom::tidy() %>%
+  select(term,contrast,adj.p.value) %>%
+  mutate(significance = case_when(adj.p.value <0.001 ~ "***",
+                                  adj.p.value <0.01 ~ "**",
+                                  adj.p.value <0.05 ~ "*",
+                                  TRUE ~ "NS"),
+         adj.p.value = round(adj.p.value, digits=4)) %>%
+  arrange(adj.p.value) %>%
+    kbl(align = 'c',
+    digits = 4,
+    caption = "TukeyHSD Results of Anova",
+    escape = F) %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+  
+multcomp::cld(emmeans(mod,
+                      list(pairwise ~ treatment*genotype),
+                      adjust = "tukey"),
+              Letters = letters) %>%
+  select(treatment, genotype, significance = .group) %>%
+    kbl(align = 'c',
+    digits = 4,
+    caption = "Significance Letter Groups") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+```
+
+The mean linear extension rate in the HCO2 group was mean `r round(mean(height$prod[which(height$treatment=='HCO2')]),3)`  (SD = `r round(sd(height$prod[which(height$treatment=='HCO2')]),3)`) mm/cm/day, whereas the mean in the LCO2 group was `r round(mean(height$prod[which(height$treatment=='LCO2')]),3)` (SD = `r round(sd(height$prod[which(height$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was not statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p < 0.0001, d = `r round(cohensResults$effsize,3)`. 
 
 
 </div>
