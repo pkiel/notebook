@@ -1074,12 +1074,13 @@ skeleton for nearly all the powder tests that we want to conduct: FTIR,
 TGA, boron isotopes, and Raman. There is enough powder to run XRD on
 some samples from genotypes AC-2 (OA=2, control=8) and SI-A (control=5)
 and a single sample of Cheetos-B. The lack of even replication though
-may preclude analysis of XRD.
+may preclude analysis of XRD. For nanoindentation tests, we should have
+enough new growth to run on a majority of samples.
 
-Linear extension was measured by a single vertical measurement with
-calipers. We additionally have initial 3d scans of all corals and post
-3d scans of a subset of 48 corals (n=3 per genotype per tank). From this
-data, we can extract surface area to volume ratios and see how this
+Linear extension was measured by maximum vertical height as measured
+with calipers. We additionally have initial 3d scans of all corals and
+post 3d scans of a subset of 48 corals (n=3 per genotype per tank). From
+this data, we can extract surface area to volume ratios and see how this
 changed among genotypes and treatments. This analysis still needs to be
 done. We can also more accurately measure total linear extension of the
 corals which may have curving or branching morphologies.
@@ -1087,7 +1088,9 @@ corals which may have curving or branching morphologies.
 ## Plating of Tissue
 
 Among control corals, I visually noticed significant plating of tissue
-and a veneer of aragonite above the acrylic tags. This was
+and a veneer of aragonite above the acrylic tags. This was almost
+completely absent in OA corals. I can take photos of each coral and
+calculate surface area of plating.
 
 ## CT Scanning
 
@@ -1095,17 +1098,9 @@ The micro-ct scan is currently out of service. We can use the large
 ct-scanner to determine bulk density. The scanner has a resolution of
 0.1mm/scan so we can measure the density of the new growth. This growth
 is isolated to the highly variable apical tips which may cause some
-problems. See this post
-
-    ## # A tibble: 6 x 3
-    ## # Groups:   genotype, treatment [6]
-    ##   genotype  treatment     n
-    ##   <chr>     <chr>     <int>
-    ## 1 AC-2      HCO2          2
-    ## 2 AC-2      LCO2         10
-    ## 3 Cheetos-B LCO2          1
-    ## 4 MB-C      LCO2          1
-    ## 5 SI-A      HCO2          3
-    ## 6 SI-A      LCO2          6
+problems.
+<a href="https://patrickmkiel.com/notebook/research/LangdonSkeletonAnalysis/?pass=acidification" target="_blank">See
+this post which discusses the ct-scanning analysis of apical tips done
+on Langdon’s OA corals.</a>
 
 </div>

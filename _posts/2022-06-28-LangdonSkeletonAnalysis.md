@@ -21,6 +21,14 @@ always_allow_html: true
 ---
 
 <script type="text/javascript">
+window.onload = function() {
+    //query string in the password
+    const urlParams = new URLSearchParams(window.location.search);
+    const pass = urlParams.get('pass')
+    document.getElementById("password").value = pass;
+};
+
+
 function verify() {
   if (document.getElementById('password').value === 'acidification') {
     document.getElementById('HIDDENDIV').classList.remove("hidden"); 
@@ -504,7 +512,7 @@ seen in linear extension data is present here and continues to muddle
 conclusions. Regardless, calcification is net positive by taking the
 difference in mass from the final and initial measurements.
 
-![](/notebook/images/LangdonCorals/unnamed-chunk-9-1.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-9-2.png)<!-- -->
+![](/notebook/images/LangdonCorals/unnamed-chunk-9-1.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-9-2.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-9-3.png)<!-- -->
 
 Due to the different number of days, I am trimming the observation of
 the OA corals to approximately equal the number of days of the control
@@ -1047,9 +1055,15 @@ skeleton grown under treatment conditions in the Old Growth section.
 time held in the experiment, with corals held in the experiment longer
 have signifcantly more time to thicken the skeleton.**
 
+### Correcting with calcification rates
+
+If we assume that the rate of densification is equal to that of
+calcifiction, we can use the calcification rate, along with the final
+density of the new growth to compare corals.
+
 ### Statistical Testing
 
-![](/notebook/images/LangdonCorals/unnamed-chunk-14-1.png)<!-- -->
+![](/notebook/images/LangdonCorals/unnamed-chunk-15-1.png)<!-- -->
 
     ## # A tibble: 6 x 5
     ##   treatment material  variable statistic     p
@@ -1403,11 +1417,11 @@ compared to other -800 reconstructions.
 
 ## Subsectioning New Growth
 
-![](/notebook/images/LangdonCorals/unnamed-chunk-16-1.png)<!-- -->
+![](/notebook/images/LangdonCorals/unnamed-chunk-17-1.png)<!-- -->
 
 ### Statistical Testing
 
-![](/notebook/images/LangdonCorals/unnamed-chunk-17-1.png)<!-- -->
+![](/notebook/images/LangdonCorals/unnamed-chunk-18-1.png)<!-- -->
 
     ## # A tibble: 8 x 5
     ##   treatment material  variable statistic     p
@@ -1747,7 +1761,7 @@ compare this calculated mass to to the buoyant weight data. We can
 further see which thresholding has a better fit with the buoyant weight
 data to add to our comparison of thesholding differnces.
 
-![](/notebook/images/LangdonCorals/unnamed-chunk-18-1.png)<!-- -->
+![](/notebook/images/LangdonCorals/unnamed-chunk-19-1.png)<!-- -->
 
     ## 
     ## Call:
@@ -1800,12 +1814,12 @@ which is an arbitrary unit without a real-world meaning, and 3) the
 range of the days are fairly large (&gt;150 days difference between
 group means), and the data may just be incomparable.
 
-![](/notebook/images/LangdonCorals/unnamed-chunk-19-1.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-19-2.png)<!-- -->
+![](/notebook/images/LangdonCorals/unnamed-chunk-20-1.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-20-2.png)<!-- -->
 
 Nevertheless, here is the data standardized to the number of days in
 treatment.
 
-![](/notebook/images/LangdonCorals/unnamed-chunk-20-1.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-20-2.png)<!-- -->
+![](/notebook/images/LangdonCorals/unnamed-chunk-21-1.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-21-2.png)<!-- -->
 
 Now, there are significant differences with LCO2 corals being denser
 than OA corals. However, the differences across sectioned materials and
@@ -1826,7 +1840,7 @@ the coral, we can standardize density of the coral to its initial
 height. However, this shares many of the same caveats from above, namely
 that density/height is an arbitrary, potentially meaningless unit.
 
-![](/notebook/images/LangdonCorals/unnamed-chunk-21-1.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-21-2.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-21-3.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-21-4.png)<!-- -->
+![](/notebook/images/LangdonCorals/unnamed-chunk-22-1.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-22-2.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-22-3.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-22-4.png)<!-- -->
 
     ## # A tibble: 3 x 9
     ##   material  .y.     group1 group2    n1    n2 statistic    df     p
@@ -1853,7 +1867,7 @@ the mean value did not differ significantly.
 Same concept, but using initial mass to standardize just as we did for
 calcification.
 
-![](/notebook/images/LangdonCorals/unnamed-chunk-22-1.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-22-2.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-22-3.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-22-4.png)<!-- -->
+![](/notebook/images/LangdonCorals/unnamed-chunk-23-1.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-23-2.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-23-3.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-23-4.png)<!-- -->
 
     ## # A tibble: 3 x 9
     ##   material  .y.     group1 group2    n1    n2 statistic    df      p
@@ -1880,7 +1894,7 @@ the variability of a genoype within that population to begin to
 understand genotype-specific sensitivities. Here, I compare 3 ramets of
 P-Lirman grown under LCO2 conditions and compare it to all LCO2 corals
 
-![](/notebook/images/LangdonCorals/unnamed-chunk-23-1.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-23-2.png)<!-- -->
+![](/notebook/images/LangdonCorals/unnamed-chunk-24-1.png)<!-- -->![](/notebook/images/LangdonCorals/unnamed-chunk-24-2.png)<!-- -->
 
     ## # A tibble: 3 x 6
     ## # Groups:   material [3]
@@ -1890,7 +1904,7 @@ P-Lirman grown under LCO2 conditions and compare it to all LCO2 corals
     ## 2 NewGrowth       250      2.65   0.266         2 Bartlett test of homogeneity ~
     ## 3 OldGrowth       250      2.55   0.279         2 Bartlett test of homogeneity ~
 
-![](/notebook/images/LangdonCorals/unnamed-chunk-23-3.png)<!-- -->
+![](/notebook/images/LangdonCorals/unnamed-chunk-24-3.png)<!-- -->
 
     ##   Tukey multiple comparisons of means
     ##     95% family-wise confidence level
