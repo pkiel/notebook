@@ -68,7 +68,7 @@ function verify() {
 Here I review the growth we have observed in our experiment. The total
 growth was less than we anticipated, but we still produced enough new
 skeleton with significant differences in growth rates and sensitivities
-to proceed forward with all our tests.
+to proceed forward with most of our tests.
 
 # Calcification Analysis
 

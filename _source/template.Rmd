@@ -45,6 +45,14 @@ knitr::opts_chunk$set(fig.path = fig_path,
 ```
 
 ```{js}
+
+window.onload = function() {
+    //query string in the password
+    const urlParams = new URLSearchParams(window.location.search);
+    const pass = urlParams.get('pass')
+    document.getElementById("password").value = pass;
+};
+
 function verify() {
   <!-- set the password here -->
   if (document.getElementById('password').value === 'password') {

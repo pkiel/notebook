@@ -410,7 +410,7 @@ To map out the intensities we want to simulate in our aquariums, I am looking at
 
 ### Nursery PAR Data
 
-PAR data collected by Morgan Chakraborty and Nathan Formel. It most closely approximates a sine wave with a peak at solar noon. This data was also collected right around the summer solstice, giving us the peak of the seasonal light curve. From the smoothed data, our yearly peaked data is thus around 550 micromol m^-2 s^-1.
+PAR data collected by Morgan Chakraborty and Nathan Formel. It most closely approximates a sine wave with a peak at solar noon. This data was also collected right around the summer solstice, giving us the peak of the seasonal light intensity curve. From the smoothed data, our yearly peaked data is thus around 550 micromol m^-2 s^-1.
 
 ```{r nursery PAR}
 nurseryPAR <- read.csv('../images/ERLLights/nurseryEcoPARdeployment.csv') %>%
@@ -478,7 +478,7 @@ nurseryPAR %>%
   
 ```
 
-To investigate seasonal trends in light, I am using PAR data extracted from <a href="https://oceancolor.gsfc.nasa.gov/l3/" target="_blank">NASA's MODIS Level-3 Data.</a> This data is supplied as mean daily exposure (mol m^-2 day^-1 ) and has a 4km resolution. I extracted data from 2002 to 2012 and calculated a daily average to construct a seasonal light exposure plot. Assuming that the attenuation of light in a water column is constant throughout the year, then we can extract seasonal light exposure curves to aid in our construction of modeled light exposure for our experiments. The exact brightness, however, will be informed by PAR data collected *in situ* from above.
+To investigate seasonal trends in daily light exposure, I am using PAR data extracted from <a href="https://oceancolor.gsfc.nasa.gov/l3/" target="_blank">NASA's MODIS Level-3 Data.</a> This data is supplied as mean daily exposure (mol m^-2 day^-1 ) and has a 4km resolution. I extracted data from 2002 to 2012 and calculated a daily average to construct a seasonal light exposure plot. Assuming that the attenuation of light in a water column is constant throughout the year, then we can extract seasonal daily light exposure curves to aid in our construction of modeled light exposure for our experiments. The exact intensity, however, will be informed by PAR data collected *in situ* from above and below as daily light exposure is both a factor of duration (<a href="#sun-rise-and-set-times">see sunset and sunrise times above</a>) and intensity.
 
 ```{r MODIS data}
 modisPAR <- read_csv('../images/ERLLights/modisPAR.csv')
@@ -501,9 +501,9 @@ modisPAR.summary %>%
               alpha=0.3, fill="red") +
   geom_smooth() +
   scale_x_date(labels = date_format("%b")) +
-  labs(title = "Average Daily Mean Surface PAR\nMODIS 2002-2012",
+  labs(title = "Average Daily Mean Surface PAR Daily Exposure\nMODIS 2002-2012",
        x = "Month",
-       y= expression(paste("PAR (", mu," ", mol^-2, " ", s^-1,")")))
+       y= expression(paste("PAR (mol", " ", m^-2, " ", day^-1,")")))
 ```
 
 ## NCEI Data
@@ -522,7 +522,54 @@ molasses <- lapply(list.files(path = "../images/ERLLights/MolassesPAR",
            year =  as.numeric(str_extract(basename(x), '[[:digit:]]+')))
 }) %>%
   bind_rows() %>%
-  drop_na(`Julian Day`, Hour)
+  drop_na(`Julian Day`, Hour) %>%
+  filter(`Julian Day` != 366)
+
+seasonalIntensity <- molasses %>%
+  drop_na() %>%
+  group_by(year,`Julian Day`) %>%
+  summarise(PARSmax = max(PARS),
+            PARShour = Hour[which.max(PARS)],
+            PAR12p = PARS[Hour==12]) %>%
+  group_by(`Julian Day`) %>%
+  summarise(PARSmax = mean(PARSmax),
+            PARShour = mean(PARShour),
+            PAR12p = mean(PAR12p)) %>%
+  mutate(date = as.Date(`Julian Day`-1,
+                   origin = as.Date("2022-01-01")))
+
+seasonalIntensity %>%
+  ggplot(aes(date, PARSmax)) +
+  geom_line() +
+  geom_smooth(se = F,span=0.5) +
+  scale_x_date(labels = date_format("%b")) + 
+  labs(title = "Average Daily Maximum Surface PAR\nMolasses Reef 1994-2007",
+       x = "Month",
+       y= expression(paste("PAR (", mu," ", mol^-2, " ", s^-1,")")))
+
+seasonalIntensity %>%
+  ggplot(aes(date, PARShour)) +
+  geom_line() +
+  geom_smooth(se = F,span=0.5) +
+  scale_x_date(labels = date_format("%b")) + 
+  labs(title = "Hour of Average Daily Maximum Surface PAR\nMolasses Reef 1994-2007",
+       x = "Month",
+       y= "Hour")
+
+seasonalIntensity %>%
+  ggplot(aes(date, PAR12p)) +
+  geom_line() +
+  geom_smooth(se = F,span=0.5) +
+  scale_x_date(labels = date_format("%b")) + 
+  labs(title = "Average Daily Surface PAR @ 12p\nMolasses Reef 1994-2007",
+       x = "Month",
+       y= expression(paste("PAR (", mu," ", mol^-2, " ", s^-1,")")))
+
+```
+
+For some reason, this data is offset from solar noon with the highest PAR occurring around 3p. A similar seasonal trend in average maximum intensity and average 12p intensity is apparent and can be used. 
+
+```{r Molasses Data 2}
 
 seasonalLight <- molasses %>%
   group_by(`Julian Day`, Hour) %>%
@@ -572,6 +619,10 @@ seasonalLight %>%
 ```
 
 Don't really trust the subsurface (1m) dataset. My guess is that it's right below the buoy and thus it is partly shaded by said buoy, and the odd pattern may align with prevailing winds as that may move the buoy around. Not sure if it's a moored buoy. Shot in the dark though :)
+
+## Solar Noon Intensity Lab Data
+
+Solar noon is defined as the time when the sun crosses the celestial meridian, its highest point in the sky and its brightest for that day. To reconstruct a seasonal lg. This data complements the maximum intensity data from Molasses Reef above.
 
 ### Takeaways
 
