@@ -53,6 +53,14 @@ knitr::opts_chunk$set(fig.path = fig_path,
 ```
 
 ```{js}
+window.onload = function() {
+    //query string in the password
+    const urlParams = new URLSearchParams(window.location.search);
+    const pass = urlParams.get('pass')
+    document.getElementById("password").value = pass;
+};
+
+
 function verify() {
   <!-- set the password here -->
   if (document.getElementById('password').value === 'ulink') {
@@ -105,7 +113,8 @@ assignment <- read.csv('~/Grad School/ULink 2022/tankAssignment.csv') %>%
 
 bw <- bw %>%
   left_join(assignment, by="tag") %>%
-  arrange(tank, genotype,tag,date)
+  arrange(tank, genotype,tag,date) %>%
+  filter(date > as.Date("2022-03-15"))
   
 
 #calculate weight in air
@@ -213,7 +222,7 @@ weeklyGrowth %>%
   theme_classic()
 ```
 
-Following April 15 (Weeky 7), the declining health of the corals stabilized and began to split amongst treatment groups.
+Following April 15 (Weeky 5), the declining health of the corals stabilized and began to split amongst treatment groups.
 
 ```{r calcification graphs}
 totalGrowth %>%
@@ -242,6 +251,8 @@ There is some obvious genet-specific responses.
 2. SI-A and AC-2 had the highest average calcification rates and there was no significant difference between these two genotypes. However, when you look at the effect of treatment within these genotypes (sensitivity), there is significant differences between them.
 
 3. When looking at just controls, the only significant different genotype is Cheetos-B. Thus, there is a difference in sensitivity to OA but no observable differences in ambient conditions. 
+
+4. The relative rankings extracted from the ol' AcDC are SI-A ~ MB-C > AC-2 > Cheetos-B. The data collected here fits within that framework, yet reveals intraspecifc differences in sensitivities similar to Enochs et al. (2018). Genet identities are unknown for that paper though.
 
 ```{r calcification stats}
 
@@ -332,7 +343,7 @@ The mean calcification rate in the HCO2 group was mean `r round(mean(totalGrowth
 ```{r powder available}
 totalGrowth %>%
   ggplot(aes(x=genotype, y=newGrowth.mg)) +
-  geom_point() +
+  geom_point(aes(color=treatment)) +
   scale_y_continuous(limits = c(0,1000)) +
   geom_hline(yintercept = 50, color="red") +
   geom_hline(yintercept = 120, color="orange") +
@@ -371,7 +382,8 @@ height <- read.csv('~/Grad School/ULink 2022/initialHeights.csv') %>%
             fin.mm = max(height),
             days = as.numeric(date[which.max(height)]-first(date))) %>%
   filter(days!=0) %>%
-  mutate(prod = (fin.mm-init.mm)/(init.mm/10)/days) %>%
+  mutate(prod = (fin.mm-init.mm)/(init.mm/10)/days,
+         LE = fin.mm-init.mm) %>%
   left_join(assignment %>%
               mutate(tag = as.numeric(tag)),
             by="tag")
@@ -480,6 +492,37 @@ multcomp::cld(emmeans(mod,
 ```
 
 The mean linear extension rate in the HCO2 group was mean `r round(mean(height$prod[which(height$treatment=='HCO2')]),3)`  (SD = `r round(sd(height$prod[which(height$treatment=='HCO2')]),3)`) mm/cm/day, whereas the mean in the LCO2 group was `r round(mean(height$prod[which(height$treatment=='LCO2')]),3)` (SD = `r round(sd(height$prod[which(height$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was not statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p =0.124, d = `r round(cohensResults$effsize,3)`. 
+
+```{r total extension}
+height %>%
+  ggplot(aes(x=genotype, y=LE)) +
+  geom_point(aes(color=treatment)) +
+  scale_y_continuous(limits = c(0,30)) +
+  geom_hline(yintercept = mean(height$LE),
+             color="red") +
+  labs(title = "Amount of New Skeleton and Mean New LE (Red Line)",
+       y = "Linear Extension (mm)") +
+  theme_classic()
+```
+
+# Takeaways and Next Steps
+
+Overall growth was less than hoped for. However, there is enough new skeleton for nearly all the powder tests that we want to conduct: FTIR, TGA, boron isotopes, and Raman. There is enough powder to run XRD on some samples from genotypes AC-2 (OA=2, control=8) and SI-A (control=5) and a single sample of Cheetos-B. The lack of even replication though may preclude analysis of XRD. 
+
+Linear extension was measured by a single vertical measurement with calipers. We additionally have initial 3d scans of all corals and post 3d scans of a subset of 48 corals (n=3 per genotype per tank). From this data, we can extract surface area to volume ratios and see how this changed among genotypes and treatments. This analysis still needs to be done. We can also more accurately measure total linear extension of the corals which may have curving or branching morphologies.
+
+## Plating of Tissue
+Among control corals, I visually noticed significant plating of tissue and a veneer of aragonite above the acrylic tags. This was 
+
+## CT Scanning
+The micro-ct scan is currently out of service. We can use the large ct-scanner to determine bulk density. The scanner has a resolution of 0.1mm/scan so we can measure the density of the new growth. This growth is isolated to the highly variable apical tips which may cause some problems. See this post 
+
+```{r}
+totalGrowth %>%
+  filter(newGrowth.mg>=450) %>%
+  group_by(genotype, treatment) %>%
+  count()
+```
 
 
 </div>
