@@ -65,6 +65,11 @@ function verify() {
 
 # Overview
 
+Here I review the growth we have observed in our experiment. The total
+growth was less than we anticipated, but we still produced enough new
+skeleton with significant differences in growth rates and sensitivities
+to proceed forward with all our tests.
+
 # Calcification Analysis
 
 <img src="/notebook/images/ulinkGrowth2022/growth graphs-1.png" width="60%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/growth graphs-2.png" width="60%" style="display: block; margin: auto;" />

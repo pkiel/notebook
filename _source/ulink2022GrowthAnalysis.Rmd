@@ -94,6 +94,7 @@ function verify() {
 <!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
 
 # Overview
+Here I review the growth we have observed in our experiment. The total growth was less than we anticipated, but we still produced enough new skeleton with significant differences in growth rates and sensitivities to proceed forward with all our tests. 
 
 # Calcification Analysis
 
