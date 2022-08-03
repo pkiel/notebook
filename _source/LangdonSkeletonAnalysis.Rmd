@@ -198,6 +198,14 @@ ctSub <- ctSub %>%
 ```
 
 ```{js}
+window.onload = function() {
+    //query string in the password
+    const urlParams = new URLSearchParams(window.location.search);
+    const pass = urlParams.get('pass')
+    document.getElementById("password").value = pass;
+};
+
+
 function verify() {
   if (document.getElementById('password').value === 'acidification') {
     document.getElementById('HIDDENDIV').classList.remove("hidden"); 
