@@ -2,7 +2,7 @@
 layout: post
 title:  "ULink 2022 Genotype x OA Growth Analysis"
 author: "Patrick M Kiel"
-date: '`r Sys.Date()`'
+date: '2022-08-03'
 categories: [research]
 description: "Growth analysis of corals in the University of Miami ULINK Genotype x ocean acidifcation experiment to test for mechanisms of resilience to global change within the critically endangered Acropora cervicornis."
 output:
@@ -31,11 +31,9 @@ library(seacarb)
 library(emmeans)
 library(ggpubr)
 library(rstatix)
-
-#selet the authorized tokens
-googledrive::drive_auth("p.kiel98@gmail.com")
-gs4_auth("p.kiel98@gmail.com")
-
+library(openxlsx)
+library(lubridate)
+library(scales)
 
 base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
 base_url <- "/notebook/" # subdirectory of patrickmkiel.com
@@ -94,11 +92,358 @@ function verify() {
 <!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
 
 # Overview
-Here I review the growth we have observed in our experiment. The total growth was less than we anticipated, but we still produced enough new skeleton with significant differences in growth rates and sensitivities to proceed forward with most of our tests. 
+Here I review the growth we have observed in our experiment. The total growth was less than we anticipated, but we still produced enough new skeleton with significant differences in growth rates and sensitivities to proceed forward with most of our tests.
+
+# Treatment Conditions
+
+## Labview Data
+
+```{r load labview}
+#load data
+pH <- list.files(pattern = "(.*)(_PHData.xlsx$)",
+                path = "~/Grad School/ULink 2022/ERLLabView/",
+                full.names = T) %>%
+  #remove files that begin with ~
+  magrittr::extract(which(str_detect(.,"~",negate = T))) %>%
+  lapply(., function(x) {
+    x %>%
+      readxl::read_excel(.,
+                         col_types = c("text", "numeric", "numeric", 
+                                       "numeric", "numeric", "numeric", 
+                                       "numeric", "numeric", "numeric", 
+                                       "numeric", "numeric", "numeric", 
+                                       "numeric", "numeric", "numeric", 
+                                       "numeric", "numeric"))
+  }) %>%
+  bind_rows() %>%
+  distinct() %>%
+  mutate(time = convertToDateTime(Time, origin = "1904-01-01",
+                                  tz = "America/New_York")) %>%
+  select(time, 
+         `13` = `Untitled 12`,
+         `14` = `Untitled 13`,
+         `15` = `Untitled 14`,
+         `16` = `Untitled 15`) %>%
+  pivot_longer(cols = `13`:`16`,
+               names_to = "tank",
+               values_to = "pH")
+
+temp <- list.files(pattern = "_TemperatureData.xlsx$",
+                   path = "~/Grad School/ULink 2022/ERLLabView/",
+                   full.names = T) %>%
+  #remove files that begin with ~
+  magrittr::extract(which(str_detect(.,"~",negate = T))) %>%
+  lapply(., function(x) {
+    x %>%
+      readxl::read_excel(.,
+                         col_types = c("text", "numeric", "numeric", 
+                                       "numeric", "numeric", "numeric", 
+                                       "numeric", "numeric", "numeric", 
+                                       "numeric", "numeric", "numeric", 
+                                       "numeric", "numeric", "numeric", 
+                                       "numeric", "numeric"))
+  }) %>%
+  bind_rows() %>%
+  distinct() %>%
+  mutate(time = convertToDateTime(Time, origin = "1904-01-01",
+                                  tz = "America/New_York")) %>%
+  select(time, 
+         `13` = `Untitled 12`,
+         `14` = `Untitled 13`,
+         `15` = `Untitled 14`,
+         `16` = `Untitled 15`) %>%
+  pivot_longer(cols = `13`:`16`,
+               names_to = "tank",
+               values_to = "temp")
+
+setPoints <- readxl::read_excel('~/Grad School/ULink 2022/pHFinalOscillation.xlsx') %>%
+  pivot_longer(control:treat,
+               names_to = "type",
+               values_to = "pH.set")
+
+labViewData <- full_join(pH,temp, by=c("time", "tank")) %>%
+  arrange(time) %>%
+  #convert UTC to EST
+  mutate(time = with_tz(time, 
+                        "America/New_York"),
+         hour = hour(time),
+         type = case_when(
+           tank %in% c(13,15) ~ "treat",
+           TRUE ~ "control")) %>%
+  #add in set points
+  left_join(setPoints,
+            by=c("type","hour"="time")) %>%
+  select(-c(type,hour))
+```
+
+```{r diel pot}
+labViewData %>%
+  #only use data once treatment conditions met 4/1
+  filter(date(time) > as.Date("2022-04-01")) %>%
+  drop_na() %>%
+  mutate(hms = as.POSIXct(format(time,
+                           format="%H:%M:%S"), 
+                           format = "%H:%M:%S",
+                           tz = "America/New_York"),
+          #scale temp to fit on same graph
+          temp = temp *  0.0625 + 6.45) %>%
+  group_by(hms = round_date(hms, "10 minutes"), tank) %>%
+  summarise(pH.mean = mean(pH,na.rm=T),
+            pH.sd = sd(pH,na.rm=T),
+            temp.mean = mean(temp,na.rm=T),
+            temp.sd = sd(temp,na.rm=T)) %>%
+  ggplot(aes(hms)) +
+  geom_smooth(aes(y=pH.mean, color="pH"),
+              se = F, span=0.5) +
+  geom_ribbon(aes(ymin=pH.mean-pH.sd,
+                  ymax=pH.mean+pH.sd,
+                  fill="pH"), alpha=0.3) + 
+  geom_line(aes(y=temp.mean, color="Temp")) +
+  geom_ribbon(aes(ymin=temp.mean-temp.sd,
+                ymax=temp.mean+temp.sd,
+                fill="temp"),alpha=0.3) + 
+  scale_y_continuous(
+    # Features of the first axis
+    name = "pH",
+    breaks = seq(7.8,8.2,by=0.2),
+    minor_breaks = seq(7.7,8.2,by=0.05),
+    limits = c(7.7,8.2),
+    # Add a second axis and specify its features
+    sec.axis = sec_axis(~(.- 6.45) / 0.0625, 
+                        name="Temperature")
+  ) + 
+  scale_x_datetime("Hour",
+                   limits = as.POSIXct(strptime(c("00:00",
+                                                  "23:59"),
+                                                format = "%H:%M")),
+                   breaks = seq(as.POSIXct("00:00", format="%H:%M"),
+                                as.POSIXct("24:00", format="%H:%M"),
+                                by = "3 hours"),
+                   #expand = c(0,0),
+                   labels = date_format("%H")) +
+  facet_wrap(~tank) +
+  theme_bw() +
+  guides(fill = FALSE) +
+  labs(title = "15-min Averaged Log")
+```
+
+The peaks in the standard deviation are almost certainly caused by aquarium cleaning days when corals are removed into a separate bath and the sensors are capped causing logging errors. CO2 injection is turned off during these times so the aquariums themselves are not experiencing the conditions that the logged data are suggesting. The following graph filters out these spiked values which were programmatically identified by occurring during scheduled cleaning times and affecting multiple aquariums at once since cleaning occurred at the same time for all aquariums.
+
+```{r cleaned diel plot}
+#gather times affected by cleaning of aquarium
+#corals are placed in a separate bath and are not affected by the rapid swing
+#cleaned during the week, between 9a and 6p
+#defined when multiple tanks affected
+cleaningTimes <- labViewData %>%
+  filter(date(time) > as.Date("2022-04-01")) %>%
+  group_by(tank) %>%
+  filter(weekdays(time) %in% weekdays(ISOdate(1, 1, 1:5)) &
+           between(hour(time),9,18) &
+           abs(pH-pH.set)>0.05) %>%
+  ungroup() %>%
+  group_by(time = round_date(time, "30 minutes")) %>%
+  filter(length(unique(tank))>1)
+
+labViewData %>%
+  #only use data once treatment conditions met 4/1
+  filter(date(time) > as.Date("2022-04-01")) %>%
+  drop_na() %>%
+  filter(!round_date(time, "30 minutes") %in% cleaningTimes$time) %>%
+  #durafet swapped T14 4/22 9:30a-16:30
+  filter(!(between(time,
+                 as.POSIXct("2022-04-22 09:30:00",
+                            tz="America/New_York"),
+                 as.POSIXct("2022-04-22 16:30:00",
+                            tz="America/New_York")) & tank==14)) %>%
+  #durafet swapped T15 7/8 
+    filter(!(between(time,
+                 as.POSIXct("2022-07-08 14:13:00",
+                            tz="America/New_York"),
+                 as.POSIXct("2022-07-08 19:30:00",
+                            tz="America/New_York")) & tank==15)) %>%
+  mutate(hms = as.POSIXct(format(time,
+                           format="%H:%M:%S"), 
+                           format = "%H:%M:%S",
+                           tz = "EST"),
+          #scale temp to fit on same graph
+          temp = temp *  0.0625 + 6.45) %>%
+  group_by(hms = round_date(hms, "10 minutes"), tank) %>%
+  summarise(pH.mean = mean(pH,na.rm=T),
+            pH.sd = sd(pH,na.rm=T),
+            temp.mean = mean(temp,na.rm=T),
+            temp.sd = sd(temp,na.rm=T)) %>%
+  ggplot(aes(hms)) +
+  geom_smooth(aes(y=pH.mean, color="pH"),
+              se = F, span=0.5) +
+  geom_ribbon(aes(ymin=pH.mean-pH.sd,
+                  ymax=pH.mean+pH.sd,
+                  fill="pH"), alpha=0.3) + 
+  geom_line(aes(y=temp.mean, color="Temp")) +
+  geom_ribbon(aes(ymin=temp.mean-temp.sd,
+                ymax=temp.mean+temp.sd,
+                fill="temp"),alpha=0.3) + 
+  scale_y_continuous(
+    # Features of the first axis
+    name = "pH",
+    breaks = seq(7.8,8.2,by=0.2),
+    minor_breaks = seq(7.7,8.2,by=0.05),
+    limits = c(7.7,8.2),
+    # Add a second axis and specify its features
+    sec.axis = sec_axis(~(.- 6.45) / 0.0625, 
+                        name="Temperature")
+  ) + 
+  scale_x_datetime("Hour",
+                   limits = as.POSIXct(strptime(c("00:00",
+                                                  "23:59"),
+                                                format = "%H:%M")),
+                   breaks = seq(as.POSIXct("00:00", format="%H:%M"),
+                                as.POSIXct("24:00", format="%H:%M"),
+                                by = "3 hours"),
+                   labels = date_format("%H")) +
+  facet_wrap(~tank) +
+  theme_bw() +
+  guides(fill = FALSE) +
+  labs(title = "15-min Averaged Log")
+```
+
+Variability is still present, but the extreme spikes caused by cleaning have been removed. Thus, any variability that remains is due to durafet error or experimental variability that affected the corals. For example, the durafet for T15 had much higher variability than the other aquariums. However, I believe this to be negligible.
+
+## Carbonate Chemistry Data
+
+500mL water samples were collected every Tuesday for analysis of the complete carbonate chemistry suite. 
+
+```{r load data from google sheets}
+googlesheets4::gs4_auth("patrick.kiel@noaa.gov")
+ERL <- read_sheet("https://docs.google.com/spreadsheets/d/1Y8L0S9jOiYVoWzMCHqiuJm4vPZARVMvh56td83SO9BA/edit#gid=0",
+                  col_types = "-Ddcdd---d------------------") %>%
+  rename_with(tolower) %>%
+  drop_na(`bottle id`) %>%
+  #filter the tanks in your experiment
+  #PMK OAxGenotype2022 = 13-16
+  filter(tank %in% paste0('T',13:16)) %>%
+  #combine date and time columns
+  mutate(date = parse_datetime(paste(date,
+                                     (time-time%%100)/100,
+                                     ifelse(time%%100 == 0, "00", time%%100)),
+                               format = "%Y-%m-%d %H %M",
+                               locale = locale(tz = "America/New_York"))) %>%
+  #for some reason some T15,T16 times aren't parsing fill down
+  fill(date) %>%
+  select(-c(time), temp.ERL = `tank temp`, pH.ERL = `erl ph`, tag = `bottle id`)
+```
+
+```{r load data from carb database}
+#load data from Bottle Database - Final_Query_with_Spec_pH
+#one day will be SQL from Mike's DB
+carbSystem <- read.csv("~/Grad School/ULink 2022/carbonateChemistry/carbData.csv") %>%
+  filter(ID_Sample %in% ERL$tag) %>%
+  select(tag = ID_Sample,
+         DIC.kg = Avg_DIC_Kg_CORRECTED,
+         TA.kg = Avg_TA_Kg_CORRECTED,
+         sal = Calcdsalinity,
+         pH.spec = CORRECTED_pH) %>%
+  left_join(ERL,
+            by = "tag")  %>%
+#solve carbonate system
+  mutate(carb(flag = 15, #flag 15 for Alkalinity and DIC, respectively
+       var1 = TA.kg/1000000, 
+       var2 = DIC.kg/1000000,
+       S= sal,
+       T = temp.ERL,
+       #use all default constants as recommended by Dickson et al. (2007) 
+       k1k2 = "l",
+       kf = "pf",
+       ks = "d", 
+       pHscale="T",
+       b = "u74")) %>%
+  select(tank,date,tag,
+         DIC.kg,TA.kg,sal,
+         pH.spec,pH.ERL,temp.ERL,
+         pH.solved=pH,pCO2,omega=OmegaAragonite,HCO3,CO3)
+  # pivot_longer(pH.solved:CO3,
+  #              names_to = "param",
+  #              values_to = "value")
+```
+
+### Time of Day
+The bottles were not taken at exactly the same time of day, and thus the programmed variability will be apart of the variability of each sample along with sampling error, durafet error altering amount of CO2 injected into aquaria (shown above in  the LabView data), etc.
+
+```{r}
+carbSystem %>%
+  mutate(hms = as.POSIXct(format(date,
+                           format="%H:%M:%S"), 
+                           format = "%H:%M:%S",
+                           tz = "America/New_York")) %>%
+  group_by(date = date(date(date))) %>%
+  summarise(hms = mean(hms,na.rm = T)) %>%
+  ggplot(aes(date, hms)) +
+  geom_point() +
+  theme_bw() +
+  labs(x = "Date",
+       y = "Time of Day",
+       title = "Bottle Sampling of Aquariums")
+```
+
+Most sampling occurred around 9:30-10:30.
+
+## Carb Parameters
+```{r carbsystem}
+carbSystem %>%
+  #only use data once treatment conditions met 4/1
+  filter(date(date) > as.Date("2022-04-01")) %>%
+  select(tank, sal, temp = temp.ERL, TA = TA.kg, DIC = DIC.kg, pCO2, omega) %>%
+  group_by(tank) %>%
+  summarise(across(everything(),
+                    ~ paste(format(round(mean(., na.rm=T),2),nsmall = 2),
+        format(round(sd(.,na.rm = T)/sqrt(n()),2),nsmall = 2),
+        sep = " ± "))) %>%
+  kbl(align = 'c',
+    digits = 4,
+    caption = "Aquarium Conditions. Means ± SEM") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+  
+```
+
+## Statistics
+
+```{r carb statistics}
+carbSystem %>%
+  #only use data once treatment conditions met 4/1
+  filter(date(date) > as.Date("2022-04-01")) %>%
+  select(tank, sal, temp = temp.ERL, TA = TA.kg, DIC = DIC.kg, pCO2, omega) %>%
+  mutate(treatment = case_when(tank %in% c('T13','T15') ~ 'HCO2',
+                               TRUE ~ 'LCO2')) %>%
+  pivot_longer(sal:omega,
+               names_to = "parameter") %>%
+  group_by(parameter) %>%
+  nest() %>%
+  mutate(mod = map(data, ~aov(data = .,
+                    formula = value ~ treatment/tank))) %>%
+  mutate(model_tidy = map(mod, broom::tidy)) %>%
+  unnest(model_tidy) %>%
+  select(-c(data,mod)) %>%
+  mutate(significance = case_when(p.value <0.001 ~ "xxx",
+                                  p.value <0.01 ~ "xx",
+                                  p.value <0.05 ~ "x",
+                                  TRUE ~ "NS")) %>%
+    kbl(align = 'c',
+    digits = 3,
+    caption = "Significance of Parameters") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+```
+
+Salinity, temperature, and total alkalinity were not significantly different between treatments or within treatments (p>>0.05). DIC (p<0.01), pCO2(p<0.001), and $\Omega_{Ar} $ (p<0.001) were significantly different between treatment, but not between aquariums (p>>0.05). In other words, our system reproducibly altered the carbonate chemistry parameters with high precision.
+
 
 # Calcification Analysis
 
 ```{r load buoyant weight data}
+#selet the authorized tokens
+googledrive::drive_auth("p.kiel98@gmail.com")
+gs4_auth("p.kiel98@gmail.com")
+
 #load data from google drive
 bw <- googledrive::drive_ls(path = "~/GradSchool/ULink_OAxGenotype/",
                             pattern = "buoyantWeight$") %>%
@@ -338,6 +683,66 @@ multcomp::cld(emmeans(mod,
 ```
 
 The mean calcification rate in the HCO2 group was mean `r round(mean(totalGrowth$dailyG[which(totalGrowth$treatment=='HCO2')]),3)`  (SD = `r round(sd(totalGrowth$dailyG[which(totalGrowth$treatment=='HCO2')]),3)`) mg/g/day, whereas the mean in the LCO2 group was `r round(mean(totalGrowth$dailyG[which(totalGrowth$treatment=='LCO2')]),3)` (SD = `r round(sd(totalGrowth$dailyG[which(totalGrowth$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p < 0.0001, d = `r round(cohensResults$effsize,3)`. Thus, the ocean acidification group saw on average a `r round((groupMeans$mean[2]-groupMeans$mean[1])/groupMeans$mean[2]*100,0)`% reduction in calcification rates.
+
+## Tank Effects
+
+We saw above that tank conditions were significantly different among treatment groups, but not individual aquariums within treatment. We also saw that calcification rates were significantly different among treatment. Here I am analyzing tank effects on the calcification rate and investigating if calcification rates were significantly different between aquariums within the same treatment group.
+
+```{r tank effects graph}
+manLegend <- c("13 HCO2"= "#e46e65",
+              "14 LCO2"= "#88b57f",
+              "15 HCO2"= "#e46e65",
+              "16 LCO2" = "#88b57f")
+
+totalGrowth %>%
+  mutate(tank = case_when(tank == 13 ~ "13 HCO2",
+                          tank == 14 ~ "14 LCO2",
+                          tank == 15 ~ "15 HCO2",
+                          tank == 16 ~ "16 LCO2")) %>%
+  ggplot(aes(tank, dailyG)) +
+  geom_boxplot(aes(fill=tank)) +
+  scale_fill_manual(values = manLegend) +
+  labs(x = "Genotype",
+       y = "Avg Daily Growth Rate (mg/g/day)",
+       title = "Avg Daily Growth by Tank and Treatment") +
+  theme_classic()
+
+totalGrowth %>%
+  mutate(tank = case_when(tank == 13 ~ "13 HCO2",
+                          tank == 14 ~ "14 LCO2",
+                          tank == 15 ~ "15 HCO2",
+                          tank == 16 ~ "16 LCO2")) %>%
+  ggplot(aes(genotype, dailyG)) +
+  geom_boxplot(aes(fill=tank)) +
+  scale_fill_manual(values = manLegend) +
+  labs(x = "Genotype",
+       y = "Avg Daily Growth Rate (mg/g/day)",
+       title = "Avg Daily Growth by Genotype,Treatment, and Tank") +
+  theme_classic()
+```
+
+### Tank Effects Statistics
+
+```{r tank effects statistics}
+totalGrowth %>%
+  group_by(treatment) %>%
+  nest() %>%
+  mutate(mod = map(data, ~aov(data = .,
+                    formula = dailyG ~ tank))) %>%
+  mutate(model_tidy = map(mod, broom::tidy)) %>%
+  unnest(model_tidy) %>%
+  select(-c(data,mod)) %>%
+  mutate(significance = case_when(p.value <0.001 ~ "xxx",
+                                  p.value <0.01 ~ "xx",
+                                  p.value <0.05 ~ "x",
+                                  TRUE ~ "NS")) %>%
+    kbl(align = 'c',
+    digits = 3,
+    caption = "Significance testing of tank effect on calcification") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+```
+
 
 ## Powder Available
 
