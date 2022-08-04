@@ -12,7 +12,7 @@ output:
 knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile, 
   encoding = encoding, 
-  output_file = paste0(Sys.Date(), "-",
+  output_file = paste0("2022-08-03",
                         gsub(pattern = "\\.Rmd$",
                               "", basename(inputFile))
                         ,".md"), 
@@ -69,6 +69,689 @@ Here I review the growth we have observed in our experiment. The total
 growth was less than we anticipated, but we still produced enough new
 skeleton with significant differences in growth rates and sensitivities
 to proceed forward with most of our tests.
+
+# Treatment Conditions
+
+## Labview Data
+
+<img src="/notebook/images/ulinkGrowth2022/diel pot-1.png" width="60%" style="display: block; margin: auto;" />
+
+The peaks in the standard deviation are almost certainly caused by
+aquarium cleaning days when corals are removed into a separate bath and
+the sensors are capped causing logging errors. CO2 injection is turned
+off during these times so the aquariums themselves are not experiencing
+the conditions that the logged data are suggesting. The following graph
+filters out these spiked values which were programmatically identified
+by occurring during scheduled cleaning times and affecting multiple
+aquariums at once since cleaning occurred at the same time for all
+aquariums.
+
+<img src="/notebook/images/ulinkGrowth2022/cleaned diel plot-1.png" width="60%" style="display: block; margin: auto;" />
+
+Variability is still present, but the extreme spikes caused by cleaning
+have been removed. Thus, any variability that remains is due to durafet
+error or experimental variability that affected the corals. For example,
+the durafet for T15 had much higher variability than the other
+aquariums. However, I believe this to be negligible.
+
+## Carbonate Chemistry Data
+
+500mL water samples were collected every Tuesday for analysis of the
+complete carbonate chemistry suite.
+
+### Time of Day
+
+The bottles were not taken at exactly the same time of day, and thus the
+programmed variability will be apart of the variability of each sample
+along with sampling error, durafet error altering amount of CO2 injected
+into aquaria (shown above in the LabView data), etc.
+
+<img src="/notebook/images/ulinkGrowth2022/unnamed-chunk-3-1.png" width="60%" style="display: block; margin: auto;" />
+
+Sampling time had a mean of around 10a. 3 sampling times were taken
+after 12p with one sampling time around 4:20p
+
+## Carb Parameters
+
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<caption>
+Aquarium Conditions. Means ± SEM
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;font-weight: bold;">
+tank
+</th>
+<th style="text-align:center;font-weight: bold;">
+sal
+</th>
+<th style="text-align:center;font-weight: bold;">
+temp
+</th>
+<th style="text-align:center;font-weight: bold;">
+TA
+</th>
+<th style="text-align:center;font-weight: bold;">
+DIC
+</th>
+<th style="text-align:center;font-weight: bold;">
+pCO2
+</th>
+<th style="text-align:center;font-weight: bold;">
+omega
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+T13
+</td>
+<td style="text-align:center;">
+34.45 ± 0.65
+</td>
+<td style="text-align:center;">
+27.05 ± 0.02
+</td>
+<td style="text-align:center;">
+2301.01 ± 21.14
+</td>
+<td style="text-align:center;">
+2126.64 ± 22.78
+</td>
+<td style="text-align:center;">
+835.70 ± 36.22
+</td>
+<td style="text-align:center;">
+2.19 ± 0.07
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+T14
+</td>
+<td style="text-align:center;">
+34.38 ± 0.66
+</td>
+<td style="text-align:center;">
+27.05 ± 0.02
+</td>
+<td style="text-align:center;">
+2300.12 ± 21.34
+</td>
+<td style="text-align:center;">
+2000.13 ± 21.73
+</td>
+<td style="text-align:center;">
+426.93 ± 14.74
+</td>
+<td style="text-align:center;">
+3.46 ± 0.08
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+T15
+</td>
+<td style="text-align:center;">
+34.44 ± 0.65
+</td>
+<td style="text-align:center;">
+27.04 ± 0.02
+</td>
+<td style="text-align:center;">
+2303.84 ± 21.56
+</td>
+<td style="text-align:center;">
+2119.24 ± 24.84
+</td>
+<td style="text-align:center;">
+848.20 ± 99.62
+</td>
+<td style="text-align:center;">
+2.31 ± 0.18
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+T16
+</td>
+<td style="text-align:center;">
+34.40 ± 0.67
+</td>
+<td style="text-align:center;">
+27.07 ± 0.02
+</td>
+<td style="text-align:center;">
+2297.52 ± 21.47
+</td>
+<td style="text-align:center;">
+2004.24 ± 23.57
+</td>
+<td style="text-align:center;">
+442.12 ± 17.83
+</td>
+<td style="text-align:center;">
+3.38 ± 0.08
+</td>
+</tr>
+</tbody>
+</table>
+
+## Statistics
+
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<caption>
+Significance of Parameters
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+parameter
+</th>
+<th style="text-align:center;">
+term
+</th>
+<th style="text-align:center;">
+df
+</th>
+<th style="text-align:center;">
+sumsq
+</th>
+<th style="text-align:center;">
+meansq
+</th>
+<th style="text-align:center;">
+statistic
+</th>
+<th style="text-align:center;">
+p.value
+</th>
+<th style="text-align:center;">
+significance
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+sal
+</td>
+<td style="text-align:center;">
+treatment
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0.040
+</td>
+<td style="text-align:center;">
+0.040
+</td>
+<td style="text-align:center;">
+0.007
+</td>
+<td style="text-align:center;">
+0.933
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+sal
+</td>
+<td style="text-align:center;">
+treatment:tank
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+0.003
+</td>
+<td style="text-align:center;">
+0.002
+</td>
+<td style="text-align:center;">
+0.000
+</td>
+<td style="text-align:center;">
+1.000
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+sal
+</td>
+<td style="text-align:center;">
+Residuals
+</td>
+<td style="text-align:center;">
+48
+</td>
+<td style="text-align:center;">
+269.036
+</td>
+<td style="text-align:center;">
+5.605
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+temp
+</td>
+<td style="text-align:center;">
+treatment
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0.003
+</td>
+<td style="text-align:center;">
+0.003
+</td>
+<td style="text-align:center;">
+1.007
+</td>
+<td style="text-align:center;">
+0.321
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+temp
+</td>
+<td style="text-align:center;">
+treatment:tank
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+0.004
+</td>
+<td style="text-align:center;">
+0.002
+</td>
+<td style="text-align:center;">
+0.636
+</td>
+<td style="text-align:center;">
+0.534
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+temp
+</td>
+<td style="text-align:center;">
+Residuals
+</td>
+<td style="text-align:center;">
+48
+</td>
+<td style="text-align:center;">
+0.167
+</td>
+<td style="text-align:center;">
+0.003
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+TA
+</td>
+<td style="text-align:center;">
+treatment
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+169.020
+</td>
+<td style="text-align:center;">
+169.020
+</td>
+<td style="text-align:center;">
+0.028
+</td>
+<td style="text-align:center;">
+0.867
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+TA
+</td>
+<td style="text-align:center;">
+treatment:tank
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+96.270
+</td>
+<td style="text-align:center;">
+48.135
+</td>
+<td style="text-align:center;">
+0.008
+</td>
+<td style="text-align:center;">
+0.992
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+TA
+</td>
+<td style="text-align:center;">
+Residuals
+</td>
+<td style="text-align:center;">
+48
+</td>
+<td style="text-align:center;">
+285247.509
+</td>
+<td style="text-align:center;">
+5942.656
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+DIC
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+treatment
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+1
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+189577.501
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+189577.501
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+26.960
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+0.000
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+xxx
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+DIC
+</td>
+<td style="text-align:center;">
+treatment:tank
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+465.459
+</td>
+<td style="text-align:center;">
+232.730
+</td>
+<td style="text-align:center;">
+0.033
+</td>
+<td style="text-align:center;">
+0.967
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+DIC
+</td>
+<td style="text-align:center;">
+Residuals
+</td>
+<td style="text-align:center;">
+48
+</td>
+<td style="text-align:center;">
+337526.642
+</td>
+<td style="text-align:center;">
+7031.805
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+pCO2
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+treatment
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+1
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+2157966.567
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+2157966.567
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+56.404
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+0.000
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+xxx
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+pCO2
+</td>
+<td style="text-align:center;">
+treatment:tank
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+2513.434
+</td>
+<td style="text-align:center;">
+1256.717
+</td>
+<td style="text-align:center;">
+0.033
+</td>
+<td style="text-align:center;">
+0.968
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+pCO2
+</td>
+<td style="text-align:center;">
+Residuals
+</td>
+<td style="text-align:center;">
+48
+</td>
+<td style="text-align:center;">
+1836441.545
+</td>
+<td style="text-align:center;">
+38259.199
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+omega
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+treatment
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+1
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+17.735
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+17.735
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+109.739
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+0.000
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+xxx
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+omega
+</td>
+<td style="text-align:center;">
+treatment:tank
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+0.135
+</td>
+<td style="text-align:center;">
+0.068
+</td>
+<td style="text-align:center;">
+0.418
+</td>
+<td style="text-align:center;">
+0.661
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+omega
+</td>
+<td style="text-align:center;">
+Residuals
+</td>
+<td style="text-align:center;">
+48
+</td>
+<td style="text-align:center;">
+7.757
+</td>
+<td style="text-align:center;">
+0.162
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+</tbody>
+</table>
+
+Salinity, temperature, and total alkalinity were not significantly
+different between treatments or within treatments (p&gt;&gt;0.05). DIC,
+pCO2, and
+*Ω*<sub>*A**r*</sub>
+(p&lt;0.001) were significantly different between treatment, but not
+between aquariums (p&gt;&gt;0.05). In other words, our system
+reproducibly altered the carbonate chemistry parameters with high
+precision.
 
 # Calcification Analysis
 
@@ -298,86 +981,86 @@ significance
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 treatment
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 LCO2-HCO2
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0000
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xxx
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 treatment:genotype
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 LCO2:AC-2-HCO2:AC-2
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0001
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xxx
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 genotype
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 SI-A-Cheetos-B
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0003
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xxx
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 genotype
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 Cheetos-B-AC-2
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0009
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xxx
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 genotype
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 SI-A-MB-C
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0051
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xx
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 treatment:genotype
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 LCO2:MB-C-HCO2:MB-C
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0122
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 x
 </td>
 </tr>
@@ -580,6 +1263,159 @@ Student two-samples t-test showed that the difference was statistically
 significant, t(87) = -5.821, p &lt; 0.0001, d = -1.235. Thus, the ocean
 acidification group saw on average a 45% reduction in calcification
 rates.
+
+## Tank Effects
+
+We saw above that tank conditions were significantly different among
+treatment groups, but not individual aquariums within treatment. We also
+saw that calcification rates were significantly different among
+treatment. Here I am analyzing tank effects on the calcification rate
+and investigating if calcification rates were significantly different
+between aquariums within the same treatment group.
+
+<img src="/notebook/images/ulinkGrowth2022/tank effects graph-1.png" width="60%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/tank effects graph-2.png" width="60%" style="display: block; margin: auto;" />
+
+### Tank Effects Statistics
+
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<caption>
+Significance testing of tank effect on calcification
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;font-weight: bold;">
+treatment
+</th>
+<th style="text-align:center;font-weight: bold;">
+term
+</th>
+<th style="text-align:center;font-weight: bold;">
+df
+</th>
+<th style="text-align:center;font-weight: bold;">
+sumsq
+</th>
+<th style="text-align:center;font-weight: bold;">
+meansq
+</th>
+<th style="text-align:center;font-weight: bold;">
+statistic
+</th>
+<th style="text-align:center;font-weight: bold;">
+p.value
+</th>
+<th style="text-align:center;font-weight: bold;">
+significance
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+HCO2
+</td>
+<td style="text-align:center;">
+tank
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0.005
+</td>
+<td style="text-align:center;">
+0.005
+</td>
+<td style="text-align:center;">
+0.232
+</td>
+<td style="text-align:center;">
+0.632
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+HCO2
+</td>
+<td style="text-align:center;">
+Residuals
+</td>
+<td style="text-align:center;">
+44
+</td>
+<td style="text-align:center;">
+0.883
+</td>
+<td style="text-align:center;">
+0.020
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+LCO2
+</td>
+<td style="text-align:center;">
+tank
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0.205
+</td>
+<td style="text-align:center;">
+0.205
+</td>
+<td style="text-align:center;">
+3.288
+</td>
+<td style="text-align:center;">
+0.077
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+LCO2
+</td>
+<td style="text-align:center;">
+Residuals
+</td>
+<td style="text-align:center;">
+41
+</td>
+<td style="text-align:center;">
+2.561
+</td>
+<td style="text-align:center;">
+0.062
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+</tbody>
+</table>
 
 ## Powder Available
 
@@ -789,16 +1625,16 @@ significance
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 treatment:genotype
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 LCO2:SI-A-HCO2:SI-A
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0012
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xx
 </td>
 </tr>
