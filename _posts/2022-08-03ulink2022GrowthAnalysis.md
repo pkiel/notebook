@@ -12,7 +12,7 @@ output:
 knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile, 
   encoding = encoding, 
-  output_file = paste0(Sys.Date(), "-",
+  output_file = paste0("2022-08-03",
                         gsub(pattern = "\\.Rmd$",
                               "", basename(inputFile))
                         ,".md"), 
@@ -108,7 +108,8 @@ into aquaria (shown above in the LabView data), etc.
 
 <img src="/notebook/images/ulinkGrowth2022/unnamed-chunk-3-1.png" width="60%" style="display: block; margin: auto;" />
 
-Most sampling occurred around 9:30-10:30.
+Sampling time had a mean of around 10a. 3 sampling times were taken
+after 12p with one sampling time around 4:20p
 
 ## Carb Parameters
 
@@ -147,22 +148,22 @@ omega
 T13
 </td>
 <td style="text-align:center;">
-36.03 ± 0.27
+34.45 ± 0.65
 </td>
 <td style="text-align:center;">
-27.04 ± 0.02
+27.05 ± 0.02
 </td>
 <td style="text-align:center;">
-2345.76 ± 23.66
+2301.01 ± 21.14
 </td>
 <td style="text-align:center;">
-2168.80 ± 33.48
+2126.64 ± 22.78
 </td>
 <td style="text-align:center;">
-880.11 ± 66.89
+835.70 ± 36.22
 </td>
 <td style="text-align:center;">
-2.20 ± 0.10
+2.19 ± 0.07
 </td>
 </tr>
 <tr>
@@ -170,22 +171,22 @@ T13
 T14
 </td>
 <td style="text-align:center;">
-36.02 ± 0.25
+34.38 ± 0.66
 </td>
 <td style="text-align:center;">
-27.01 ± 0.01
+27.05 ± 0.02
 </td>
 <td style="text-align:center;">
-2342.11 ± 26.14
+2300.12 ± 21.34
 </td>
 <td style="text-align:center;">
-2044.44 ± 30.75
+2000.13 ± 21.73
 </td>
 <td style="text-align:center;">
-465.83 ± 26.25
+426.93 ± 14.74
 </td>
 <td style="text-align:center;">
-3.39 ± 0.09
+3.46 ± 0.08
 </td>
 </tr>
 <tr>
@@ -193,22 +194,22 @@ T14
 T15
 </td>
 <td style="text-align:center;">
-36.03 ± 0.26
+34.44 ± 0.65
 </td>
 <td style="text-align:center;">
-27.03 ± 0.01
+27.04 ± 0.02
 </td>
 <td style="text-align:center;">
-2347.36 ± 24.54
+2303.84 ± 21.56
 </td>
 <td style="text-align:center;">
-2171.00 ± 33.28
+2119.24 ± 24.84
 </td>
 <td style="text-align:center;">
-881.19 ± 58.30
+848.20 ± 99.62
 </td>
 <td style="text-align:center;">
-2.20 ± 0.07
+2.31 ± 0.18
 </td>
 </tr>
 <tr>
@@ -216,22 +217,22 @@ T15
 T16
 </td>
 <td style="text-align:center;">
-36.00 ± 0.27
+34.40 ± 0.67
 </td>
 <td style="text-align:center;">
-27.03 ± 0.02
+27.07 ± 0.02
 </td>
 <td style="text-align:center;">
-2342.36 ± 24.87
+2297.52 ± 21.47
 </td>
 <td style="text-align:center;">
-2043.02 ± 39.67
+2004.24 ± 23.57
 </td>
 <td style="text-align:center;">
-466.85 ± 43.39
+442.12 ± 17.83
 </td>
 <td style="text-align:center;">
-3.41 ± 0.15
+3.38 ± 0.08
 </td>
 </tr>
 </tbody>
@@ -245,28 +246,28 @@ Significance of Parameters
 </caption>
 <thead>
 <tr>
-<th style="text-align:center;font-weight: bold;">
+<th style="text-align:center;">
 parameter
 </th>
-<th style="text-align:center;font-weight: bold;">
+<th style="text-align:center;">
 term
 </th>
-<th style="text-align:center;font-weight: bold;">
+<th style="text-align:center;">
 df
 </th>
-<th style="text-align:center;font-weight: bold;">
+<th style="text-align:center;">
 sumsq
 </th>
-<th style="text-align:center;font-weight: bold;">
+<th style="text-align:center;">
 meansq
 </th>
-<th style="text-align:center;font-weight: bold;">
+<th style="text-align:center;">
 statistic
 </th>
-<th style="text-align:center;font-weight: bold;">
+<th style="text-align:center;">
 p.value
 </th>
-<th style="text-align:center;font-weight: bold;">
+<th style="text-align:center;">
 significance
 </th>
 </tr>
@@ -283,42 +284,16 @@ treatment
 1
 </td>
 <td style="text-align:center;">
-0.001
+0.040
 </td>
 <td style="text-align:center;">
-0.001
+0.040
 </td>
 <td style="text-align:center;">
-0.004
+0.007
 </td>
 <td style="text-align:center;">
-0.953
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-sal
-</td>
-<td style="text-align:center;">
-treatment:tank
-</td>
-<td style="text-align:center;">
-2
-</td>
-<td style="text-align:center;">
-0.001
-</td>
-<td style="text-align:center;">
-0.000
-</td>
-<td style="text-align:center;">
-0.002
-</td>
-<td style="text-align:center;">
-0.998
+0.933
 </td>
 <td style="text-align:center;">
 NS
@@ -329,302 +304,16 @@ NS
 sal
 </td>
 <td style="text-align:center;">
-Residuals
-</td>
-<td style="text-align:center;">
-12
-</td>
-<td style="text-align:center;">
-3.294
-</td>
-<td style="text-align:center;">
-0.275
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-temp
-</td>
-<td style="text-align:center;">
-treatment
-</td>
-<td style="text-align:center;">
-1
-</td>
-<td style="text-align:center;">
-0.001
-</td>
-<td style="text-align:center;">
-0.001
-</td>
-<td style="text-align:center;">
-0.747
-</td>
-<td style="text-align:center;">
-0.404
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-temp
-</td>
-<td style="text-align:center;">
 treatment:tank
 </td>
 <td style="text-align:center;">
 2
-</td>
-<td style="text-align:center;">
-0.001
-</td>
-<td style="text-align:center;">
-0.000
-</td>
-<td style="text-align:center;">
-0.459
-</td>
-<td style="text-align:center;">
-0.642
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-temp
-</td>
-<td style="text-align:center;">
-Residuals
-</td>
-<td style="text-align:center;">
-12
-</td>
-<td style="text-align:center;">
-0.010
-</td>
-<td style="text-align:center;">
-0.001
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-TA
-</td>
-<td style="text-align:center;">
-treatment
-</td>
-<td style="text-align:center;">
-1
-</td>
-<td style="text-align:center;">
-74.909
-</td>
-<td style="text-align:center;">
-74.909
-</td>
-<td style="text-align:center;">
-0.030
-</td>
-<td style="text-align:center;">
-0.864
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-TA
-</td>
-<td style="text-align:center;">
-treatment:tank
-</td>
-<td style="text-align:center;">
-2
-</td>
-<td style="text-align:center;">
-5.200
-</td>
-<td style="text-align:center;">
-2.600
-</td>
-<td style="text-align:center;">
-0.001
-</td>
-<td style="text-align:center;">
-0.999
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-TA
-</td>
-<td style="text-align:center;">
-Residuals
-</td>
-<td style="text-align:center;">
-12
-</td>
-<td style="text-align:center;">
-29564.890
-</td>
-<td style="text-align:center;">
-2463.741
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-DIC
-</td>
-<td style="text-align:center;">
-treatment
-</td>
-<td style="text-align:center;">
-1
-</td>
-<td style="text-align:center;">
-63674.214
-</td>
-<td style="text-align:center;">
-63674.214
-</td>
-<td style="text-align:center;">
-13.413
 </td>
 <td style="text-align:center;">
 0.003
 </td>
 <td style="text-align:center;">
-xx
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-DIC
-</td>
-<td style="text-align:center;">
-treatment:tank
-</td>
-<td style="text-align:center;">
-2
-</td>
-<td style="text-align:center;">
-13.706
-</td>
-<td style="text-align:center;">
-6.853
-</td>
-<td style="text-align:center;">
-0.001
-</td>
-<td style="text-align:center;">
-0.999
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-DIC
-</td>
-<td style="text-align:center;">
-Residuals
-</td>
-<td style="text-align:center;">
-12
-</td>
-<td style="text-align:center;">
-56967.689
-</td>
-<td style="text-align:center;">
-4747.307
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-pCO2
-</td>
-<td style="text-align:center;">
-treatment
-</td>
-<td style="text-align:center;">
-1
-</td>
-<td style="text-align:center;">
-686613.034
-</td>
-<td style="text-align:center;">
-686613.034
-</td>
-<td style="text-align:center;">
-65.741
-</td>
-<td style="text-align:center;">
-0.000
-</td>
-<td style="text-align:center;">
-xxx
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-pCO2
-</td>
-<td style="text-align:center;">
-treatment:tank
-</td>
-<td style="text-align:center;">
-2
-</td>
-<td style="text-align:center;">
-4.415
-</td>
-<td style="text-align:center;">
-2.207
+0.002
 </td>
 <td style="text-align:center;">
 0.000
@@ -638,19 +327,19 @@ NS
 </tr>
 <tr>
 <td style="text-align:center;">
-pCO2
+sal
 </td>
 <td style="text-align:center;">
 Residuals
 </td>
 <td style="text-align:center;">
-12
+48
 </td>
 <td style="text-align:center;">
-125330.480
+269.036
 </td>
 <td style="text-align:center;">
-10444.207
+5.605
 </td>
 <td style="text-align:center;">
 NA
@@ -664,7 +353,7 @@ NS
 </tr>
 <tr>
 <td style="text-align:center;">
-omega
+temp
 </td>
 <td style="text-align:center;">
 treatment
@@ -673,18 +362,330 @@ treatment
 1
 </td>
 <td style="text-align:center;">
-5.767
+0.003
 </td>
 <td style="text-align:center;">
-5.767
+0.003
 </td>
 <td style="text-align:center;">
-120.503
+1.007
 </td>
 <td style="text-align:center;">
+0.321
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+temp
+</td>
+<td style="text-align:center;">
+treatment:tank
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+0.004
+</td>
+<td style="text-align:center;">
+0.002
+</td>
+<td style="text-align:center;">
+0.636
+</td>
+<td style="text-align:center;">
+0.534
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+temp
+</td>
+<td style="text-align:center;">
+Residuals
+</td>
+<td style="text-align:center;">
+48
+</td>
+<td style="text-align:center;">
+0.167
+</td>
+<td style="text-align:center;">
+0.003
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+TA
+</td>
+<td style="text-align:center;">
+treatment
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+169.020
+</td>
+<td style="text-align:center;">
+169.020
+</td>
+<td style="text-align:center;">
+0.028
+</td>
+<td style="text-align:center;">
+0.867
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+TA
+</td>
+<td style="text-align:center;">
+treatment:tank
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+96.270
+</td>
+<td style="text-align:center;">
+48.135
+</td>
+<td style="text-align:center;">
+0.008
+</td>
+<td style="text-align:center;">
+0.992
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+TA
+</td>
+<td style="text-align:center;">
+Residuals
+</td>
+<td style="text-align:center;">
+48
+</td>
+<td style="text-align:center;">
+285247.509
+</td>
+<td style="text-align:center;">
+5942.656
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+DIC
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+treatment
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+1
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+189577.501
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+189577.501
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+26.960
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.000
 </td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+xxx
+</td>
+</tr>
+<tr>
 <td style="text-align:center;">
+DIC
+</td>
+<td style="text-align:center;">
+treatment:tank
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+465.459
+</td>
+<td style="text-align:center;">
+232.730
+</td>
+<td style="text-align:center;">
+0.033
+</td>
+<td style="text-align:center;">
+0.967
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+DIC
+</td>
+<td style="text-align:center;">
+Residuals
+</td>
+<td style="text-align:center;">
+48
+</td>
+<td style="text-align:center;">
+337526.642
+</td>
+<td style="text-align:center;">
+7031.805
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+pCO2
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+treatment
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+1
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+2157966.567
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+2157966.567
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+56.404
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+0.000
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+xxx
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+pCO2
+</td>
+<td style="text-align:center;">
+treatment:tank
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+2513.434
+</td>
+<td style="text-align:center;">
+1256.717
+</td>
+<td style="text-align:center;">
+0.033
+</td>
+<td style="text-align:center;">
+0.968
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+pCO2
+</td>
+<td style="text-align:center;">
+Residuals
+</td>
+<td style="text-align:center;">
+48
+</td>
+<td style="text-align:center;">
+1836441.545
+</td>
+<td style="text-align:center;">
+38259.199
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+omega
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+treatment
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+1
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+17.735
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+17.735
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+109.739
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+0.000
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xxx
 </td>
 </tr>
@@ -699,16 +700,16 @@ treatment:tank
 2
 </td>
 <td style="text-align:center;">
-0.001
+0.135
 </td>
 <td style="text-align:center;">
-0.000
+0.068
 </td>
 <td style="text-align:center;">
-0.006
+0.418
 </td>
 <td style="text-align:center;">
-0.994
+0.661
 </td>
 <td style="text-align:center;">
 NS
@@ -722,13 +723,13 @@ omega
 Residuals
 </td>
 <td style="text-align:center;">
-12
+48
 </td>
 <td style="text-align:center;">
-0.574
+7.757
 </td>
 <td style="text-align:center;">
-0.048
+0.162
 </td>
 <td style="text-align:center;">
 NA
@@ -744,11 +745,13 @@ NS
 </table>
 
 Salinity, temperature, and total alkalinity were not significantly
-different between treatments or within treatments (p&gt;&gt;0.05). DIC
-(p&lt;0.01), pCO2(p&lt;0.001), and $\_{Ar} $ (p&lt;0.001) were
-significantly different between treatment, but not between aquariums
-(p&gt;&gt;0.05). In other words, our system reproducibly altered the
-carbonate chemistry parameters with high precision.
+different between treatments or within treatments (p&gt;&gt;0.05). DIC,
+pCO2, and
+*Ω*<sub>*A**r*</sub>
+(p&lt;0.001) were significantly different between treatment, but not
+between aquariums (p&gt;&gt;0.05). In other words, our system
+reproducibly altered the carbonate chemistry parameters with high
+precision.
 
 # Calcification Analysis
 
@@ -978,86 +981,86 @@ significance
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 treatment
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 LCO2-HCO2
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0000
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xxx
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 treatment:genotype
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 LCO2:AC-2-HCO2:AC-2
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0001
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xxx
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 genotype
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 SI-A-Cheetos-B
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0003
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xxx
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 genotype
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 Cheetos-B-AC-2
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0009
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xxx
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 genotype
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 SI-A-MB-C
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0051
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xx
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 treatment:genotype
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 LCO2:MB-C-HCO2:MB-C
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0122
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 x
 </td>
 </tr>
@@ -1622,16 +1625,16 @@ significance
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 treatment:genotype
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 LCO2:SI-A-HCO2:SI-A
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0012
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xx
 </td>
 </tr>

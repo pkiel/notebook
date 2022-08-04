@@ -12,7 +12,7 @@ output:
 knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile, 
   encoding = encoding, 
-  output_file = paste0(Sys.Date(), "-",
+  output_file = paste0("2022-08-03",
                         gsub(pattern = "\\.Rmd$",
                               "", basename(inputFile))
                         ,".md"), 
@@ -342,6 +342,7 @@ carbSystem <- read.csv("~/Grad School/ULink 2022/carbonateChemistry/carbData.csv
          TA.kg = Avg_TA_Kg_CORRECTED,
          sal = Calcdsalinity,
          pH.spec = CORRECTED_pH) %>%
+  mutate(across(everything(), ~ as.numeric(.))) %>%
   left_join(ERL,
             by = "tag")  %>%
 #solve carbonate system
@@ -360,9 +361,6 @@ carbSystem <- read.csv("~/Grad School/ULink 2022/carbonateChemistry/carbData.csv
          DIC.kg,TA.kg,sal,
          pH.spec,pH.ERL,temp.ERL,
          pH.solved=pH,pCO2,omega=OmegaAragonite,HCO3,CO3)
-  # pivot_longer(pH.solved:CO3,
-  #              names_to = "param",
-  #              values_to = "value")
 ```
 
 ### Time of Day
@@ -384,7 +382,7 @@ carbSystem %>%
        title = "Bottle Sampling of Aquariums")
 ```
 
-Most sampling occurred around 9:30-10:30.
+Sampling time had a mean of  around 10a. 3 sampling times were taken after 12p with one sampling time around 4:20p
 
 ## Carb Parameters
 ```{r carbsystem}
@@ -408,7 +406,7 @@ carbSystem %>%
 ## Statistics
 
 ```{r carb statistics}
-carbSystem %>%
+carbTbl <- carbSystem %>%
   #only use data once treatment conditions met 4/1
   filter(date(date) > as.Date("2022-04-01")) %>%
   select(tank, sal, temp = temp.ERL, TA = TA.kg, DIC = DIC.kg, pCO2, omega) %>%
@@ -426,15 +424,20 @@ carbSystem %>%
   mutate(significance = case_when(p.value <0.001 ~ "xxx",
                                   p.value <0.01 ~ "xx",
                                   p.value <0.05 ~ "x",
-                                  TRUE ~ "NS")) %>%
+                                  TRUE ~ "NS"))
+
+carbTbl %>%
     kbl(align = 'c',
     digits = 3,
     caption = "Significance of Parameters") %>%
   kable_classic() %>%
-  row_spec(0, bold = T)
+  row_spec(which(carbTbl$p.value<0.05),
+           bold = T,
+           color = "white",
+           background = "red")
 ```
 
-Salinity, temperature, and total alkalinity were not significantly different between treatments or within treatments (p>>0.05). DIC (p<0.01), pCO2(p<0.001), and $\Omega_{Ar} $ (p<0.001) were significantly different between treatment, but not between aquariums (p>>0.05). In other words, our system reproducibly altered the carbonate chemistry parameters with high precision.
+Salinity, temperature, and total alkalinity were not significantly different between treatments or within treatments (p>>0.05). DIC, pCO2, and $$\Omega_{Ar} $$ (p<0.001) were significantly different between treatment, but not between aquariums (p>>0.05). In other words, our system reproducibly altered the carbonate chemistry parameters with high precision.
 
 
 # Calcification Analysis
@@ -601,7 +604,6 @@ There is some obvious genet-specific responses.
 4. The relative rankings extracted from the ol' AcDC are SI-A ~ MB-C > AC-2 > Cheetos-B. The data collected here fits within that framework, yet reveals intraspecifc differences in sensitivities similar to Enochs et al. (2018). Genet identities are unknown for that paper though.
 
 ```{r calcification stats}
-
 groupMeans <- totalGrowth %>%
   group_by(treatment) %>%
   get_summary_stats(dailyG, type = "mean_sd")
@@ -642,7 +644,7 @@ mod <- totalGrowth %>%
   aov(dailyG ~ treatment*genotype,
                  data=.) 
 
-mod %>%
+tukeyGTbl <- mod %>%
   TukeyHSD() %>%
   broom::tidy() %>%
     filter(contrast %in% c('LCO2-HCO2',
@@ -662,13 +664,19 @@ mod %>%
                                   adj.p.value <0.05 ~ "x",
                                   TRUE ~ "NS"),
          adj.p.value = round(adj.p.value, digits=4)) %>%
-  arrange(adj.p.value) %>%
-    kbl(align = 'c',
+  arrange(adj.p.value)
+
+tukeyGTbl %>%
+  kbl(align = 'c',
     digits = 4,
     caption = "TukeyHSD Results of Anova",
     escape = TRUE) %>%
   kable_classic() %>%
-  row_spec(0, bold = T)
+  row_spec(0, bold = T) %>%
+  row_spec(which(tukeyGTbl$adj.p.value<0.05),
+         bold = T,
+         color = "white",
+         background = "red")
   
 multcomp::cld(emmeans(mod,
                       list(pairwise ~ treatment*genotype),
@@ -857,7 +865,7 @@ mod <- height %>%
   aov(prod ~ treatment*genotype,
                  data=.) 
 
-mod %>%
+tukeyLE <- mod %>%
   TukeyHSD() %>%
   broom::tidy() %>%
   filter(contrast %in% c('LCO2-HCO2',
@@ -877,14 +885,20 @@ mod %>%
                                   adj.p.value <0.05 ~ "x",
                                   TRUE ~ "NS"),
          adj.p.value = round(adj.p.value, digits=4)) %>%
-  arrange(adj.p.value) %>%
+  arrange(adj.p.value)
+
+tukeyLE %>%
     kbl(align = 'c',
     digits = 4,
     caption = "TukeyHSD Results of Anova",
     escape = F) %>%
   kable_classic() %>%
-  row_spec(0, bold = T)
-  
+  row_spec(0, bold = T) %>%
+  row_spec(which(tukeyLE$adj.p.value<0.05),
+       bold = T,
+       color = "white",
+       background = "red")
+
 multcomp::cld(emmeans(mod,
                       list(pairwise ~ treatment*genotype),
                       adjust = "tukey"),
