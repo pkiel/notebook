@@ -537,14 +537,14 @@ weeklyGrowth %>%
                     ymax = weeklyG + se,
                     fill=genotype),
                 alpha=0.3) + 
-  labs(title = "Figure 4: Avg Weekly Growth Per Week by Genotype ± se") +
+  labs(title = "Figure 4: Avg Daily Growth Per Week by Genotype ± se") +
   scale_x_continuous("Week",
                      breaks = c(seq(1,
                                     max(weeklyGrowth$weekNum, na.rm = T),
                                     by=1))) +
-  scale_y_continuous("Avg Weekly Growth Rate (mg/g/week)",
-                     limits = c(0,40),
-                     breaks = c(seq(0,40,by=10)),
+  scale_y_continuous("Avg Daily Growth Rate (mg/g/day)",
+                     limits = c(0,4),
+                     breaks = c(seq(0,4,by=1)),
                      expand = c(0, 0)) +
   theme_classic()
 
@@ -559,14 +559,14 @@ weeklyGrowth %>%
                     ymax = weeklyG + se,
                     fill=treatment),
                 alpha=0.3) + 
-  labs(title = "Figure 5: Avg Weekly Growth Per Week by Treatment Group ± se") +
+  labs(title = "Figure 5: Avg Daily Growth Per Week by Treatment Group ± se") +
   scale_x_continuous("Week",
                      breaks = c(seq(1,
                                     max(weeklyGrowth$weekNum, na.rm = T),
                                     by=1))) +
-  scale_y_continuous("Avg Weekly Growth Rate (mg/g/week)",
-                     limits = c(0,40),
-                     breaks = c(seq(0,40,by=10)),
+  scale_y_continuous("Avg Daily Growth Rate (mg/g/day)",
+                     limits = c(0,4),
+                     breaks = c(seq(0,4,by=1)),
                      expand = c(0, 0)) +
   theme_classic()
 ```
@@ -817,7 +817,7 @@ totalGrowth %>%
   geom_hline(yintercept = 50, color="red") +
   geom_hline(yintercept = 120, color="orange") +
   geom_hline(yintercept = 500, color="green") +
-  labs(title = "Figure 11: Amount of New CaCO3 Precipated",
+  labs(title = "Figure 11: Amount of New CaCO3 Precipitated",
        y = "Precipated Skeleton (mg)") +
   theme_classic()
 ```
