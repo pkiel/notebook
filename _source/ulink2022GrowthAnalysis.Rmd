@@ -640,9 +640,8 @@ cohensResults %>%
 
 #fixed effects model
 mod <- totalGrowth %>%
-  #filter(genotype!='Cheetos-B') %>%
   aov(dailyG ~ treatment*genotype,
-                 data=.) 
+                 data=.)
 
 tukeyGTbl <- mod %>%
   TukeyHSD() %>%
@@ -749,6 +748,46 @@ totalGrowth %>%
     caption = "Significance testing of tank effect on calcification") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
+```
+
+#### Mixed Effects Model
+
+Here I created a random intercept model to include tank effect, i.e. including variability within tanks into the model. This decreased the AIC from 44 to 12, and therefore the random tank effect should be included for analysis.
+
+```{r random mixed effects, echo=T}
+modFixed <- totalGrowth %>%
+  aov(dailyG ~ genotype*treatment, data=.)
+
+modFixed %>%
+  summary()
+
+modRandom <- totalGrowth %>%
+  lmerTest::lmer(dailyG ~ genotype * treatment + (1|tank),
+                 data=.)
+modRandom %>%
+  anova()
+
+AIC(modFixed, modRandom)
+
+genos <- unique(totalGrowth$genotype)
+pairwiseString <- c(paste0('(',
+                         genos,
+                         ' HCO2) - (',
+                         genos,
+                         ' LCO2)'),
+                    paste0('(HCO2 ',
+                         genos,
+                         ') - (LCO2 ',
+                         genos,
+                         ')'))
+                    
+
+emmeans(modRandom, list(pairwise ~genotype*treatment),
+        adjust = "tukey")[[2]] %>%
+  broom::tidy() %>%
+  filter(`1` %in% pairwiseString) %>%
+  select(-term) %>%
+  rename(pairwise=`1`)
 ```
 
 

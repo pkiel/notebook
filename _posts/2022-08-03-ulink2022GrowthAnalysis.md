@@ -12,7 +12,7 @@ output:
 knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile, 
   encoding = encoding, 
-  output_file = paste0("2022-08-03",
+  output_file = paste0("2022-08-03-",
                         gsub(pattern = "\\.Rmd$",
                               "", basename(inputFile))
                         ,".md"), 
@@ -815,10 +815,10 @@ HCO2
 46
 </td>
 <td style="text-align:center;">
-0.307
+0.316
 </td>
 <td style="text-align:center;">
-0.140
+0.139
 </td>
 </tr>
 <tr>
@@ -829,10 +829,10 @@ LCO2
 43
 </td>
 <td style="text-align:center;">
-0.560
+0.566
 </td>
 <td style="text-align:center;">
-0.257
+0.253
 </td>
 </tr>
 </tbody>
@@ -890,7 +890,7 @@ LCO2
 43
 </td>
 <td style="text-align:center;">
--5.8211
+-5.8208
 </td>
 <td style="text-align:center;">
 87
@@ -945,7 +945,7 @@ HCO2
 LCO2
 </td>
 <td style="text-align:center;">
--1.2348
+-1.2347
 </td>
 <td style="text-align:center;">
 46
@@ -996,13 +996,13 @@ xxx
 </tr>
 <tr>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-treatment:genotype
+genotype
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-LCO2:AC-2-HCO2:AC-2
+SI-A-Cheetos-B
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-0.0001
+0.0000
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xxx
@@ -1010,13 +1010,13 @@ xxx
 </tr>
 <tr>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-genotype
+treatment:genotype
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-SI-A-Cheetos-B
+LCO2:AC-2-HCO2:AC-2
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-0.0003
+0.0000
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xxx
@@ -1030,10 +1030,10 @@ genotype
 Cheetos-B-AC-2
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-0.0009
+0.0019
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-xxx
+xx
 </td>
 </tr>
 <tr>
@@ -1044,7 +1044,7 @@ genotype
 SI-A-MB-C
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-0.0051
+0.0020
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xx
@@ -1058,10 +1058,10 @@ treatment:genotype
 LCO2:MB-C-HCO2:MB-C
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-0.0122
+0.0072
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-x
+xx
 </td>
 </tr>
 <tr>
@@ -1072,7 +1072,7 @@ treatment:genotype
 LCO2:SI-A-HCO2:SI-A
 </td>
 <td style="text-align:center;">
-0.0797
+0.3477
 </td>
 <td style="text-align:center;">
 NS
@@ -1086,21 +1086,7 @@ genotype
 MB-C-Cheetos-B
 </td>
 <td style="text-align:center;">
-0.6143
-</td>
-<td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-treatment:genotype
-</td>
-<td style="text-align:center;">
-LCO2:Cheetos-B-HCO2:Cheetos-B
-</td>
-<td style="text-align:center;">
-0.9514
+0.3620
 </td>
 <td style="text-align:center;">
 NS
@@ -1114,7 +1100,21 @@ genotype
 SI-A-AC-2
 </td>
 <td style="text-align:center;">
-0.9917
+0.5572
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+treatment:genotype
+</td>
+<td style="text-align:center;">
+LCO2:Cheetos-B-HCO2:Cheetos-B
+</td>
+<td style="text-align:center;">
+0.9389
 </td>
 <td style="text-align:center;">
 NS
@@ -1172,20 +1172,6 @@ a
 </tr>
 <tr>
 <td style="text-align:left;">
-4
-</td>
-<td style="text-align:center;">
-LCO2
-</td>
-<td style="text-align:center;">
-Cheetos-B
-</td>
-<td style="text-align:center;">
-ab
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 1
 </td>
 <td style="text-align:center;">
@@ -1193,6 +1179,20 @@ HCO2
 </td>
 <td style="text-align:center;">
 AC-2
+</td>
+<td style="text-align:center;">
+ab
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:center;">
+LCO2
+</td>
+<td style="text-align:center;">
+Cheetos-B
 </td>
 <td style="text-align:center;">
 ab
@@ -1209,7 +1209,7 @@ HCO2
 SI-A
 </td>
 <td style="text-align:center;">
-abc
+bc
 </td>
 </tr>
 <tr>
@@ -1223,7 +1223,7 @@ LCO2
 MB-C
 </td>
 <td style="text-align:center;">
-bcd
+bc
 </td>
 </tr>
 <tr>
@@ -1237,7 +1237,7 @@ LCO2
 SI-A
 </td>
 <td style="text-align:center;">
-cd
+c
 </td>
 </tr>
 <tr>
@@ -1251,18 +1251,18 @@ LCO2
 AC-2
 </td>
 <td style="text-align:center;">
-d
+c
 </td>
 </tr>
 </tbody>
 </table>
 
-The mean calcification rate in the HCO2 group was mean 0.307 (SD = 0.14)
-mg/g/day, whereas the mean in the LCO2 group was 0.56 (SD = 0.257). A
-Student two-samples t-test showed that the difference was statistically
-significant, t(87) = -5.821, p &lt; 0.0001, d = -1.235. Thus, the ocean
-acidification group saw on average a 45% reduction in calcification
-rates.
+The mean calcification rate in the HCO2 group was mean 0.316 (SD =
+0.139) mg/g/day, whereas the mean in the LCO2 group was 0.566 (SD =
+0.253). A Student two-samples t-test showed that the difference was
+statistically significant, t(87) = -5.821, p &lt; 0.0001, d = -1.235.
+Thus, the ocean acidification group saw on average a 44% reduction in
+calcification rates.
 
 ## Tank Effects
 
@@ -1321,16 +1321,16 @@ tank
 1
 </td>
 <td style="text-align:center;">
-0.005
+0.004
 </td>
 <td style="text-align:center;">
-0.005
+0.004
 </td>
 <td style="text-align:center;">
-0.232
+0.227
 </td>
 <td style="text-align:center;">
-0.632
+0.636
 </td>
 <td style="text-align:center;">
 NS
@@ -1347,7 +1347,7 @@ Residuals
 44
 </td>
 <td style="text-align:center;">
-0.883
+0.865
 </td>
 <td style="text-align:center;">
 0.020
@@ -1373,16 +1373,16 @@ tank
 1
 </td>
 <td style="text-align:center;">
-0.205
+0.172
 </td>
 <td style="text-align:center;">
-0.205
+0.172
 </td>
 <td style="text-align:center;">
-3.288
+2.805
 </td>
 <td style="text-align:center;">
-0.077
+0.102
 </td>
 <td style="text-align:center;">
 NS
@@ -1399,10 +1399,10 @@ Residuals
 41
 </td>
 <td style="text-align:center;">
-2.561
+2.518
 </td>
 <td style="text-align:center;">
-0.062
+0.061
 </td>
 <td style="text-align:center;">
 NA
@@ -1416,6 +1416,84 @@ NS
 </tr>
 </tbody>
 </table>
+
+#### Mixed Effects Model
+
+Here I created a random intercept model to include tank effect,
+i.e. including variability within tanks into the model. This decreased
+the AIC from 44 to 12, and therefore the random tank effect should be
+included for analysis.
+
+``` r
+modFixed <- totalGrowth %>%
+  aov(dailyG ~ genotype*treatment, data=.)
+
+modFixed %>%
+  summary()
+```
+
+    ##                    Df Sum Sq Mean Sq F value   Pr(>F)    
+    ## genotype            3 1.0216  0.3405  11.585 2.14e-06 ***
+    ## treatment           1 1.2674  1.2674  43.113 4.58e-09 ***
+    ## genotype:treatment  3 0.2759  0.0920   3.128   0.0302 *  
+    ## Residuals          81 2.3811  0.0294                     
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+``` r
+modRandom <- totalGrowth %>%
+  lmerTest::lmer(dailyG ~ genotype * treatment + (1|tank),
+                 data=.)
+modRandom %>%
+  anova()
+```
+
+    ## Type III Analysis of Variance Table with Satterthwaite's method
+    ##                     Sum Sq Mean Sq NumDF  DenDF F value    Pr(>F)    
+    ## genotype           0.97894 0.32631     3 79.028 11.6243 2.172e-06 ***
+    ## treatment          0.38416 0.38416     1  2.046 13.6851   0.06369 .  
+    ## genotype:treatment 0.26981 0.08994     3 79.028  3.2038   0.02765 *  
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+``` r
+AIC(modFixed, modRandom)
+```
+
+    ##           df       AIC
+    ## modFixed   9 -51.70581
+    ## modRandom 10 -18.34436
+
+``` r
+genos <- unique(totalGrowth$genotype)
+pairwiseString <- c(paste0('(',
+                         genos,
+                         ' HCO2) - (',
+                         genos,
+                         ' LCO2)'),
+                    paste0('(HCO2 ',
+                         genos,
+                         ') - (LCO2 ',
+                         genos,
+                         ')'))
+                    
+
+emmeans(modRandom, list(pairwise ~genotype*treatment),
+        adjust = "tukey")[[2]] %>%
+  broom::tidy() %>%
+  filter(`1` %in% pairwiseString) %>%
+  select(-term) %>%
+  rename(pairwise=`1`)
+```
+
+    ## # A tibble: 4 x 6
+    ##   pairwise                            estimate std.error    df statistic adj.p~1
+    ##   <chr>                                  <dbl>     <dbl> <dbl>     <dbl>   <dbl>
+    ## 1 (AC-2 HCO2) - (AC-2 LCO2)             -0.393    0.0848  7.23     -4.63  0.0262
+    ## 2 (Cheetos-B HCO2) - (Cheetos-B LCO2)   -0.105    0.101  14.0      -1.03  0.961 
+    ## 3 (MB-C HCO2) - (MB-C LCO2)             -0.270    0.0858  7.58     -3.15  0.145 
+    ## 4 (SI-A HCO2) - (SI-A LCO2)             -0.146    0.0815  6.21     -1.80  0.643 
+    ## # ... with abbreviated variable name 1: adj.p.value
 
 ## Powder Available
 
