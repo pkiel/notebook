@@ -1478,19 +1478,19 @@ adj.p.value
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 (AC-2 HCO2) - (AC-2 LCO2)
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 -0.3942
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0741
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 -5.3202
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0066
 </td>
 </tr>
@@ -1512,19 +1512,19 @@ adj.p.value
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 (MB-C HCO2) - (MB-C LCO2)
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 -0.3045
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0751
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 -4.0544
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0333
 </td>
 </tr>
@@ -2253,19 +2253,19 @@ adj.p.value
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 (SI-A HCO2) - (SI-A LCO2)
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 -0.0062
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0015
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 -4.1839
 </td>
-<td style="text-align:center;">
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 0.0117
 </td>
 </tr>
@@ -2278,8 +2278,8 @@ adj.p.value
 
 AIC tells us the mixed effects model better describes the data. Post-hoc
 testing further tells us that indeed SI-A’s linear extension rates were
-significantly different between treatments, yet all other genotype’s
-were not.
+significantly different between treatments (p&lt;0.05), yet all other
+genotype’s were not.
 
 <img src="/notebook/images/ulinkGrowth2022/total extension-1.png" width="90%" style="display: block; margin: auto;" />
 

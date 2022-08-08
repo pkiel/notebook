@@ -798,7 +798,11 @@ emmeans(modRandom, list(pairwise ~genotype*treatment),
     caption = "Pairwise comparison of genotypes' sensitivity to OA",
     escape=F) %>%
   kable_classic() %>%
-  row_spec(0, bold = T)
+  row_spec(0, bold = T) %>%
+  row_spec(c(1,3),
+         bold = T,
+         color = "white",
+         background = "red")
 ```
 
 Pattern is the same as above with the fixed effects. Significance has decreased (p values increased) for AC-2 and MB-C, suggesting that there was some variability between tanks in the same treatment (T13 v T15 and T14 v T16) but that this within treatment variability was not significant enough to change our conclusions. Thus, we fail to reject our null hypothesis that there are significant differences between individual genotype's susceptibility to OA.
@@ -1033,14 +1037,18 @@ emmeans(modRandom, list(pairwise ~genotype*treatment),
     caption = "Pairwise comparison of genotypes' sensitivity to OA",
     escape=F) %>%
   kable_classic() %>%
-  row_spec(0, bold = T)
+  row_spec(0, bold = T) %>%
+  row_spec(4,
+         bold = T,
+         color = "white",
+         background = "red")
 
 AIC(modFixed, modRandom)
 
 
 ```
 
-AIC tells us the mixed effects model better describes the data. Post-hoc testing further tells us that indeed SI-A's linear extension rates were significantly different between treatments, yet all other genotype's were not.
+AIC tells us the mixed effects model better describes the data. Post-hoc testing further tells us that indeed SI-A's linear extension rates were significantly different between treatments (p<0.05), yet all other genotype's were not.
 
 
 ```{r total extension}
