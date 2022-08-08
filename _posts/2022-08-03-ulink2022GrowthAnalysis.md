@@ -106,7 +106,7 @@ programmed variability will be apart of the variability of each sample
 along with sampling error, durafet error altering amount of CO2 injected
 into aquaria (shown above in the LabView data), etc.
 
-<img src="/notebook/images/ulinkGrowth2022/unnamed-chunk-3-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="/notebook/images/ulinkGrowth2022/todSampling-1.png" width="90%" style="display: block; margin: auto;" />
 
 Sampling time had a mean of around 10a. 3 sampling times were taken
 after 12p with one sampling time around 4:20p
@@ -115,7 +115,7 @@ after 12p with one sampling time around 4:20p
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Aquarium Conditions. Means ± SEM
+Table 1: Aquarium Conditions. Means ± SEM
 </caption>
 <thead>
 <tr>
@@ -242,7 +242,7 @@ T16
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Significance of Parameters
+Table 2: Significance of Parameters
 </caption>
 <thead>
 <tr>
@@ -788,7 +788,7 @@ There is some obvious genet-specific responses.
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Means of Treatment
+Table 2: Means of Treatment
 </caption>
 <thead>
 <tr>
@@ -839,7 +839,7 @@ LCO2
 </table>
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Stats of Treatment
+Table 3: Stats of Treatment
 </caption>
 <thead>
 <tr>
@@ -906,7 +906,7 @@ LCO2
 </table>
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Effect Size of Treatment
+Table 4: Effect Size of Treatment
 </caption>
 <thead>
 <tr>
@@ -961,7 +961,7 @@ large
 </table>
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-TukeyHSD Results of Anova
+Table 5: TukeyHSD Results of Anova
 </caption>
 <thead>
 <tr>
@@ -1124,7 +1124,7 @@ NS
 </table>
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Significance Letter Groups
+Table 6: Significance Letter Groups
 </caption>
 <thead>
 <tr>
@@ -1279,7 +1279,7 @@ different between aquariums within the same treatment group.
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Significance testing of tank effect on calcification
+Table 7: Significance testing of tank effect on calcification
 </caption>
 <thead>
 <tr>
@@ -1455,7 +1455,7 @@ Tukey post-hoc analysis of the mixed effects model:
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Pairwise comparison of genotypes’ sensitivity to OA
+Table 8: Pairwise comparison of genotypes’ sensitivity to OA
 </caption>
 <thead>
 <tr>
@@ -1571,7 +1571,7 @@ including XRD), &gt;120 mg = orange (complete suite sans XRD), &gt;50mg
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Means of Treatment
+Table 9:Means of Treatment
 </caption>
 <thead>
 <tr>
@@ -1622,7 +1622,7 @@ LCO2
 </table>
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Stats of Treatment
+Table 10: Stats of Treatment
 </caption>
 <thead>
 <tr>
@@ -1689,7 +1689,7 @@ ns
 </table>
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Effect Size of Treatment
+Table 11: Effect Size of Treatment
 </caption>
 <thead>
 <tr>
@@ -1744,7 +1744,7 @@ small
 </table>
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-TukeyHSD Results of Anova
+Table 12: TukeyHSD Results of Anova
 </caption>
 <thead>
 <tr>
@@ -1907,7 +1907,7 @@ NS
 </table>
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Significance Letter Groups
+Table 13: Significance Letter Groups
 </caption>
 <thead>
 <tr>
@@ -2051,7 +2051,7 @@ statistically significant, t(82) = -1.556, p =0.124, d = -0.34.
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Significance testing of tank effect on Linear Extension Rates
+Figure 16: Significance testing of tank effect on Linear Extension Rates
 </caption>
 <thead>
 <tr>
@@ -2179,7 +2179,7 @@ ns
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Pairwise comparison of genotypes’ sensitivity to OA
+Table 14:Pairwise comparison of genotypes’ sensitivity to OA
 </caption>
 <thead>
 <tr>

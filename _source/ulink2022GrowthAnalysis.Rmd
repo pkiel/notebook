@@ -224,7 +224,7 @@ labViewData %>%
   facet_wrap(~tank) +
   theme_bw() +
   guides(fill = FALSE) +
-  labs(title = "15-min Averaged Log")
+  labs(title = "Figure 1: 15-min Averaged Log")
 ```
 
 The peaks in the standard deviation are almost certainly caused by aquarium cleaning days when corals are removed into a separate bath and the sensors are capped causing logging errors. CO2 injection is turned off during these times so the aquariums themselves are not experiencing the conditions that the logged data are suggesting. The following graph filters out these spiked values which were programmatically identified by occurring during scheduled cleaning times and affecting multiple aquariums at once since cleaning occurred at the same time for all aquariums.
@@ -303,7 +303,7 @@ labViewData %>%
   facet_wrap(~tank) +
   theme_bw() +
   guides(fill = FALSE) +
-  labs(title = "15-min Averaged Log")
+  labs(title = "Figure 2: Cleaned 15-min Averaged Log")
 ```
 
 Variability is still present, but the extreme spikes caused by cleaning have been removed. Thus, any variability that remains is due to durafet error or experimental variability that affected the corals. For example, the durafet for T15 had much higher variability than the other aquariums. However, I believe this to be negligible.
@@ -366,7 +366,7 @@ carbSystem <- read.csv("~/Grad School/ULink 2022/carbonateChemistry/carbData.csv
 ### Time of Day
 The bottles were not taken at exactly the same time of day, and thus the programmed variability will be apart of the variability of each sample along with sampling error, durafet error altering amount of CO2 injected into aquaria (shown above in  the LabView data), etc.
 
-```{r}
+```{r todSampling}
 carbSystem %>%
   mutate(hms = as.POSIXct(format(date,
                            format="%H:%M:%S"), 
@@ -379,7 +379,7 @@ carbSystem %>%
   theme_bw() +
   labs(x = "Date",
        y = "Time of Day",
-       title = "Bottle Sampling of Aquariums")
+       title = "Figure 3: Bottle Sampling of Aquariums")
 ```
 
 Sampling time had a mean of  around 10a. 3 sampling times were taken after 12p with one sampling time around 4:20p
@@ -397,7 +397,7 @@ carbSystem %>%
         sep = " ± "))) %>%
   kbl(align = 'c',
     digits = 4,
-    caption = "Aquarium Conditions. Means ± SEM") %>%
+    caption = "Table 1: Aquarium Conditions. Means ± SEM") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
   
@@ -429,7 +429,7 @@ carbTbl <- carbSystem %>%
 carbTbl %>%
     kbl(align = 'c',
     digits = 3,
-    caption = "Significance of Parameters") %>%
+    caption = "Table 2: Significance of Parameters") %>%
   kable_classic() %>%
   row_spec(which(carbTbl$p.value<0.05),
            bold = T,
@@ -497,7 +497,7 @@ weeklyGrowth <- bw %>%
                                       #average weekly growth
                                       #mg/g/week, normalized to initial mass
                                       newGrowth.mg/
-                                 first(mass_a)/(as.numeric(date-lag(date))/7),
+                                 first(mass_a)/(as.numeric(date-lag(date))),
                                       NA)) %>%
   #remove tags that have no weekly growth, i.e. died early on
   group_by(tag) %>%
@@ -537,7 +537,7 @@ weeklyGrowth %>%
                     ymax = weeklyG + se,
                     fill=genotype),
                 alpha=0.3) + 
-  labs(title = "Avg Weekly Growth Per Week by Genotype ± se") +
+  labs(title = "Figure 4: Avg Weekly Growth Per Week by Genotype ± se") +
   scale_x_continuous("Week",
                      breaks = c(seq(1,
                                     max(weeklyGrowth$weekNum, na.rm = T),
@@ -559,7 +559,7 @@ weeklyGrowth %>%
                     ymax = weeklyG + se,
                     fill=treatment),
                 alpha=0.3) + 
-  labs(title = "Avg Weekly Growth Per Week by Treatment Group ± se") +
+  labs(title = "Figure 5: Avg Weekly Growth Per Week by Treatment Group ± se") +
   scale_x_continuous("Week",
                      breaks = c(seq(1,
                                     max(weeklyGrowth$weekNum, na.rm = T),
@@ -579,7 +579,7 @@ totalGrowth %>%
   geom_boxplot() +
   labs(x = "Treatment",
        y = "Avg Daily Growth Rate (mg/g/day)",
-       title = "Avg Daily Growth by Treatment") +
+       title = "Figure 6: Avg Daily Growth by Treatment") +
   theme_classic()
 
 totalGrowth %>%
@@ -587,7 +587,7 @@ totalGrowth %>%
   geom_boxplot() +
   labs(x = "Treatment",
        y = "Avg Daily Growth Rate (mg/g/day)",
-       title = "Avg Daily Growth by Genotype") +
+       title = "Figure 7: Avg Daily Growth by Genotype") +
   theme_classic()
 
 
@@ -597,7 +597,7 @@ totalGrowth %>%
               #if quantile lines desired: draw_quantiles = c(0.25, 0.5, 0.75)) +
   labs(x = "Genotype",
        y = "Avg Daily Growth Rate (mg/g/day)",
-       title = "Avg Daily Growth by Genotype and Treatment") +
+       title = "Figure 8: Avg Daily Growth by Genotype and Treatment") +
   theme_classic()
 ```
 
@@ -620,7 +620,7 @@ groupMeans %>%
   select(-variable) %>%
       kbl(align = 'c',
     digits = 4,
-    caption = "Means of Treatment") %>%
+    caption = "Table 2: Means of Treatment") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 
@@ -631,7 +631,7 @@ tTestResults <- totalGrowth %>%
 tTestResults %>%
   kbl(align = 'c',
     digits = 4,
-    caption = "Stats of Treatment",
+    caption = "Table 3: Stats of Treatment",
     escape=F) %>%
   kable_classic() %>%
   row_spec(0, bold = T)
@@ -642,7 +642,7 @@ cohensResults <- totalGrowth %>%
 cohensResults %>%
       kbl(align = 'c',
     digits = 4,
-    caption = "Effect Size of Treatment") %>%
+    caption = "Table 4: Effect Size of Treatment") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 
@@ -676,7 +676,7 @@ tukeyGTbl <- mod %>%
 tukeyGTbl %>%
   kbl(align = 'c',
     digits = 4,
-    caption = "TukeyHSD Results of Anova",
+    caption = "Table 5: TukeyHSD Results of Anova",
     escape = TRUE) %>%
   kable_classic() %>%
   row_spec(0, bold = T) %>%
@@ -692,7 +692,7 @@ multcomp::cld(emmeans(mod,
   select(treatment, genotype, significance = .group) %>%
     kbl(align = 'c',
     digits = 4,
-    caption = "Significance Letter Groups") %>%
+    caption = "Table 6: Significance Letter Groups") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 ```
@@ -714,7 +714,7 @@ totalGrowth %>%
   geom_boxplot() +
   labs(x = "Genotype",
        y = "Avg Daily Growth Rate (mg/g/day)",
-       title = "Avg Daily Growth by Tank and Treatment") +
+       title = "Figure 9: Avg Daily Growth by Tank and Treatment") +
   theme_classic()
 
 totalGrowth %>%
@@ -727,7 +727,7 @@ totalGrowth %>%
   scale_fill_manual(values = manLegend) +
   labs(x = "Genotype",
        y = "Avg Daily Growth Rate (mg/g/day)",
-       title = "Avg Daily Growth by Genotype,Treatment, and Tank") +
+       title = "Figure 10: Avg Daily Growth by Genotype,Treatment, and Tank") +
   theme_classic()
 ```
 
@@ -740,7 +740,7 @@ totalGrowth %>%
   t_test(data=.,formula = dailyG ~ tank) %>%
     kbl(align = 'c',
     digits = 3,
-    caption = "Significance testing of tank effect on calcification") %>%
+    caption = "Table 7: Significance testing of tank effect on calcification") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 
@@ -795,7 +795,7 @@ emmeans(modRandom, list(pairwise ~genotype*treatment),
   rename(pairwise=`1`) %>%
   kbl(align = 'c',
     digits = 4,
-    caption = "Pairwise comparison of genotypes' sensitivity to OA",
+    caption = "Table 8: Pairwise comparison of genotypes' sensitivity to OA",
     escape=F) %>%
   kable_classic() %>%
   row_spec(0, bold = T) %>%
@@ -817,7 +817,7 @@ totalGrowth %>%
   geom_hline(yintercept = 50, color="red") +
   geom_hline(yintercept = 120, color="orange") +
   geom_hline(yintercept = 500, color="green") +
-  labs(title = "Amount of New CaCO3 Precipated",
+  labs(title = "Figure 11: Amount of New CaCO3 Precipated",
        y = "Precipated Skeleton (mg)") +
   theme_classic()
 ```
@@ -865,7 +865,7 @@ height %>%
   geom_boxplot() +
   labs(x = "Treatment",
        y = "Avg Daily LE Rate (mm/cm/day)",
-       title = "Avg Daily Linear Extension by Treatment") +
+       title = "Figure 12: Avg Daily Linear Extension by Treatment") +
   theme_classic()
 
 height %>%
@@ -873,7 +873,7 @@ height %>%
   geom_boxplot() +
   labs(x = "Treatment",
        y = "Avg Daily LE Rate (mm/cm/day)",
-       title = "Avg Daily Linear Extension by Treatment and Aquarium") +
+       title = "Figure 13: Avg Daily Linear Extension by Treatment and Aquarium") +
   theme_classic()
 
 
@@ -883,7 +883,7 @@ height %>%
               #if quantile lines desired: draw_quantiles = c(0.25, 0.5, 0.75)) +
   labs(x = "Genotype",
        y = "Avg Daily LE Rate (mm/cm/day)",
-       title = "Avg Daily Linear Extension by Genotype and Treatment") +
+       title = "Figure 14: Avg Daily Linear Extension by Genotype and Treatment") +
   theme_classic()
 ```
 
@@ -897,7 +897,7 @@ groupMeans %>%
   select(-variable) %>%
       kbl(align = 'c',
     digits = 4,
-    caption = "Means of Treatment") %>%
+    caption = "Table 9:Means of Treatment") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 
@@ -908,7 +908,7 @@ tTestResults <- height %>%
 tTestResults %>%
   kbl(align = 'c',
     digits = 4,
-    caption = "Stats of Treatment",
+    caption = "Table 10: Stats of Treatment",
     escape=F) %>%
   kable_classic() %>%
   row_spec(0, bold = T)
@@ -919,7 +919,7 @@ cohensResults <- height %>%
 cohensResults %>%
       kbl(align = 'c',
     digits = 4,
-    caption = "Effect Size of Treatment") %>%
+    caption = "Table 11: Effect Size of Treatment") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 
@@ -953,7 +953,7 @@ tukeyLE <- mod %>%
 tukeyLE %>%
     kbl(align = 'c',
     digits = 4,
-    caption = "TukeyHSD Results of Anova",
+    caption = "Table 12: TukeyHSD Results of Anova",
     escape = F) %>%
   kable_classic() %>%
   row_spec(0, bold = T) %>%
@@ -969,7 +969,7 @@ multcomp::cld(emmeans(mod,
   select(treatment, genotype, significance = .group) %>%
     kbl(align = 'c',
     digits = 4,
-    caption = "Significance Letter Groups") %>%
+    caption = "Table 13: Significance Letter Groups") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 ```
@@ -989,7 +989,7 @@ height %>%
   scale_fill_manual(values = manLegend) +
   labs(x = "Treatment",
        y = "Avg Daily LE Rate (mm/cm/day)",
-       title = "Avg Daily Linear Extension by Treatment and Aquarium") +
+       title = "Figure 15: Avg Daily Linear Extension by Treatment and Aquarium") +
   theme_classic()
 
 ```
@@ -1000,7 +1000,7 @@ height %>%
   t_test(data=.,formula = prod ~ tank) %>%
     kbl(align = 'c',
     digits = 3,
-    caption = "Significance testing of tank effect on Linear Extension Rates") %>%
+    caption = "Figure 16: Significance testing of tank effect on Linear Extension Rates") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 
@@ -1034,7 +1034,7 @@ emmeans(modRandom, list(pairwise ~genotype*treatment),
   rename(pairwise=`1`) %>%
   kbl(align = 'c',
     digits = 4,
-    caption = "Pairwise comparison of genotypes' sensitivity to OA",
+    caption = "Table 14:Pairwise comparison of genotypes' sensitivity to OA",
     escape=F) %>%
   kable_classic() %>%
   row_spec(0, bold = T) %>%
@@ -1058,7 +1058,7 @@ height %>%
   scale_y_continuous(limits = c(0,30)) +
   geom_hline(yintercept = mean(height$LE),
              color="red") +
-  labs(title = "Amount of New Skeleton and Mean New LE (Red Line)",
+  labs(title = "Figure 17: Amount of New Skeleton and Mean New LE (Red Line)",
        y = "Linear Extension (mm)") +
   theme_classic()
 ```
