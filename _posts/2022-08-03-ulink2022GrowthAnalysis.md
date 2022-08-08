@@ -760,7 +760,7 @@ precision.
 Following April 15 (Weeky 5), the declining health of the corals
 stabilized and began to split amongst treatment groups.
 
-<img src="/notebook/images/ulinkGrowth2022/calcification graphs-1.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/calcification graphs-2.png" width="90%" style="display: block; margin: auto;" />
+<img src="/notebook/images/ulinkGrowth2022/calcification graphs-1.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/calcification graphs-2.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/calcification graphs-3.png" width="90%" style="display: block; margin: auto;" />
 
 There is some obvious genet-specific responses.
 
@@ -1269,9 +1269,9 @@ calcification rates.
 We saw above that tank conditions were significantly different among
 treatment groups, but not individual aquariums within treatment. We also
 saw that calcification rates were significantly different among
-treatment. Here I am analyzing tank effects on the calcification rate
-and investigating if calcification rates were significantly different
-between aquariums within the same treatment group.
+treatment groups. Here I am analyzing tank effects on the calcification
+rate and investigating if calcification rates were significantly
+different between aquariums within the same treatment group.
 
 <img src="/notebook/images/ulinkGrowth2022/tank effects graph-1.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/tank effects graph-2.png" width="90%" style="display: block; margin: auto;" />
 
@@ -1287,25 +1287,34 @@ Significance testing of tank effect on calcification
 treatment
 </th>
 <th style="text-align:center;font-weight: bold;">
-term
+.y.
 </th>
 <th style="text-align:center;font-weight: bold;">
-df
+group1
 </th>
 <th style="text-align:center;font-weight: bold;">
-sumsq
+group2
 </th>
 <th style="text-align:center;font-weight: bold;">
-meansq
+n1
+</th>
+<th style="text-align:center;font-weight: bold;">
+n2
 </th>
 <th style="text-align:center;font-weight: bold;">
 statistic
 </th>
 <th style="text-align:center;font-weight: bold;">
-p.value
+df
 </th>
 <th style="text-align:center;font-weight: bold;">
-significance
+p
+</th>
+<th style="text-align:center;font-weight: bold;">
+p.adj
+</th>
+<th style="text-align:center;font-weight: bold;">
+p.adj.signif
 </th>
 </tr>
 </thead>
@@ -1315,51 +1324,34 @@ significance
 HCO2
 </td>
 <td style="text-align:center;">
-tank
+dailyG
 </td>
 <td style="text-align:center;">
-1
+13
 </td>
 <td style="text-align:center;">
-0.004
+15
 </td>
 <td style="text-align:center;">
-0.004
+24
 </td>
 <td style="text-align:center;">
-0.227
+22
 </td>
 <td style="text-align:center;">
-0.636
+-0.482
 </td>
 <td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-HCO2
+42.209
 </td>
 <td style="text-align:center;">
-Residuals
+0.632
 </td>
 <td style="text-align:center;">
-44
+0.632
 </td>
 <td style="text-align:center;">
-0.865
-</td>
-<td style="text-align:center;">
-0.020
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-NS
+ns
 </td>
 </tr>
 <tr>
@@ -1367,62 +1359,50 @@ NS
 LCO2
 </td>
 <td style="text-align:center;">
-tank
+dailyG
 </td>
 <td style="text-align:center;">
-1
+14
 </td>
 <td style="text-align:center;">
-0.116
+16
 </td>
 <td style="text-align:center;">
-0.116
+22
 </td>
 <td style="text-align:center;">
-2.121
+21
+</td>
+<td style="text-align:center;">
+1.456
+</td>
+<td style="text-align:center;">
+40.856
 </td>
 <td style="text-align:center;">
 0.153
 </td>
 <td style="text-align:center;">
-NS
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-LCO2
+0.153
 </td>
 <td style="text-align:center;">
-Residuals
-</td>
-<td style="text-align:center;">
-41
-</td>
-<td style="text-align:center;">
-2.238
-</td>
-<td style="text-align:center;">
-0.055
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-NA
-</td>
-<td style="text-align:center;">
-NS
+ns
 </td>
 </tr>
 </tbody>
 </table>
 
-#### Mixed Effects Model
+No observable differences of mean calcification rate when comparing
+within treatment groups.
 
-Here I created a random intercept model to include tank effect,
-i.e. including variability within tanks into the model. This decreased
-the AIC from 66 to 31, and therefore the random tank effect should be
-included for analysis.
+### Mixed Effects Model
+
+Here I created a mixed effects model model to account for the lack of
+independence brought upon by having multiple corals grown in the same
+tank and the possible tank-specific effects that may have affected
+calcification rates. Including this random effect decreased the AIC from
+66 to 31 as compared to a fixed-effects only model, and therefore the
+random tank effect should be included for analysis.
 
 As a reminder, here is the fixed effects model as shown above:
 
@@ -1442,10 +1422,10 @@ modFixed %>%
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Here is the mixed effects model with the tank set as a random factor to
-give each tank its own, random interept. Notice, including the random
-effects decreases the absolute value of the AIC. Therefore, this new
-model better describes the data.
+Here is the mixed effects model with the tank identity set as a random
+factor to give each tank its own, random intercept. Notice, including
+the random effects decreases the absolute value of the AIC. Therefore,
+this new model better describes the data.
 
 ``` r
 modRandom <- totalGrowth %>%
@@ -1471,20 +1451,7 @@ AIC(modFixed, modRandom)
     ## modFixed   9 -66.10356
     ## modRandom 10 -30.71757
 
-``` r
-emmeans(modRandom, list(pairwise ~genotype*treatment),
-        adjust = "tukey")[[2]] %>%
-  broom::tidy() %>%
-  filter(`1` %in% pairwiseString) %>%
-  select(-term) %>%
-  rename(pairwise=`1`) %>%
-  kbl(align = 'c',
-    digits = 4,
-    caption = "Pairwise comparison of genotypes' sensitivity to OA",
-    escape=F) %>%
-  kable_classic() %>%
-  row_spec(0, bold = T)
-```
+Tukey post-hoc analysis of the mixed effects model:
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
@@ -1500,9 +1467,6 @@ estimate
 </th>
 <th style="text-align:center;font-weight: bold;">
 std.error
-</th>
-<th style="text-align:center;font-weight: bold;">
-df
 </th>
 <th style="text-align:center;font-weight: bold;">
 statistic
@@ -1524,9 +1488,6 @@ adj.p.value
 0.0741
 </td>
 <td style="text-align:center;">
-9.2258
-</td>
-<td style="text-align:center;">
 -5.3202
 </td>
 <td style="text-align:center;">
@@ -1542,9 +1503,6 @@ adj.p.value
 </td>
 <td style="text-align:center;">
 0.0903
-</td>
-<td style="text-align:center;">
-18.7121
 </td>
 <td style="text-align:center;">
 -0.9082
@@ -1564,9 +1522,6 @@ adj.p.value
 0.0751
 </td>
 <td style="text-align:center;">
-9.7252
-</td>
-<td style="text-align:center;">
 -4.0544
 </td>
 <td style="text-align:center;">
@@ -1584,9 +1539,6 @@ adj.p.value
 0.0708
 </td>
 <td style="text-align:center;">
-7.7876
-</td>
-<td style="text-align:center;">
 -1.9281
 </td>
 <td style="text-align:center;">
@@ -1595,6 +1547,14 @@ adj.p.value
 </tr>
 </tbody>
 </table>
+
+Pattern is the same as above with the fixed effects. Significance has
+decreased (p values increased) for AC-2 and MB-C, suggesting that there
+was some variability between tanks in the same treatment (T13 v T15 and
+T14 v T16) but that this within treatment variability was not
+significant enough to change our conclusions. Thus, we fail to reject
+our null hypothesis that there are significant differences between
+individual genotype’s susceptibility to OA.
 
 ## Powder Available
 
@@ -1607,7 +1567,7 @@ including XRD), &gt;120 mg = orange (complete suite sans XRD), &gt;50mg
 
 # Linear Extension
 
-<img src="/notebook/images/ulinkGrowth2022/LE graphs-1.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/LE graphs-2.png" width="90%" style="display: block; margin: auto;" />
+<img src="/notebook/images/ulinkGrowth2022/LE graphs-1.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/LE graphs-2.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/LE graphs-3.png" width="90%" style="display: block; margin: auto;" />
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
@@ -2084,6 +2044,242 @@ The mean linear extension rate in the HCO2 group was mean 0.005 (SD =
 0.004) mm/cm/day, whereas the mean in the LCO2 group was 0.006 (SD =
 0.004). A Student two-samples t-test showed that the difference was not
 statistically significant, t(82) = -1.556, p =0.124, d = -0.34.
+
+## Tank Effects
+
+<img src="/notebook/images/ulinkGrowth2022/LE tank effects-1.png" width="90%" style="display: block; margin: auto;" />
+
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<caption>
+Significance testing of tank effect on Linear Extension Rates
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;font-weight: bold;">
+treatment
+</th>
+<th style="text-align:center;font-weight: bold;">
+.y.
+</th>
+<th style="text-align:center;font-weight: bold;">
+group1
+</th>
+<th style="text-align:center;font-weight: bold;">
+group2
+</th>
+<th style="text-align:center;font-weight: bold;">
+n1
+</th>
+<th style="text-align:center;font-weight: bold;">
+n2
+</th>
+<th style="text-align:center;font-weight: bold;">
+statistic
+</th>
+<th style="text-align:center;font-weight: bold;">
+df
+</th>
+<th style="text-align:center;font-weight: bold;">
+p
+</th>
+<th style="text-align:center;font-weight: bold;">
+p.adj
+</th>
+<th style="text-align:center;font-weight: bold;">
+p.adj.signif
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+HCO2
+</td>
+<td style="text-align:center;">
+prod
+</td>
+<td style="text-align:center;">
+13
+</td>
+<td style="text-align:center;">
+15
+</td>
+<td style="text-align:center;">
+23
+</td>
+<td style="text-align:center;">
+22
+</td>
+<td style="text-align:center;">
+-0.911
+</td>
+<td style="text-align:center;">
+38.599
+</td>
+<td style="text-align:center;">
+0.368
+</td>
+<td style="text-align:center;">
+0.368
+</td>
+<td style="text-align:center;">
+ns
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+LCO2
+</td>
+<td style="text-align:center;">
+prod
+</td>
+<td style="text-align:center;">
+14
+</td>
+<td style="text-align:center;">
+16
+</td>
+<td style="text-align:center;">
+21
+</td>
+<td style="text-align:center;">
+18
+</td>
+<td style="text-align:center;">
+1.227
+</td>
+<td style="text-align:center;">
+34.931
+</td>
+<td style="text-align:center;">
+0.228
+</td>
+<td style="text-align:center;">
+0.228
+</td>
+<td style="text-align:center;">
+ns
+</td>
+</tr>
+</tbody>
+</table>
+
+    ## # A tibble: 1 x 4
+    ##   term               contrast            adj.p.value significance
+    ##   <chr>              <chr>                     <dbl> <chr>       
+    ## 1 treatment:genotype LCO2:SI-A-HCO2:SI-A      0.0012 xx
+
+    ## Type III Analysis of Variance Table with Satterthwaite's method
+    ##                        Sum Sq    Mean Sq NumDF  DenDF F value  Pr(>F)   
+    ## genotype           4.3893e-05 1.4631e-05     3 74.015  1.1832 0.32200   
+    ## treatment          1.7696e-05 1.7696e-05     1  2.059  1.4311 0.35119   
+    ## genotype:treatment 2.1560e-04 7.1866e-05     3 74.015  5.8119 0.00127 **
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<caption>
+Pairwise comparison of genotypes’ sensitivity to OA
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;font-weight: bold;">
+pairwise
+</th>
+<th style="text-align:center;font-weight: bold;">
+estimate
+</th>
+<th style="text-align:center;font-weight: bold;">
+std.error
+</th>
+<th style="text-align:center;font-weight: bold;">
+statistic
+</th>
+<th style="text-align:center;font-weight: bold;">
+adj.p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+(AC-2 HCO2) - (AC-2 LCO2)
+</td>
+<td style="text-align:center;">
+0.0017
+</td>
+<td style="text-align:center;">
+0.0015
+</td>
+<td style="text-align:center;">
+1.1114
+</td>
+<td style="text-align:center;">
+0.9453
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+(Cheetos-B HCO2) - (Cheetos-B LCO2)
+</td>
+<td style="text-align:center;">
+0.0004
+</td>
+<td style="text-align:center;">
+0.0019
+</td>
+<td style="text-align:center;">
+0.1980
+</td>
+<td style="text-align:center;">
+1.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+(MB-C HCO2) - (MB-C LCO2)
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.0015
+</td>
+<td style="text-align:center;">
+0.0210
+</td>
+<td style="text-align:center;">
+1.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+(SI-A HCO2) - (SI-A LCO2)
+</td>
+<td style="text-align:center;">
+-0.0062
+</td>
+<td style="text-align:center;">
+0.0015
+</td>
+<td style="text-align:center;">
+-4.1839
+</td>
+<td style="text-align:center;">
+0.0117
+</td>
+</tr>
+</tbody>
+</table>
+
+    ##           df       AIC
+    ## modFixed   9 -700.8051
+    ## modRandom 10 -604.1854
+
+AIC tells us the mixed effects model better describes the data. Post-hoc
+testing further tells us that indeed SI-A’s linear extension rates were
+significantly different between treatments, yet all other genotype’s
+were not.
 
 <img src="/notebook/images/ulinkGrowth2022/total extension-1.png" width="90%" style="display: block; margin: auto;" />
 

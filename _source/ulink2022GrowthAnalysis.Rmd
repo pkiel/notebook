@@ -575,11 +575,19 @@ Following April 15 (Weeky 5), the declining health of the corals stabilized and 
 
 ```{r calcification graphs}
 totalGrowth %>%
-  ggplot(aes(treatment, dailyG)) +
+  ggplot(aes(treatment, dailyG, fill=treatment)) +
   geom_boxplot() +
   labs(x = "Treatment",
        y = "Avg Daily Growth Rate (mg/g/day)",
-       title = "Avg Daily Growth byTreatment") +
+       title = "Avg Daily Growth by Treatment") +
+  theme_classic()
+
+totalGrowth %>%
+  ggplot(aes(genotype, dailyG)) +
+  geom_boxplot() +
+  labs(x = "Treatment",
+       y = "Avg Daily Growth Rate (mg/g/day)",
+       title = "Avg Daily Growth by Genotype") +
   theme_classic()
 
 
@@ -693,22 +701,17 @@ The mean calcification rate in the HCO2 group was mean `r round(mean(totalGrowth
 
 ## Tank Effects
 
-We saw above that tank conditions were significantly different among treatment groups, but not individual aquariums within treatment. We also saw that calcification rates were significantly different among treatment. Here I am analyzing tank effects on the calcification rate and investigating if calcification rates were significantly different between aquariums within the same treatment group.
+We saw above that tank conditions were significantly different among treatment groups, but not individual aquariums within treatment. We also saw that calcification rates were significantly different among treatment groups. Here I am analyzing tank effects on the calcification rate and investigating if calcification rates were significantly different between aquariums within the same treatment group.
 
 ```{r tank effects graph}
-manLegend <- c("13 HCO2"= "#e46e65",
-              "14 LCO2"= "#88b57f",
-              "15 HCO2"= "#e46e65",
-              "16 LCO2" = "#88b57f")
+manLegend <- c("13 HCO2"= "#f0786f",
+              "14 LCO2"= "#3dbec3",
+              "15 HCO2"= "#f0786f",
+              "16 LCO2" = "#3dbec3")
 
 totalGrowth %>%
-  mutate(tank = case_when(tank == 13 ~ "13 HCO2",
-                          tank == 14 ~ "14 LCO2",
-                          tank == 15 ~ "15 HCO2",
-                          tank == 16 ~ "16 LCO2")) %>%
-  ggplot(aes(tank, dailyG)) +
-  geom_boxplot(aes(fill=tank)) +
-  scale_fill_manual(values = manLegend) +
+  ggplot(aes(tank, dailyG, fill=treatment)) +
+  geom_boxplot() +
   labs(x = "Genotype",
        y = "Avg Daily Growth Rate (mg/g/day)",
        title = "Avg Daily Growth by Tank and Treatment") +
@@ -731,18 +734,10 @@ totalGrowth %>%
 ### Tank Effects Statistics
 
 ```{r tank effects statistics}
+#t-test between tanks
 totalGrowth %>%
   group_by(treatment) %>%
-  nest() %>%
-  mutate(mod = map(data, ~aov(data = .,
-                    formula = dailyG ~ tank))) %>%
-  mutate(model_tidy = map(mod, broom::tidy)) %>%
-  unnest(model_tidy) %>%
-  select(-c(data,mod)) %>%
-  mutate(significance = case_when(p.value <0.001 ~ "xxx",
-                                  p.value <0.01 ~ "xx",
-                                  p.value <0.05 ~ "x",
-                                  TRUE ~ "NS")) %>%
+  t_test(data=.,formula = dailyG ~ tank) %>%
     kbl(align = 'c',
     digits = 3,
     caption = "Significance testing of tank effect on calcification") %>%
@@ -762,9 +757,11 @@ pairwiseString <- c(paste0('(',
                          ')'))
 ```
 
-#### Mixed Effects Model
+No observable differences of mean calcification rate when comparing within treatment groups. 
 
-Here I created a random intercept model to include tank effect, i.e. including variability within tanks into the model. This decreased the AIC from 66 to 31, and therefore the random tank effect should be included for analysis. 
+### Mixed Effects Model
+
+Here I created a mixed effects model model to account for the lack of independence brought upon by having multiple corals grown in the same tank and the possible tank-specific effects that may have affected calcification rates. Including this random effect decreased the AIC from 66 to 31 as compared to a fixed-effects only model, and therefore the random tank effect should be included for analysis. 
 
 As a reminder, here is the fixed effects model as shown above:
 
@@ -776,7 +773,7 @@ modFixed %>%
   summary()
 ```
 
-Here is the mixed effects model with the tank set as a random factor to give each tank its own, random interept. Notice, including the random effects decreases the absolute value of the AIC. Therefore, this new model better describes the data.
+Here is the mixed effects model with the tank identity set as a random factor to give each tank its own, random intercept. Notice, including the random effects decreases the absolute value of the AIC. Therefore, this new model better describes the data.
 ```{r random mixed effects, echo=T}
 modRandom <- totalGrowth %>%
   lmerTest::lmer(dailyG ~ genotype * treatment + (1|tank),
@@ -785,13 +782,16 @@ modRandom %>%
   anova()
 
 AIC(modFixed, modRandom)
+```
 
+Tukey post-hoc analysis of the mixed effects model:
 
+```{r random mixed effects table}
 emmeans(modRandom, list(pairwise ~genotype*treatment),
         adjust = "tukey")[[2]] %>%
   broom::tidy() %>%
   filter(`1` %in% pairwiseString) %>%
-  select(-term) %>%
+  select(-c(term,df)) %>%
   rename(pairwise=`1`) %>%
   kbl(align = 'c',
     digits = 4,
@@ -801,6 +801,7 @@ emmeans(modRandom, list(pairwise ~genotype*treatment),
   row_spec(0, bold = T)
 ```
 
+Pattern is the same as above with the fixed effects. Significance has decreased (p values increased) for AC-2 and MB-C, suggesting that there was some variability between tanks in the same treatment (T13 v T15 and T14 v T16) but that this within treatment variability was not significant enough to change our conclusions. Thus, we fail to reject our null hypothesis that there are significant differences between individual genotype's susceptibility to OA.
 
 ## Powder Available
 
@@ -856,11 +857,19 @@ height <- read.csv('~/Grad School/ULink 2022/initialHeights.csv') %>%
 
 ```{r LE graphs}
 height %>%
-  ggplot(aes(treatment, prod)) +
+  ggplot(aes(treatment, prod, fill=treatment)) +
   geom_boxplot() +
   labs(x = "Treatment",
        y = "Avg Daily LE Rate (mm/cm/day)",
        title = "Avg Daily Linear Extension by Treatment") +
+  theme_classic()
+
+height %>%
+  ggplot(aes(tank, prod, fill=treatment)) +
+  geom_boxplot() +
+  labs(x = "Treatment",
+       y = "Avg Daily LE Rate (mm/cm/day)",
+       title = "Avg Daily Linear Extension by Treatment and Aquarium") +
   theme_classic()
 
 
@@ -962,6 +971,77 @@ multcomp::cld(emmeans(mod,
 ```
 
 The mean linear extension rate in the HCO2 group was mean `r round(mean(height$prod[which(height$treatment=='HCO2')]),3)`  (SD = `r round(sd(height$prod[which(height$treatment=='HCO2')]),3)`) mm/cm/day, whereas the mean in the LCO2 group was `r round(mean(height$prod[which(height$treatment=='LCO2')]),3)` (SD = `r round(sd(height$prod[which(height$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was not statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p =0.124, d = `r round(cohensResults$effsize,3)`. 
+
+## Tank Effects
+
+```{r LE tank effects}
+height %>%
+   mutate(tank = case_when(tank == 13 ~ "13 HCO2",
+                          tank == 14 ~ "14 LCO2",
+                          tank == 15 ~ "15 HCO2",
+                          tank == 16 ~ "16 LCO2")) %>%
+  ggplot(aes(genotype, prod, fill=tank)) +
+  geom_boxplot() +
+  scale_fill_manual(values = manLegend) +
+  labs(x = "Treatment",
+       y = "Avg Daily LE Rate (mm/cm/day)",
+       title = "Avg Daily Linear Extension by Treatment and Aquarium") +
+  theme_classic()
+
+```
+
+```{r LE Tank effects stats}
+height %>%
+  group_by(treatment) %>%
+  t_test(data=.,formula = prod ~ tank) %>%
+    kbl(align = 'c',
+    digits = 3,
+    caption = "Significance testing of tank effect on Linear Extension Rates") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+modFixed <- height %>%
+  aov(prod ~ treatment*genotype,
+                 data=.) 
+
+modFixed %>% TukeyHSD() %>%
+  broom::tidy() %>%
+  filter(contrast %in% c('LCO2:SI-A-HCO2:SI-A')) %>%
+  select(term,contrast,adj.p.value) %>%
+  mutate(significance = case_when(adj.p.value <0.001 ~ "xxx",
+                                  adj.p.value <0.01 ~ "xx",
+                                  adj.p.value <0.05 ~ "x",
+                                  TRUE ~ "NS"),
+         adj.p.value = round(adj.p.value, digits=4)) %>%
+  arrange(adj.p.value)
+
+
+modRandom <- height %>%
+  lmerTest::lmer(prod ~ genotype * treatment + (1|tank),
+                 data=.)
+modRandom %>%
+  anova()
+
+emmeans(modRandom, list(pairwise ~genotype*treatment),
+        adjust = "tukey")[[2]] %>%
+  broom::tidy() %>%
+  filter(`1` %in% pairwiseString) %>%
+  select(-c(term,df)) %>%
+  rename(pairwise=`1`) %>%
+  kbl(align = 'c',
+    digits = 4,
+    caption = "Pairwise comparison of genotypes' sensitivity to OA",
+    escape=F) %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+AIC(modFixed, modRandom)
+
+
+```
+
+AIC tells us the mixed effects model better describes the data. Post-hoc testing further tells us that indeed SI-A's linear extension rates were significantly different between treatments, yet all other genotype's were not.
+
 
 ```{r total extension}
 height %>%
