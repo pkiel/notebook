@@ -45,7 +45,7 @@ knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
 # Set figure directories
 knitr::opts_chunk$set(fig.path = fig_path,
                     cache.path = '../cache/',
-                    fig.align = 'center', out.width = '60%',
+                    fig.align = 'center', out.width = '90%',
                     message=FALSE, warning=FALSE,
                     cache = FALSE)
 ```
@@ -748,26 +748,6 @@ totalGrowth %>%
     caption = "Significance testing of tank effect on calcification") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
-```
-
-#### Mixed Effects Model
-
-Here I created a random intercept model to include tank effect, i.e. including variability within tanks into the model. This decreased the AIC from 44 to 12, and therefore the random tank effect should be included for analysis.
-
-```{r random mixed effects, echo=T}
-modFixed <- totalGrowth %>%
-  aov(dailyG ~ genotype*treatment, data=.)
-
-modFixed %>%
-  summary()
-
-modRandom <- totalGrowth %>%
-  lmerTest::lmer(dailyG ~ genotype * treatment + (1|tank),
-                 data=.)
-modRandom %>%
-  anova()
-
-AIC(modFixed, modRandom)
 
 genos <- unique(totalGrowth$genotype)
 pairwiseString <- c(paste0('(',
@@ -780,14 +760,45 @@ pairwiseString <- c(paste0('(',
                          ') - (LCO2 ',
                          genos,
                          ')'))
-                    
+```
+
+#### Mixed Effects Model
+
+Here I created a random intercept model to include tank effect, i.e. including variability within tanks into the model. This decreased the AIC from 66 to 31, and therefore the random tank effect should be included for analysis. 
+
+As a reminder, here is the fixed effects model as shown above:
+
+```{r fixed effects reminder, echo=T}
+modFixed <- totalGrowth %>%
+  aov(dailyG ~ genotype*treatment, data=.)
+
+modFixed %>%
+  summary()
+```
+
+Here is the mixed effects model with the tank set as a random factor to give each tank its own, random interept. Notice, including the random effects decreases the absolute value of the AIC. Therefore, this new model better describes the data.
+```{r random mixed effects, echo=T}
+modRandom <- totalGrowth %>%
+  lmerTest::lmer(dailyG ~ genotype * treatment + (1|tank),
+                 data=.)
+modRandom %>%
+  anova()
+
+AIC(modFixed, modRandom)
+
 
 emmeans(modRandom, list(pairwise ~genotype*treatment),
         adjust = "tukey")[[2]] %>%
   broom::tidy() %>%
   filter(`1` %in% pairwiseString) %>%
   select(-term) %>%
-  rename(pairwise=`1`)
+  rename(pairwise=`1`) %>%
+  kbl(align = 'c',
+    digits = 4,
+    caption = "Pairwise comparison of genotypes' sensitivity to OA",
+    escape=F) %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
 ```
 
 

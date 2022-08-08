@@ -74,7 +74,7 @@ to proceed forward with most of our tests.
 
 ## Labview Data
 
-<img src="/notebook/images/ulinkGrowth2022/diel pot-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="/notebook/images/ulinkGrowth2022/diel pot-1.png" width="90%" style="display: block; margin: auto;" />
 
 The peaks in the standard deviation are almost certainly caused by
 aquarium cleaning days when corals are removed into a separate bath and
@@ -86,7 +86,7 @@ by occurring during scheduled cleaning times and affecting multiple
 aquariums at once since cleaning occurred at the same time for all
 aquariums.
 
-<img src="/notebook/images/ulinkGrowth2022/cleaned diel plot-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="/notebook/images/ulinkGrowth2022/cleaned diel plot-1.png" width="90%" style="display: block; margin: auto;" />
 
 Variability is still present, but the extreme spikes caused by cleaning
 have been removed. Thus, any variability that remains is due to durafet
@@ -106,7 +106,7 @@ programmed variability will be apart of the variability of each sample
 along with sampling error, durafet error altering amount of CO2 injected
 into aquaria (shown above in the LabView data), etc.
 
-<img src="/notebook/images/ulinkGrowth2022/unnamed-chunk-3-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="/notebook/images/ulinkGrowth2022/unnamed-chunk-3-1.png" width="90%" style="display: block; margin: auto;" />
 
 Sampling time had a mean of around 10a. 3 sampling times were taken
 after 12p with one sampling time around 4:20p
@@ -755,12 +755,12 @@ precision.
 
 # Calcification Analysis
 
-<img src="/notebook/images/ulinkGrowth2022/growth graphs-1.png" width="60%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/growth graphs-2.png" width="60%" style="display: block; margin: auto;" />
+<img src="/notebook/images/ulinkGrowth2022/growth graphs-1.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/growth graphs-2.png" width="90%" style="display: block; margin: auto;" />
 
 Following April 15 (Weeky 5), the declining health of the corals
 stabilized and began to split amongst treatment groups.
 
-<img src="/notebook/images/ulinkGrowth2022/calcification graphs-1.png" width="60%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/calcification graphs-2.png" width="60%" style="display: block; margin: auto;" />
+<img src="/notebook/images/ulinkGrowth2022/calcification graphs-1.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/calcification graphs-2.png" width="90%" style="display: block; margin: auto;" />
 
 There is some obvious genet-specific responses.
 
@@ -829,10 +829,10 @@ LCO2
 43
 </td>
 <td style="text-align:center;">
-0.566
+0.569
 </td>
 <td style="text-align:center;">
-0.253
+0.237
 </td>
 </tr>
 </tbody>
@@ -890,7 +890,7 @@ LCO2
 43
 </td>
 <td style="text-align:center;">
--5.8208
+-6.1944
 </td>
 <td style="text-align:center;">
 87
@@ -945,7 +945,7 @@ HCO2
 LCO2
 </td>
 <td style="text-align:center;">
--1.2347
+-1.314
 </td>
 <td style="text-align:center;">
 46
@@ -1030,24 +1030,10 @@ genotype
 Cheetos-B-AC-2
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-0.0019
+0.0004
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-xx
-</td>
-</tr>
-<tr>
-<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-genotype
-</td>
-<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-SI-A-MB-C
-</td>
-<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-0.0020
-</td>
-<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-xx
+xxx
 </td>
 </tr>
 <tr>
@@ -1058,24 +1044,24 @@ treatment:genotype
 LCO2:MB-C-HCO2:MB-C
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-0.0072
+0.0004
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-xx
+xxx
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
-treatment:genotype
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+genotype
 </td>
-<td style="text-align:center;">
-LCO2:SI-A-HCO2:SI-A
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+SI-A-MB-C
 </td>
-<td style="text-align:center;">
-0.3477
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+0.0039
 </td>
-<td style="text-align:center;">
-NS
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
+xx
 </td>
 </tr>
 <tr>
@@ -1086,7 +1072,21 @@ genotype
 MB-C-Cheetos-B
 </td>
 <td style="text-align:center;">
-0.3620
+0.1103
+</td>
+<td style="text-align:center;">
+NS
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+treatment:genotype
+</td>
+<td style="text-align:center;">
+LCO2:SI-A-HCO2:SI-A
+</td>
+<td style="text-align:center;">
+0.3339
 </td>
 <td style="text-align:center;">
 NS
@@ -1100,7 +1100,7 @@ genotype
 SI-A-AC-2
 </td>
 <td style="text-align:center;">
-0.5572
+0.5634
 </td>
 <td style="text-align:center;">
 NS
@@ -1114,7 +1114,7 @@ treatment:genotype
 LCO2:Cheetos-B-HCO2:Cheetos-B
 </td>
 <td style="text-align:center;">
-0.9389
+0.9741
 </td>
 <td style="text-align:center;">
 NS
@@ -1172,20 +1172,6 @@ a
 </tr>
 <tr>
 <td style="text-align:left;">
-1
-</td>
-<td style="text-align:center;">
-HCO2
-</td>
-<td style="text-align:center;">
-AC-2
-</td>
-<td style="text-align:center;">
-ab
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 4
 </td>
 <td style="text-align:center;">
@@ -1193,6 +1179,20 @@ LCO2
 </td>
 <td style="text-align:center;">
 Cheetos-B
+</td>
+<td style="text-align:center;">
+ab
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:center;">
+HCO2
+</td>
+<td style="text-align:center;">
+AC-2
 </td>
 <td style="text-align:center;">
 ab
@@ -1223,7 +1223,7 @@ LCO2
 MB-C
 </td>
 <td style="text-align:center;">
-bc
+cd
 </td>
 </tr>
 <tr>
@@ -1237,7 +1237,7 @@ LCO2
 SI-A
 </td>
 <td style="text-align:center;">
-c
+cd
 </td>
 </tr>
 <tr>
@@ -1251,16 +1251,16 @@ LCO2
 AC-2
 </td>
 <td style="text-align:center;">
-c
+d
 </td>
 </tr>
 </tbody>
 </table>
 
 The mean calcification rate in the HCO2 group was mean 0.316 (SD =
-0.139) mg/g/day, whereas the mean in the LCO2 group was 0.566 (SD =
-0.253). A Student two-samples t-test showed that the difference was
-statistically significant, t(87) = -5.821, p &lt; 0.0001, d = -1.235.
+0.139) mg/g/day, whereas the mean in the LCO2 group was 0.569 (SD =
+0.237). A Student two-samples t-test showed that the difference was
+statistically significant, t(87) = -6.194, p &lt; 0.0001, d = -1.314.
 Thus, the ocean acidification group saw on average a 44% reduction in
 calcification rates.
 
@@ -1273,7 +1273,7 @@ treatment. Here I am analyzing tank effects on the calcification rate
 and investigating if calcification rates were significantly different
 between aquariums within the same treatment group.
 
-<img src="/notebook/images/ulinkGrowth2022/tank effects graph-1.png" width="60%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/tank effects graph-2.png" width="60%" style="display: block; margin: auto;" />
+<img src="/notebook/images/ulinkGrowth2022/tank effects graph-1.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/tank effects graph-2.png" width="90%" style="display: block; margin: auto;" />
 
 ### Tank Effects Statistics
 
@@ -1373,16 +1373,16 @@ tank
 1
 </td>
 <td style="text-align:center;">
-0.172
+0.116
 </td>
 <td style="text-align:center;">
-0.172
+0.116
 </td>
 <td style="text-align:center;">
-2.805
+2.121
 </td>
 <td style="text-align:center;">
-0.102
+0.153
 </td>
 <td style="text-align:center;">
 NS
@@ -1399,10 +1399,10 @@ Residuals
 41
 </td>
 <td style="text-align:center;">
-2.518
+2.238
 </td>
 <td style="text-align:center;">
-0.061
+0.055
 </td>
 <td style="text-align:center;">
 NA
@@ -1421,8 +1421,10 @@ NS
 
 Here I created a random intercept model to include tank effect,
 i.e. including variability within tanks into the model. This decreased
-the AIC from 44 to 12, and therefore the random tank effect should be
+the AIC from 66 to 31, and therefore the random tank effect should be
 included for analysis.
+
+As a reminder, here is the fixed effects model as shown above:
 
 ``` r
 modFixed <- totalGrowth %>%
@@ -1433,12 +1435,17 @@ modFixed %>%
 ```
 
     ##                    Df Sum Sq Mean Sq F value   Pr(>F)    
-    ## genotype            3 1.0216  0.3405  11.585 2.14e-06 ***
-    ## treatment           1 1.2674  1.2674  43.113 4.58e-09 ***
-    ## genotype:treatment  3 0.2759  0.0920   3.128   0.0302 *  
-    ## Residuals          81 2.3811  0.0294                     
+    ## genotype            3 0.9975  0.3325  13.298 3.86e-07 ***
+    ## treatment           1 1.2904  1.2904  51.605 2.97e-10 ***
+    ## genotype:treatment  3 0.3311  0.1104   4.413  0.00631 ** 
+    ## Residuals          81 2.0254  0.0250                     
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Here is the mixed effects model with the tank set as a random factor to
+give each tank its own, random interept. Notice, including the random
+effects decreases the absolute value of the AIC. Therefore, this new
+model better describes the data.
 
 ``` r
 modRandom <- totalGrowth %>%
@@ -1450,9 +1457,9 @@ modRandom %>%
 
     ## Type III Analysis of Variance Table with Satterthwaite's method
     ##                     Sum Sq Mean Sq NumDF  DenDF F value    Pr(>F)    
-    ## genotype           0.97894 0.32631     3 79.028 11.6243 2.172e-06 ***
-    ## treatment          0.38416 0.38416     1  2.046 13.6851   0.06369 .  
-    ## genotype:treatment 0.26981 0.08994     3 79.028  3.2038   0.02765 *  
+    ## genotype           0.96092 0.32031     3 79.039 13.2105 4.486e-07 ***
+    ## treatment          0.49517 0.49517     1  2.061 20.4225  0.043159 *  
+    ## genotype:treatment 0.32747 0.10916     3 79.039  4.5019  0.005729 ** 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1461,43 +1468,137 @@ AIC(modFixed, modRandom)
 ```
 
     ##           df       AIC
-    ## modFixed   9 -51.70581
-    ## modRandom 10 -18.34436
+    ## modFixed   9 -66.10356
+    ## modRandom 10 -30.71757
 
 ``` r
-genos <- unique(totalGrowth$genotype)
-pairwiseString <- c(paste0('(',
-                         genos,
-                         ' HCO2) - (',
-                         genos,
-                         ' LCO2)'),
-                    paste0('(HCO2 ',
-                         genos,
-                         ') - (LCO2 ',
-                         genos,
-                         ')'))
-                    
-
 emmeans(modRandom, list(pairwise ~genotype*treatment),
         adjust = "tukey")[[2]] %>%
   broom::tidy() %>%
   filter(`1` %in% pairwiseString) %>%
   select(-term) %>%
-  rename(pairwise=`1`)
+  rename(pairwise=`1`) %>%
+  kbl(align = 'c',
+    digits = 4,
+    caption = "Pairwise comparison of genotypes' sensitivity to OA",
+    escape=F) %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
 ```
 
-    ## # A tibble: 4 x 6
-    ##   pairwise                            estimate std.error    df statistic adj.p~1
-    ##   <chr>                                  <dbl>     <dbl> <dbl>     <dbl>   <dbl>
-    ## 1 (AC-2 HCO2) - (AC-2 LCO2)             -0.393    0.0848  7.23     -4.63  0.0262
-    ## 2 (Cheetos-B HCO2) - (Cheetos-B LCO2)   -0.105    0.101  14.0      -1.03  0.961 
-    ## 3 (MB-C HCO2) - (MB-C LCO2)             -0.270    0.0858  7.58     -3.15  0.145 
-    ## 4 (SI-A HCO2) - (SI-A LCO2)             -0.146    0.0815  6.21     -1.80  0.643 
-    ## # ... with abbreviated variable name 1: adj.p.value
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<caption>
+Pairwise comparison of genotypes’ sensitivity to OA
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;font-weight: bold;">
+pairwise
+</th>
+<th style="text-align:center;font-weight: bold;">
+estimate
+</th>
+<th style="text-align:center;font-weight: bold;">
+std.error
+</th>
+<th style="text-align:center;font-weight: bold;">
+df
+</th>
+<th style="text-align:center;font-weight: bold;">
+statistic
+</th>
+<th style="text-align:center;font-weight: bold;">
+adj.p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+(AC-2 HCO2) - (AC-2 LCO2)
+</td>
+<td style="text-align:center;">
+-0.3942
+</td>
+<td style="text-align:center;">
+0.0741
+</td>
+<td style="text-align:center;">
+9.2258
+</td>
+<td style="text-align:center;">
+-5.3202
+</td>
+<td style="text-align:center;">
+0.0066
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+(Cheetos-B HCO2) - (Cheetos-B LCO2)
+</td>
+<td style="text-align:center;">
+-0.0820
+</td>
+<td style="text-align:center;">
+0.0903
+</td>
+<td style="text-align:center;">
+18.7121
+</td>
+<td style="text-align:center;">
+-0.9082
+</td>
+<td style="text-align:center;">
+0.9815
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+(MB-C HCO2) - (MB-C LCO2)
+</td>
+<td style="text-align:center;">
+-0.3045
+</td>
+<td style="text-align:center;">
+0.0751
+</td>
+<td style="text-align:center;">
+9.7252
+</td>
+<td style="text-align:center;">
+-4.0544
+</td>
+<td style="text-align:center;">
+0.0333
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+(SI-A HCO2) - (SI-A LCO2)
+</td>
+<td style="text-align:center;">
+-0.1365
+</td>
+<td style="text-align:center;">
+0.0708
+</td>
+<td style="text-align:center;">
+7.7876
+</td>
+<td style="text-align:center;">
+-1.9281
+</td>
+<td style="text-align:center;">
+0.5701
+</td>
+</tr>
+</tbody>
+</table>
 
 ## Powder Available
 
-<img src="/notebook/images/ulinkGrowth2022/powder available-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="/notebook/images/ulinkGrowth2022/powder available-1.png" width="90%" style="display: block; margin: auto;" />
 
 The amount of new aragonite precipated is visualized above. Horizontal
 lines denote thresholds for tests: &gt;500mg = green (complete suite
@@ -1506,7 +1607,7 @@ including XRD), &gt;120 mg = orange (complete suite sans XRD), &gt;50mg
 
 # Linear Extension
 
-<img src="/notebook/images/ulinkGrowth2022/LE graphs-1.png" width="60%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/LE graphs-2.png" width="60%" style="display: block; margin: auto;" />
+<img src="/notebook/images/ulinkGrowth2022/LE graphs-1.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/LE graphs-2.png" width="90%" style="display: block; margin: auto;" />
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
@@ -1984,7 +2085,7 @@ The mean linear extension rate in the HCO2 group was mean 0.005 (SD =
 0.004). A Student two-samples t-test showed that the difference was not
 statistically significant, t(82) = -1.556, p =0.124, d = -0.34.
 
-<img src="/notebook/images/ulinkGrowth2022/total extension-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="/notebook/images/ulinkGrowth2022/total extension-1.png" width="90%" style="display: block; margin: auto;" />
 
 # Takeaways and Next Steps
 
