@@ -1,0 +1,159 @@
+---
+layout: post
+title:  "TGA Analysis of Coral Skeletons"
+author: "Patrick M Kiel"
+date: '2021-09-15'
+categories: [research]
+description: "Review of thermogravimetric analysis techniques for quanitative comparisons of coral skeletal properties."
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, 
+  encoding = encoding, 
+  output_file = paste0('2021-09-15', "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
+  output_dir = "../_posts") })
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#load packages
+library(tidyverse)
+library(kableExtra)
+library(readxl)
+library(ggpubr)
+library(rstatix)
+
+base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
+fig_path <- "images/" #add a new folder if you want to group output into a single foder
+
+# Set base directories
+knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
+
+# Set figure directories
+knitr::opts_chunk$set(fig.path = fig_path,
+                    cache.path = '../cache/',
+                    message=FALSE, warning=FALSE,
+                    cache = FALSE)
+```
+
+```{js}
+
+window.onload = function() {
+    //query string in the password
+    const urlParams = new URLSearchParams(window.location.search);
+    const pass = urlParams.get('pass')
+    document.getElementById("password").value = pass;
+};
+
+function verify() {
+  <!-- set the password here -->
+  if (document.getElementById('password').value === 'tga') {
+    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
+    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
+  } else {
+    alert('Invalid Password! You cannot view this content.');
+    password.setSelectionRange(0, password.value.length);
+  }
+  return false;
+}
+```
+
+```{css}
+/*Change content Display */
+.hidden {
+  display: none;
+}
+```
+
+```{r FigCaptions, echo=FALSE}
+
+#Figure and Table Caption Numbering
+capTabNo = 1; capFigNo = 1;
+
+#Function to add the Table Number
+capTab = function(x){
+    x = paste0("Table ",capTabNo,". ",x)
+    capTabNo <<- capTabNo + 1
+    return(x)
+}
+
+#Function to add the Figure Number
+capFig = function(x){
+    x = paste0("Figure ",capFigNo,". ",x)
+    capFigNo <<- capFigNo + 1
+    return(x)
+}
+```
+
+<!-- The password box -->
+<div id="credentials">
+  <input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
+  <br/>
+  <input id="button" type="button" value="Show Content" onclick="verify()" />
+</div>
+
+<!-- The content we want to show after password -->
+<div id="HIDDENDIV" class="hidden" markdown="1">
+
+<!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
+
+# Overview
+
+Thermogravimetric analysis (TGA) is a quantitative materials technique that linearly heats a sample and simultaneously measures its mass as the sample degrades. By looking at the percent of decomposition over discrete regions, we can characterize the coral sample's fractional constituents. The heating occurs in an inert environment (N<sub>2</sub> gas) to avoid sample oxidation.
+
+```{r example TGA curve, fig.cap=capFig("Example TGA and DTG Curve")}
+  exampleTGA = readLines('~/Grad School/ULink 2022/TGA/allysonGenotypes/pmk_genos_149.txt')
+  filteredLines = head(tail(exampleTGA,-10),-2)
+  dat = read.csv(textConnection(filteredLines), header = FALSE, stringsAsFactors = FALSE,
+                 sep = "\t")
+  colnames(dat) = c("time","temperature", "mass",
+                     "percent",	"deriv.weight")
+  
+  source("~/DeterminingScaleFactors.R")
+  
+  DetermineScale(right=c(min(dat$deriv.weight),
+                   max(dat$deriv.weight)),
+                 left=c(min(dat$percent),
+                   max(dat$percent)))
+  
+  dat %>%
+    mutate(deriv.weight = deriv.weight*84.663+99.502) %>%
+    ggplot(aes(x=temperature)) +
+    geom_line(aes(y=percent),
+              color="black") +
+    geom_line(aes(y=deriv.weight),
+              color="red") +
+    scale_y_continuous(
+      # Features of the first axis
+      name = "Weight Loss (%)",
+      # Add a second axis and specify its features
+      sec.axis = sec_axis(trans=~(.-99.502)/84.663,
+                          name="DTG (%/°C)")
+    ) +
+    labs(x= "Temperature (°C)",
+         title= "TGA (black) and DTG (red)") +
+    theme_bw()
+```
+
+
+In this document, I review the current coral TGA literature, describe the samples I have tested thus far and the proposed analysis methodology, and begin to analyze my inital results.
+
+# Literature Review
+
+
+
+# Samples
+
+# Proposed Analysis
+
+# Initial Results
+
+</div>
