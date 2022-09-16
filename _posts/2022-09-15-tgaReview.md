@@ -2,7 +2,7 @@
 layout: post
 title:  "TGA Analysis of Coral Skeletons"
 author: "Patrick M Kiel"
-date: '2021-09-15'
+date: '2022-09-15'
 categories: [research]
 description: "Review of thermogravimetric analysis techniques for quanitative comparisons of coral skeletal properties."
 output:
@@ -12,7 +12,7 @@ output:
 knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile, 
   encoding = encoding, 
-  output_file = paste0('2021-09-15', "-",
+  output_file = paste0('2022-09-15', "-",
                         gsub(pattern = "\\.Rmd$",
                               "", basename(inputFile))
                         ,".md"), 
@@ -72,11 +72,12 @@ discrete regions, we can characterize the coral sample’s fractional
 constituents. The heating occurs in an inert environment (N<sub>2</sub>
 gas) to avoid sample oxidation.
 
-    ## Use this formula to scale orignal values of the right axis: adj = original *  84.663 + 99.502 
-    ## Use this formula to scale the right axis ticks: scale = original - 99.502 / 84.663
+\[1\] "
+<h5>
+Figure 1. Example TGA and DTG Curve
+</h5>
 
-![Figure 1. Example TGA and DTG
-Curve](/notebook/images/example%20TGA%20curve-1.png)
+" ![](/notebook/images/example-TGA-1.png)<!-- -->
 
 In this document, I review the current coral TGA literature, describe
 the samples I have tested thus far and the proposed analysis

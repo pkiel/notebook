@@ -2,7 +2,7 @@
 layout: post
 title:  "TGA Analysis of Coral Skeletons"
 author: "Patrick M Kiel"
-date: '2021-09-15'
+date: '2022-09-15'
 categories: [research]
 description: "Review of thermogravimetric analysis techniques for quanitative comparisons of coral skeletal properties."
 output:
@@ -12,7 +12,7 @@ output:
 knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile, 
   encoding = encoding, 
-  output_file = paste0('2021-09-15', "-",
+  output_file = paste0('2022-09-15', "-",
                         gsub(pattern = "\\.Rmd$",
                               "", basename(inputFile))
                         ,".md"), 
@@ -41,7 +41,7 @@ knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
 knitr::opts_chunk$set(fig.path = fig_path,
                     cache.path = '../cache/',
                     message=FALSE, warning=FALSE,
-                    cache = FALSE)
+                    cache = FALSE, results = "asis")
 ```
 
 ```{js}
@@ -87,7 +87,7 @@ capTab = function(x){
 
 #Function to add the Figure Number
 capFig = function(x){
-    x = paste0("Figure ",capFigNo,". ",x)
+    x = paste0("<h5>Figure ",capFigNo,". ",x,"</h5>")
     capFigNo <<- capFigNo + 1
     return(x)
 }
@@ -109,7 +109,7 @@ capFig = function(x){
 
 Thermogravimetric analysis (TGA) is a quantitative materials technique that linearly heats a sample and simultaneously measures its mass as the sample degrades. By looking at the percent of decomposition over discrete regions, we can characterize the coral sample's fractional constituents. The heating occurs in an inert environment (N<sub>2</sub> gas) to avoid sample oxidation.
 
-```{r example TGA curve, fig.cap=capFig("Example TGA and DTG Curve")}
+```{r example-TGA}
   exampleTGA = readLines('~/Grad School/ULink 2022/TGA/allysonGenotypes/pmk_genos_149.txt')
   filteredLines = head(tail(exampleTGA,-10),-2)
   dat = read.csv(textConnection(filteredLines), header = FALSE, stringsAsFactors = FALSE,
@@ -117,13 +117,14 @@ Thermogravimetric analysis (TGA) is a quantitative materials technique that line
   colnames(dat) = c("time","temperature", "mass",
                      "percent",	"deriv.weight")
   
-  source("~/DeterminingScaleFactors.R")
+  # source("~/DeterminingScaleFactors.R")
+  # 
+  # DetermineScale(right=c(min(dat$deriv.weight),
+  #                  max(dat$deriv.weight)),
+  #                left=c(min(dat$percent),
+  #                  max(dat$percent)))
   
-  DetermineScale(right=c(min(dat$deriv.weight),
-                   max(dat$deriv.weight)),
-                 left=c(min(dat$percent),
-                   max(dat$percent)))
-  
+  capFig("Example TGA and DTG Curve")
   dat %>%
     mutate(deriv.weight = deriv.weight*84.663+99.502) %>%
     ggplot(aes(x=temperature)) +
