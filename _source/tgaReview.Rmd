@@ -29,6 +29,7 @@ library(kableExtra)
 library(readxl)
 library(ggpubr)
 library(rstatix)
+library(seacarb)
 
 base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
 base_url <- "/notebook/" # subdirectory of patrickmkiel.com
@@ -110,7 +111,7 @@ capFig = function(x){
 
 Thermogravimetric analysis (TGA) is a quantitative materials technique that linearly heats a sample and simultaneously measures its mass as the sample degrades. By looking at the percent decomposition over discrete regions, we can characterize the coral sample's fractional constituents. The heating occurs in an inert environment (N<sub>2</sub> gas) to avoid sample oxidation. 
 
-For analysis, we can use the first derivative of the TGA curve (called the DTG curve) to identify the start, peak, and end temperatures for each respective region. Then, we can integrate between the start and end temperatures to calculate the percent degradation. For example, an aragonite coral skeleton may have two peaks: decomposition of the intracrystaline organics at approximately  and the decomposition of CaCO<sub>3</sub> to CaO and CO<sub>2</sub> at approximately 600-800 °C (Fig 1.).
+For analysis, we can use the first derivative of the TGA curve (called the DTG curve) to identify the start, peak, and end temperatures for each respective region. Then, we can integrate between the start and end temperatures to calculate the percent degradation. For example, an aragonite coral skeleton may have two peaks: decomposition of the intracrystaline organics at approximately  and the decomposition of CaCO<sub>3</sub> to CaO and CO<sub>2</sub> at approximately 600-800°C (Fig 1.).
 
 ```{r example-TGA}
   exampleTGA = readLines('~/Grad School/ULink 2022/TGA/allysonGenotypes/pmk_genos_149.txt')
@@ -162,7 +163,7 @@ They heated at a rate of 10°C/min to 1000°C, but limited their analysis to dis
 ```{r Coronado-table}
 coronadoTable <- structure(list(Temperature = c("20-150 ", "150-210 ", "210-275 ", 
 "275-300 ", "300-330 ", "330-411 ", "411-440 ", "440-520 ", "20-275 ", 
-"275-520"), Name = c("Nonstructural water", "", "", "", "ACC", 
+"275-520"), Name = c("Nonstructural water", "Structural Water", "", "", "ACC", 
 "", "", "", "H2O", "OM-OH-ACC"), Reasoning = c("evaporation of nonstructural water molecules", 
 "", "", "", "crystallization of ACC, which occurs ~ 316", "", 
 "transformation of aragonite to calcite, which occurs ~418", 
@@ -181,7 +182,7 @@ coronadoTable %>%
 ```{r}
 capFig("TGA Results from Coronado et al. 2019")
 ```
-![](/notebook/images/Coronado2019Results.png)<!-- -->
+![](/notebook/images/tgaAnalysis/Coronado2019Results.png)<!-- -->
 
 ### Moynihan *et al.* 2021
 This paper looked at *Porites* coral cores collected from Thailand, Singapore, and Taiwan and correlated micro-mechanical properties with environmental conditions. They found that corals from low salinity and high sedimentation environments (large freshwater influx) had higher organic content and increased embrittlement.  
@@ -191,7 +192,7 @@ Their analysis looked at TGA from 20-500°C, which was achieved by heating to a 
 ```{r}
 capFig("Regression of micro-mechanical properties and TGA, Moynihan et al. 2019")
 ```
-![](/notebook/images/Moynihan2021.png)<!-- -->
+![](/notebook/images/tgaAnalysis/Moynihan2021.png)<!-- -->
 
 
 ### Prada *et al.* 2021
@@ -202,14 +203,15 @@ They only found significant differences between sites in intraskeletal strucutre
 ```{r}
 capFig("TGA Results from Prada et al. 2021")
 ```
-![](/notebook/images/Prada2021.png)<!-- -->
+![](/notebook/images/tgaAnalysis/Prada2021.png)<!-- -->
 
 ## Takeaways
 
-Each of these papers analyzed TGA data slightly differently. However, there is general agreement in the organic matrix limits (250-470°C) and the structural water limits (150-225°C). There is potentially other regions of interest too including the crystallization of ACC (300-330°C, ~316°C) and the monotropic transformation of aragonite to calcite (411-440°C, ~418°C).
+Each of these papers analyzed TGA data slightly differently. However, there is general agreement in the organic matrix limits (250-470°C) and the structural water limits (150-225°C). There is potentially other regions of interest too including the crystallization of ACC (300-330°C, ~316°C) and the monotropic transformation of aragonite to calcite (411-440°C, ~418°C). See section below where I propose the analysis I will undertake.
+
 
 ## References
-1. 1. Coronado, I., Fine, M., Bosellini, F. R. & Stolarski, J. Impact of ocean acidification on crystallographic vital effect of the coral skeleton. Nat. Commun. 10, 1–9 (2019).
+1. Coronado, I., Fine, M., Bosellini, F. R. & Stolarski, J. Impact of ocean acidification on crystallographic vital effect of the coral skeleton. Nat. Commun. 10, 1–9 (2019).
 2. Cuif, J. P., Dauphin, Y. Y., Doucet, J., Salome, M. & Susini, J. XANES mapping of organic sulfate in three scleractinian coral skeletons. Geochim. Cosmochim. Acta 67, 75–83 (2003).
 3. Cuif, J. P. et al. Fine-scale growth patterns in coral skeletons: Biochemical control over crystallization of aragonite fibres and assessment of early diagenesis. Geol. Soc. Spec. Publ. 303, 87–96 (2008).
 4. Cuif, J. P., Dauphin, Y., Berthet, P. & Jegoudez, J. Associated water and organic compounds in coral skeletons: Quantitative thermogravimetry coupled to infrared absorption spectrometry. Geochemistry, Geophys. Geosystems 5, 1–9 (2004).
@@ -225,8 +227,78 @@ Each of these papers analyzed TGA data slightly differently. However, there is g
 
 # Samples
 
+The corals for this first batch of analysis come from Allyson Demerlis's recent project where she investigated gene expression during a rapid bleaching experiment of 3 *Acropora cervicornis* genotypes. Some of the corals underwent a thermal stress-hardening treatment where the corals were exposed to a daily variable temperature which is believed to increase a coral's bleaching resilience. The corals exposed to the high temperatures (36°C) had high amounts of mortality and I took these skeletons to analyze. 
+
+```{r allysonStressHardening}
+corals <- read_excel('~/Grad School/ULink 2022/AllysonGenotypedCorals/metadata.xlsx') %>%
+  mutate(bw_initial_calc = Bw_initial_raw_mass/(1-(rho(S = `bw_initial_salinity (ppt)`,
+                                                       T = bw_initial_temp)/1000)/2.93),
+         bw_final_calc = bw_final_raw_mass/(1-(rho(S = bw_final_salinity,
+                                                   T = bw_final_temp)/1000)/2.93),
+         newMassStd = (bw_final_calc-bw_initial_calc)*1000/
+           bw_initial_calc/
+           as.numeric(bw_final_date-bw_initial_date)) %>%
+  filter(Species == 'Acropora cervicornis',
+         newMassStd>0) %>%
+  filter(ID %in%
+           (read.table('~/Grad School/ULink 2022/AllysonGenotypedCorals/skeletonTag.txt') %>%
+           pull(V1) %>%
+           str_extract(., '[[:digit:]]*') %>%
+           as.numeric(.)))
+
+capFig("Calcification data from Allyson Demerlis's project")
+
+corals %>%
+  ggplot(aes(Colony,newMassStd, fill=Treatment)) +
+  geom_boxplot() +
+  theme_classic() +
+  labs(y = "Daily Calcification Rate (mg/g/day)",
+       x= "Genotype",
+       title = "Genotype x Temperature")
+
+corals %>%
+  rename(Genotype=Colony) %>%
+  aov(data=.,
+      newMassStd~Genotype*Treatment) %>% 
+  summary()
+```
+
+There was a significant effect of the coral genotype (F=23.27, p=7.78e-6), but no observed effect of stress hardening treatment on calcification rates (F=0.91, p=0.352). Following post-hoc testing, the significant genotype effect was driven by genotype MB-B which had much higher rates than BC-8B and SI-C which had similar calcification rates.
+
+Thus, we are conducting these tests with a special focus on genotype MB-B to see if its faster calcification rate results in any observable differences in skeletal properties.
+
 # Proposed Analysis
 
+With the reviewed literature above, I synthesized the analysis I plan to conduct with the goals of 1) automating the analysis; 2) characterizing the structural water, organic matrix, ACC, aragonite to calcite, and calcium carbonate regions; and 3) analyzing if there are any propertie conserved among genotypes.
+
+## Programatic Analysis
+
+
+
 # Initial Results
+
+```{r TGA-Analysis}
+source('~/Grad School/ULink 2022/TGA/tgaAnalysis.R')
+
+tga <- list.files(path = '~/Grad School/ULink 2022/TGA/allysonGenotypes/',
+           pattern = ".txt",
+           full.names = T)
+
+lapply(tga, analyze_tga)
+
+# lapply(analysis, function(x) {
+#   x[[2]]
+#   
+#   x[[1]] %>%
+#      kbl(align = 'c',
+#       digits = 4,
+#       caption = paste0("Sample ",
+#                       names(x[1]))) %>%
+#     kable_classic() %>%
+#     row_spec(0, bold = T)
+# })
+
+```
+
 
 </div>

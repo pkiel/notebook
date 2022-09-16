@@ -78,7 +78,7 @@ each respective region. Then, we can integrate between the start and end
 temperatures to calculate the percent degradation. For example, an
 aragonite coral skeleton may have two peaks: decomposition of the
 intracrystaline organics at approximately and the decomposition of
-CaCO<sub>3</sub> to CaO and CO<sub>2</sub> at approximately 600-800 °C
+CaCO<sub>3</sub> to CaO and CO<sub>2</sub> at approximately 600-800°C
 (Fig 1.).
 
 <h5>
@@ -150,6 +150,7 @@ evaporation of nonstructural water molecules
 150-210
 </td>
 <td style="text-align:center;">
+Structural Water
 </td>
 <td style="text-align:center;">
 </td>
@@ -239,7 +240,7 @@ captures all organic matrix, structural water, and ACC crystallization
 Figure 2. TGA Results from Coronado et al. 2019
 </h5>
 
-![](/notebook/images/Coronado2019Results.png)<!-- -->
+![](/notebook/images/tgaAnalysis/Coronado2019Results.png)<!-- -->
 
 ### Moynihan *et al.* 2021
 
@@ -262,7 +263,7 @@ Figure 3. Regression of micro-mechanical properties and TGA, Moynihan et
 al. 2019
 </h5>
 
-![](/notebook/images/Moynihan2021.png)<!-- -->
+![](/notebook/images/tgaAnalysis/Moynihan2021.png)<!-- -->
 
 ### Prada *et al.* 2021
 
@@ -286,7 +287,7 @@ not presented here.
 Figure 4. TGA Results from Prada et al. 2021
 </h5>
 
-![](/notebook/images/Prada2021.png)<!-- -->
+![](/notebook/images/tgaAnalysis/Prada2021.png)<!-- -->
 
 ## Takeaways
 
@@ -295,66 +296,136 @@ there is general agreement in the organic matrix limits (250-470°C) and
 the structural water limits (150-225°C). There is potentially other
 regions of interest too including the crystallization of ACC (300-330°C,
 \~316°C) and the monotropic transformation of aragonite to calcite
-(411-440°C, \~418°C).
+(411-440°C, \~418°C). See section below where I propose the analysis I
+will undertake.
 
 ## References
 
-1.  1.  Coronado, I., Fine, M., Bosellini, F. R. & Stolarski, J. Impact
-        of ocean acidification on crystallographic vital effect of the
-        coral skeleton. Nat. Commun. 10, 1–9 (2019).
-
+1.  Coronado, I., Fine, M., Bosellini, F. R. & Stolarski, J. Impact of
+    ocean acidification on crystallographic vital effect of the coral
+    skeleton. Nat. Commun. 10, 1–9 (2019).
 2.  Cuif, J. P., Dauphin, Y. Y., Doucet, J., Salome, M. & Susini, J.
     XANES mapping of organic sulfate in three scleractinian coral
     skeletons. Geochim. Cosmochim. Acta 67, 75–83 (2003).
-
 3.  Cuif, J. P. et al. Fine-scale growth patterns in coral skeletons:
     Biochemical control over crystallization of aragonite fibres and
     assessment of early diagenesis. Geol. Soc. Spec. Publ. 303, 87–96
     (2008).
-
 4.  Cuif, J. P., Dauphin, Y., Berthet, P. & Jegoudez, J. Associated
     water and organic compounds in coral skeletons: Quantitative
     thermogravimetry coupled to infrared absorption spectrometry.
     Geochemistry, Geophys. Geosystems 5, 1–9 (2004).
-
 5.  Dauphin, Y., Cuif, J. P. & Massard, P. Persistent organic components
     in heated coral aragonitic skeletons-Implications for
     palaeoenvironmental reconstructions. Chem. Geol. 231, 26–37 (2006).
-
 6.  Falini, G. et al. Control of aragonite deposition in colonial corals
     by intra-skeletal macromolecules. J. Struct. Biol. 183, 226–238
     (2013).
-
 7.  Goffredo, S. et al. Biomineralization control related to population
     density under ocean acidification. Nat. Clim. Chang. 4, 593–597
     (2014).
-
 8.  Moynihan, M. A. et al. Environmental impact on the mechanical
     properties of Porites spp. corals. Coral Reefs 40, 701–717 (2021).
-
 9.  Pasquini, L. et al. Isotropic microscale mechanical properties of
     coral skeletons. J. R. Soc. Interface 12, 1–9 (2015).
-
 10. Prada, F. et al. Coral micro- and macro-morphological skeletal
     properties in response to life-long acclimatization at CO2 vents in
     Papua New Guinea. Sci. Rep. 11, 1–10 (2021).
-
 11. Reggi, M. et al. Biomineralization in mediterranean corals: The role
     of the intraskeletal organic matrix. Cryst. Growth Des. 14,
     4310–4320 (2014).
-
 12. Schmidt, M. P., Ilott, A. J., Phillips, B. L. & Reeder, R. J.
     Structural changes upon dehydration of amorphous calcium carbonate.
     Cryst. Growth Des. 14, 938–951 (2014).
-
 13. Stolarski, J. & Mazur, M. Nanostructure of biogenic versus abiogenic
     calcium carbonate crystals. Acta Palaeontol. Pol. 50, 847–865
     (2005).
 
 # Samples
 
+The corals for this first batch of analysis come from Allyson Demerlis’s
+recent project where she investigated gene expression during a rapid
+bleaching experiment of 3 *Acropora cervicornis* genotypes. Some of the
+corals underwent a thermal stress-hardening treatment where the corals
+were exposed to a daily variable temperature which is believed to
+increase a coral’s bleaching resilience. The corals exposed to the high
+temperatures (36°C) had high amounts of mortality and I took these
+skeletons to analyze.
+
+<h5>
+Figure 5. Calcification data from Allyson Demerlis’s project
+</h5>
+
+<img src="/notebook/images/tgaAnalysis/allysonStressHardening-1.png" width="90%" style="display: block; margin: auto;" />
+Df Sum Sq Mean Sq F value Pr(&gt;F)  
+Genotype 2 10.166 5.083 23.272 7.78e-06 \*\*\* Treatment 1 0.199 0.199
+0.911 0.352  
+Genotype:Treatment 2 0.075 0.038 0.172 0.843  
+Residuals 19 4.150 0.218  
+— Signif. codes: 0 ‘***’ 0.001 ’**’ 0.01 ’*’ 0.05 ‘.’ 0.1 ’ ’ 1
+
+There was a significant effect of the coral genotype (F=23.27,
+p=7.78e-6), but no observed effect of stress hardening treatment on
+calcification rates (F=0.91, p=0.352). Following post-hoc testing, the
+significant genotype effect was driven by genotype MB-B which had much
+higher rates than BC-8B and SI-C which had similar calcification rates.
+
+Thus, we are conducting these tests with a special focus on genotype
+MB-B to see if its faster calcification rate results in any observable
+differences in skeletal properties.
+
 # Proposed Analysis
 
+With the reviewed literature above, I synthesized the analysis I plan to
+conduct with the goals of 1) automating the analysis; 2) characterizing
+the structural water, organic matrix, ACC, aragonite to calcite, and
+calcium carbonate regions; and 3) analyzing if there are any propertie
+conserved among genotypes.
+
+## Programatic Analysis
+
 # Initial Results
+
+\[\[1\]\] \[\[1\]\]$`149` region start peak stop loss 1 organics 247.95
+299.61 376.28 1.865 2 caco3 489.67 736.54 783.31 41.623
+
+\[\[1\]\]$`149`
+<img src="/notebook/images/tgaAnalysis/TGA-Analysis-1.png" width="90%" style="display: block; margin: auto;" />
+
+\[\[2\]\] \[\[2\]\]$`15` region start peak stop loss 1 organics 253.59
+303.58 381.91 1.780 2 caco3 483.64 727.17 828.90 42.146
+
+\[\[2\]\]$`15`
+<img src="/notebook/images/tgaAnalysis/TGA-Analysis-2.png" width="90%" style="display: block; margin: auto;" />
+
+\[\[3\]\] \[\[3\]\]$`23` region start peak stop loss 1 organics 253.12
+298.1 369.77 1.786 2 caco3 474.82 736.7 813.37 39.913
+
+\[\[3\]\]$`23`
+<img src="/notebook/images/tgaAnalysis/TGA-Analysis-3.png" width="90%" style="display: block; margin: auto;" />
+
+\[\[4\]\] \[\[4\]\]$`35` region start peak stop loss 1 organics 255.31
+300.30 378.63 1.789 2 caco3 492.03 738.92 787.37 41.630
+
+\[\[4\]\]$`35`
+<img src="/notebook/images/tgaAnalysis/TGA-Analysis-4.png" width="90%" style="display: block; margin: auto;" />
+
+\[\[5\]\] \[\[5\]\]$`58` region start peak stop loss 1 organics 252.46
+302.45 379.12 1.827 2 caco3 482.51 736.05 781.15 41.728
+
+\[\[5\]\]$`58`
+<img src="/notebook/images/tgaAnalysis/TGA-Analysis-5.png" width="90%" style="display: block; margin: auto;" />
+
+\[\[6\]\] \[\[6\]\]$`67` region start peak stop loss 1 organics 249.91
+299.89 368.22 1.826 2 caco3 488.29 718.48 768.58 41.672
+
+\[\[6\]\]$`67`
+<img src="/notebook/images/tgaAnalysis/TGA-Analysis-6.png" width="90%" style="display: block; margin: auto;" />
+
+\[\[7\]\] \[\[7\]\]$`88` region start peak stop loss 1 organics 264.10
+299.09 365.75 1.638 2 caco3 485.81 729.35 776.11 41.586
+
+\[\[7\]\]$`88`
+<img src="/notebook/images/tgaAnalysis/TGA-Analysis-7.png" width="90%" style="display: block; margin: auto;" />
 
 </div>
