@@ -382,6 +382,34 @@ conserved among genotypes.
 
 ## Programatic Analysis
 
+The first way I will analyze will be to find inflection points of the
+DTG curve to identify the start, peak, and stop of the organc matrix
+region between 240 and 450°C and the calcium carbonate region between
+450 and 850°C. I first calculate the second derivative of the TGA curve
+and identify all points of inflection (f’’ goes from positive to
+negative). In theory there should only be three points of inflection
+denoting the start, peak, and stop of the DTG curve. However, due to
+noise within the data, there is often instances where there is five or
+more points of inflection. To counteract that, I also run a cumulative
+minimum function to find the minimum of the DTG curve which corresponds
+to the peak. I then find the 3 values within the returned point of
+inflection which center around the peak.
+
+Here is an example. My inflection function returns the values
+12,10,7,6,9,10,12. And the cummin function returns the value 6. I center
+this around the inflection point and extract 7,6, and 9.
+
+This removes the observed noise and when graphed below, you can see that
+the extract points correspond with the inflection points you can
+visualize.
+
+The other ways I will analyze the data will be over discrete intervals
+including, 1. Non structural water (40-150) 2. Structural water
+(125-250) 3. Total water (40-250) 4. Organic matrix (250-470) 5.
+Crystallization of ACC (300-330) 6. Aragonite to Calcite Transformation
+(411-440) 7. Organic Matrix + ACC + OH Groups (275-520) 8. CaCO3
+(600-800)
+
 # Initial Results
 
 \[\[1\]\]
@@ -430,26 +458,6 @@ loss
 149
 </td>
 <td style="text-align:center;">
-organics
-</td>
-<td style="text-align:center;">
-247.95
-</td>
-<td style="text-align:center;">
-299.61
-</td>
-<td style="text-align:center;">
-376.28
-</td>
-<td style="text-align:center;">
-1.865
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-149
-</td>
-<td style="text-align:center;">
 caco3
 </td>
 <td style="text-align:center;">
@@ -463,26 +471,6 @@ caco3
 </td>
 <td style="text-align:center;">
 41.623
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-15
-</td>
-<td style="text-align:center;">
-organics
-</td>
-<td style="text-align:center;">
-253.59
-</td>
-<td style="text-align:center;">
-303.58
-</td>
-<td style="text-align:center;">
-381.91
-</td>
-<td style="text-align:center;">
-1.780
 </td>
 </tr>
 <tr>
@@ -510,26 +498,6 @@ caco3
 23
 </td>
 <td style="text-align:center;">
-organics
-</td>
-<td style="text-align:center;">
-253.12
-</td>
-<td style="text-align:center;">
-298.10
-</td>
-<td style="text-align:center;">
-369.77
-</td>
-<td style="text-align:center;">
-1.786
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-23
-</td>
-<td style="text-align:center;">
 caco3
 </td>
 <td style="text-align:center;">
@@ -543,26 +511,6 @@ caco3
 </td>
 <td style="text-align:center;">
 39.913
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-35
-</td>
-<td style="text-align:center;">
-organics
-</td>
-<td style="text-align:center;">
-255.31
-</td>
-<td style="text-align:center;">
-300.30
-</td>
-<td style="text-align:center;">
-378.63
-</td>
-<td style="text-align:center;">
-1.789
 </td>
 </tr>
 <tr>
@@ -590,26 +538,6 @@ caco3
 58
 </td>
 <td style="text-align:center;">
-organics
-</td>
-<td style="text-align:center;">
-252.46
-</td>
-<td style="text-align:center;">
-302.45
-</td>
-<td style="text-align:center;">
-379.12
-</td>
-<td style="text-align:center;">
-1.827
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-58
-</td>
-<td style="text-align:center;">
 caco3
 </td>
 <td style="text-align:center;">
@@ -623,26 +551,6 @@ caco3
 </td>
 <td style="text-align:center;">
 41.728
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-67
-</td>
-<td style="text-align:center;">
-organics
-</td>
-<td style="text-align:center;">
-249.91
-</td>
-<td style="text-align:center;">
-299.89
-</td>
-<td style="text-align:center;">
-368.22
-</td>
-<td style="text-align:center;">
-1.826
 </td>
 </tr>
 <tr>
@@ -670,26 +578,6 @@ caco3
 88
 </td>
 <td style="text-align:center;">
-organics
-</td>
-<td style="text-align:center;">
-264.10
-</td>
-<td style="text-align:center;">
-299.09
-</td>
-<td style="text-align:center;">
-365.75
-</td>
-<td style="text-align:center;">
-1.638
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-88
-</td>
-<td style="text-align:center;">
 caco3
 </td>
 <td style="text-align:center;">
@@ -705,7 +593,159 @@ caco3
 41.586
 </td>
 </tr>
+<tr>
+<td style="text-align:center;">
+149
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+247.95
+</td>
+<td style="text-align:center;">
+299.61
+</td>
+<td style="text-align:center;">
+376.28
+</td>
+<td style="text-align:center;">
+1.865
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+15
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+253.59
+</td>
+<td style="text-align:center;">
+303.58
+</td>
+<td style="text-align:center;">
+381.91
+</td>
+<td style="text-align:center;">
+1.780
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+23
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+253.12
+</td>
+<td style="text-align:center;">
+298.10
+</td>
+<td style="text-align:center;">
+369.77
+</td>
+<td style="text-align:center;">
+1.786
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+35
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+255.31
+</td>
+<td style="text-align:center;">
+300.30
+</td>
+<td style="text-align:center;">
+378.63
+</td>
+<td style="text-align:center;">
+1.789
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+58
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+252.46
+</td>
+<td style="text-align:center;">
+302.45
+</td>
+<td style="text-align:center;">
+379.12
+</td>
+<td style="text-align:center;">
+1.827
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+67
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+249.91
+</td>
+<td style="text-align:center;">
+299.89
+</td>
+<td style="text-align:center;">
+368.22
+</td>
+<td style="text-align:center;">
+1.826
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+88
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+264.10
+</td>
+<td style="text-align:center;">
+299.09
+</td>
+<td style="text-align:center;">
+365.75
+</td>
+<td style="text-align:center;">
+1.638
+</td>
+</tr>
 </tbody>
 </table>
+
+# Stats
+
+<h5>
+Figure 6. Genotype Specific Percent Loss
+</h5>
+
+<img src="/notebook/images/tgaAnalysis/genotypeStats-1.png" width="90%" style="display: block; margin: auto;" />
+The organics figure looks like MB-B has a slight difference, but looking
+at the y axis its median is only 4% less than the median of the other
+two genotypes and currently not showing significant genotype differences
+(F=2.027, p=0.247).
 
 </div>

@@ -271,7 +271,21 @@ With the reviewed literature above, I synthesized the analysis I plan to conduct
 
 ## Programatic Analysis
 
+The first way I will analyze will be to find inflection points of the DTG curve to identify the start, peak, and stop of the organc matrix region between 240 and 450°C and the calcium carbonate region between 450 and 850°C. I first calculate the second derivative of the TGA curve and identify all points of inflection (f'' goes from positive to negative). In theory there should only be three points of inflection denoting the start, peak, and stop of the DTG curve. However, due to noise within the data, there is often instances where there is five or more points of inflection. To counteract that, I also run a cumulative minimum function to find the minimum of the DTG curve which corresponds to the peak. I then find the 3 values within the returned point of inflection which center around the peak.
 
+Here is an example. My inflection function returns the values 12,10,7,6,9,10,12. And the cummin function returns the value 6. I center this around the inflection point and extract 7,6, and 9. 
+
+This removes the observed noise and when graphed below, you can see that the extract points correspond with the inflection points you can visualize. 
+
+The other ways I will analyze the data will be over discrete intervals including, 
+1. Non structural water (40-150)
+2. Structural water (125-250)
+3. Total water (40-250)
+4. Organic matrix (250-470)
+5. Crystallization of ACC (300-330)
+6. Aragonite to Calcite Transformation (411-440)
+7. Organic Matrix + ACC + OH Groups (275-520)
+8. CaCO3 (600-800)
 
 # Initial Results
 
@@ -287,19 +301,36 @@ analysis <- lapply(tga, analyze_tga)
 lapply(analysis, function(x) {
   x[[1]]
 })
-lapply(analysis, function(x) {
+TGAdata <- lapply(analysis, function(x) {
         x[[2]]
-}) %>% bind_rows() %>%
+}) %>% bind_rows()
+
+TGAdata %>%
   relocate(sample, .before=region) %>%
+  arrange(region) %>%
    kbl(align = 'c',
       digits = 4,
       caption = "Table 2: Batch 1 Results")
- # %>%
- #    kable_classic() %>%
- #    row_spec(0, bold = T)
 
 
 ```
 
+# Stats
+
+```{r genotypeStats}
+TGAdata <- TGAdata %>%
+  mutate(sample=as.numeric(sample)) %>%
+  left_join(read_excel('~/Grad School/ULink 2022/AllysonGenotypedCorals/metadata.xlsx') %>%
+              filter(Species=='Acropora cervicornis') %>%
+              select(ID, genotype=Colony),
+            by = c('sample'='ID'))
+
+capFig("Genotype Specific Percent Loss")
+TGAdata %>%
+  ggplot(aes(genotype, loss)) +
+  geom_boxplot() +
+  facet_wrap(~region, scales = "free")
+```
+ The organics figure looks like MB-B has a slight difference, but looking at the y axis its median is only 4% less than the median of the other two genotypes and currently not showing significant genotype differences (F=2.027, p=0.247).
 
 </div>
