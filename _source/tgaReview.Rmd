@@ -89,7 +89,7 @@ capTab = function(x){
 capFig = function(x){
     x = paste0("<h5>Figure ",capFigNo,". ",x,"</h5>")
     capFigNo <<- capFigNo + 1
-    return(x)
+    cat(x)
 }
 ```
 

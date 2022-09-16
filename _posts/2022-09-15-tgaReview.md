@@ -72,12 +72,11 @@ discrete regions, we can characterize the coral sample’s fractional
 constituents. The heating occurs in an inert environment (N<sub>2</sub>
 gas) to avoid sample oxidation.
 
-\[1\] "
 <h5>
 Figure 1. Example TGA and DTG Curve
 </h5>
 
-" ![](/notebook/images/example-TGA-1.png)<!-- -->
+![](/notebook/images/example-TGA-1.png)<!-- -->
 
 In this document, I review the current coral TGA literature, describe
 the samples I have tested thus far and the proposed analysis
