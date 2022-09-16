@@ -73,6 +73,10 @@ function verify() {
 .hidden {
   display: none;
 }
+img {
+    max-width: 90%;
+    margin: 0 auto;
+}
 ```
 
 ```{r FigCaptions, echo=FALSE}
@@ -255,12 +259,6 @@ corals %>%
   labs(y = "Daily Calcification Rate (mg/g/day)",
        x= "Genotype",
        title = "Genotype x Temperature")
-
-corals %>%
-  rename(Genotype=Colony) %>%
-  aov(data=.,
-      newMassStd~Genotype*Treatment) %>% 
-  summary()
 ```
 
 There was a significant effect of the coral genotype (F=23.27, p=7.78e-6), but no observed effect of stress hardening treatment on calcification rates (F=0.91, p=0.352). Following post-hoc testing, the significant genotype effect was driven by genotype MB-B which had much higher rates than BC-8B and SI-C which had similar calcification rates.
@@ -284,19 +282,22 @@ tga <- list.files(path = '~/Grad School/ULink 2022/TGA/allysonGenotypes/',
            pattern = ".txt",
            full.names = T)
 
-lapply(tga, analyze_tga)
+analysis <- lapply(tga, analyze_tga)
 
-# lapply(analysis, function(x) {
-#   x[[2]]
-#   
-#   x[[1]] %>%
-#      kbl(align = 'c',
-#       digits = 4,
-#       caption = paste0("Sample ",
-#                       names(x[1]))) %>%
-#     kable_classic() %>%
-#     row_spec(0, bold = T)
-# })
+lapply(analysis, function(x) {
+  x[[1]]
+})
+lapply(analysis, function(x) {
+        x[[2]]
+}) %>% bind_rows() %>%
+  relocate(sample, .before=region) %>%
+   kbl(align = 'c',
+      digits = 4,
+      caption = "Table 2: Batch 1 Results")
+ # %>%
+ #    kable_classic() %>%
+ #    row_spec(0, bold = T)
+
 
 ```
 

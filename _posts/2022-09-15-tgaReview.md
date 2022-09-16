@@ -46,6 +46,10 @@ function verify() {
 .hidden {
   display: none;
 }
+img {
+    max-width: 90%;
+    margin: 0 auto;
+}
 </style>
 <!-- The password box -->
 
@@ -357,12 +361,6 @@ Figure 5. Calcification data from Allyson Demerlis’s project
 </h5>
 
 <img src="/notebook/images/tgaAnalysis/allysonStressHardening-1.png" width="90%" style="display: block; margin: auto;" />
-Df Sum Sq Mean Sq F value Pr(&gt;F)  
-Genotype 2 10.166 5.083 23.272 7.78e-06 \*\*\* Treatment 1 0.199 0.199
-0.911 0.352  
-Genotype:Treatment 2 0.075 0.038 0.172 0.843  
-Residuals 19 4.150 0.218  
-— Signif. codes: 0 ‘***’ 0.001 ’**’ 0.01 ’*’ 0.05 ‘.’ 0.1 ’ ’ 1
 
 There was a significant effect of the coral genotype (F=23.27,
 p=7.78e-6), but no observed effect of stress hardening treatment on
@@ -386,46 +384,328 @@ conserved among genotypes.
 
 # Initial Results
 
-\[\[1\]\] \[\[1\]\]$`149` region start peak stop loss 1 organics 247.95
-299.61 376.28 1.865 2 caco3 489.67 736.54 783.31 41.623
-
-\[\[1\]\]$`149`
+\[\[1\]\]
 <img src="/notebook/images/tgaAnalysis/TGA-Analysis-1.png" width="90%" style="display: block; margin: auto;" />
-
-\[\[2\]\] \[\[2\]\]$`15` region start peak stop loss 1 organics 253.59
-303.58 381.91 1.780 2 caco3 483.64 727.17 828.90 42.146
-
-\[\[2\]\]$`15`
+\[\[2\]\]
 <img src="/notebook/images/tgaAnalysis/TGA-Analysis-2.png" width="90%" style="display: block; margin: auto;" />
-
-\[\[3\]\] \[\[3\]\]$`23` region start peak stop loss 1 organics 253.12
-298.1 369.77 1.786 2 caco3 474.82 736.7 813.37 39.913
-
-\[\[3\]\]$`23`
+\[\[3\]\]
 <img src="/notebook/images/tgaAnalysis/TGA-Analysis-3.png" width="90%" style="display: block; margin: auto;" />
-
-\[\[4\]\] \[\[4\]\]$`35` region start peak stop loss 1 organics 255.31
-300.30 378.63 1.789 2 caco3 492.03 738.92 787.37 41.630
-
-\[\[4\]\]$`35`
+\[\[4\]\]
 <img src="/notebook/images/tgaAnalysis/TGA-Analysis-4.png" width="90%" style="display: block; margin: auto;" />
-
-\[\[5\]\] \[\[5\]\]$`58` region start peak stop loss 1 organics 252.46
-302.45 379.12 1.827 2 caco3 482.51 736.05 781.15 41.728
-
-\[\[5\]\]$`58`
+\[\[5\]\]
 <img src="/notebook/images/tgaAnalysis/TGA-Analysis-5.png" width="90%" style="display: block; margin: auto;" />
-
-\[\[6\]\] \[\[6\]\]$`67` region start peak stop loss 1 organics 249.91
-299.89 368.22 1.826 2 caco3 488.29 718.48 768.58 41.672
-
-\[\[6\]\]$`67`
+\[\[6\]\]
 <img src="/notebook/images/tgaAnalysis/TGA-Analysis-6.png" width="90%" style="display: block; margin: auto;" />
-
-\[\[7\]\] \[\[7\]\]$`88` region start peak stop loss 1 organics 264.10
-299.09 365.75 1.638 2 caco3 485.81 729.35 776.11 41.586
-
-\[\[7\]\]$`88`
+\[\[7\]\]
 <img src="/notebook/images/tgaAnalysis/TGA-Analysis-7.png" width="90%" style="display: block; margin: auto;" />
+<table>
+<caption>
+Table 2: Batch 1 Results
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+sample
+</th>
+<th style="text-align:center;">
+region
+</th>
+<th style="text-align:center;">
+start
+</th>
+<th style="text-align:center;">
+peak
+</th>
+<th style="text-align:center;">
+stop
+</th>
+<th style="text-align:center;">
+loss
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+149
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+247.95
+</td>
+<td style="text-align:center;">
+299.61
+</td>
+<td style="text-align:center;">
+376.28
+</td>
+<td style="text-align:center;">
+1.865
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+149
+</td>
+<td style="text-align:center;">
+caco3
+</td>
+<td style="text-align:center;">
+489.67
+</td>
+<td style="text-align:center;">
+736.54
+</td>
+<td style="text-align:center;">
+783.31
+</td>
+<td style="text-align:center;">
+41.623
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+15
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+253.59
+</td>
+<td style="text-align:center;">
+303.58
+</td>
+<td style="text-align:center;">
+381.91
+</td>
+<td style="text-align:center;">
+1.780
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+15
+</td>
+<td style="text-align:center;">
+caco3
+</td>
+<td style="text-align:center;">
+483.64
+</td>
+<td style="text-align:center;">
+727.17
+</td>
+<td style="text-align:center;">
+828.90
+</td>
+<td style="text-align:center;">
+42.146
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+23
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+253.12
+</td>
+<td style="text-align:center;">
+298.10
+</td>
+<td style="text-align:center;">
+369.77
+</td>
+<td style="text-align:center;">
+1.786
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+23
+</td>
+<td style="text-align:center;">
+caco3
+</td>
+<td style="text-align:center;">
+474.82
+</td>
+<td style="text-align:center;">
+736.70
+</td>
+<td style="text-align:center;">
+813.37
+</td>
+<td style="text-align:center;">
+39.913
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+35
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+255.31
+</td>
+<td style="text-align:center;">
+300.30
+</td>
+<td style="text-align:center;">
+378.63
+</td>
+<td style="text-align:center;">
+1.789
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+35
+</td>
+<td style="text-align:center;">
+caco3
+</td>
+<td style="text-align:center;">
+492.03
+</td>
+<td style="text-align:center;">
+738.92
+</td>
+<td style="text-align:center;">
+787.37
+</td>
+<td style="text-align:center;">
+41.630
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+58
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+252.46
+</td>
+<td style="text-align:center;">
+302.45
+</td>
+<td style="text-align:center;">
+379.12
+</td>
+<td style="text-align:center;">
+1.827
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+58
+</td>
+<td style="text-align:center;">
+caco3
+</td>
+<td style="text-align:center;">
+482.51
+</td>
+<td style="text-align:center;">
+736.05
+</td>
+<td style="text-align:center;">
+781.15
+</td>
+<td style="text-align:center;">
+41.728
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+67
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+249.91
+</td>
+<td style="text-align:center;">
+299.89
+</td>
+<td style="text-align:center;">
+368.22
+</td>
+<td style="text-align:center;">
+1.826
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+67
+</td>
+<td style="text-align:center;">
+caco3
+</td>
+<td style="text-align:center;">
+488.29
+</td>
+<td style="text-align:center;">
+718.48
+</td>
+<td style="text-align:center;">
+768.58
+</td>
+<td style="text-align:center;">
+41.672
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+88
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+264.10
+</td>
+<td style="text-align:center;">
+299.09
+</td>
+<td style="text-align:center;">
+365.75
+</td>
+<td style="text-align:center;">
+1.638
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+88
+</td>
+<td style="text-align:center;">
+caco3
+</td>
+<td style="text-align:center;">
+485.81
+</td>
+<td style="text-align:center;">
+729.35
+</td>
+<td style="text-align:center;">
+776.11
+</td>
+<td style="text-align:center;">
+41.586
+</td>
+</tr>
+</tbody>
+</table>
 
 </div>
