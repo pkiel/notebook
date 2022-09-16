@@ -40,8 +40,9 @@ knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
 # Set figure directories
 knitr::opts_chunk$set(fig.path = fig_path,
                     cache.path = '../cache/',
+                    fig.align = 'center', out.width = '90%',
                     message=FALSE, warning=FALSE,
-                    cache = FALSE)
+                    cache = FALSE, results = "asis")
 ```
 
 ```{js}
@@ -70,6 +71,26 @@ function verify() {
 /*Change content Display */
 .hidden {
   display: none;
+}
+```
+
+```{r FigCaptions, echo=FALSE}
+
+#Figure and Table Caption Numbering
+capTabNo = 1; capFigNo = 1;
+
+#Function to add the Table Number
+capTab = function(x){
+    x = paste0("Table ",capTabNo,". ",x)
+    capTabNo <<- capTabNo + 1
+    cat(x)
+}
+
+#Function to add the Figure Number
+capFig = function(x){
+    x = paste0("<h5>Figure ",capFigNo,". ",x,"</h5>")
+    capFigNo <<- capFigNo + 1
+    cat(x)
 }
 ```
 

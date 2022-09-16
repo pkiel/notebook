@@ -67,22 +67,289 @@ function verify() {
 
 Thermogravimetric analysis (TGA) is a quantitative materials technique
 that linearly heats a sample and simultaneously measures its mass as the
-sample degrades. By looking at the percent of decomposition over
-discrete regions, we can characterize the coral sample’s fractional
-constituents. The heating occurs in an inert environment (N<sub>2</sub>
-gas) to avoid sample oxidation.
+sample degrades. By looking at the percent decomposition over discrete
+regions, we can characterize the coral sample’s fractional constituents.
+The heating occurs in an inert environment (N<sub>2</sub> gas) to avoid
+sample oxidation.
+
+For analysis, we can use the first derivative of the TGA curve (called
+the DTG curve) to identify the start, peak, and end temperatures for
+each respective region. Then, we can integrate between the start and end
+temperatures to calculate the percent degradation. For example, an
+aragonite coral skeleton may have two peaks: decomposition of the
+intracrystaline organics at approximately and the decomposition of
+CaCO<sub>3</sub> to CaO and CO<sub>2</sub> at approximately 600-800 °C
+(Fig 1.).
 
 <h5>
 Figure 1. Example TGA and DTG Curve
 </h5>
 
-![](/notebook/images/example-TGA-1.png)<!-- -->
+<img src="/notebook/images/tgaAnalysis/example-TGA-1.png" width="90%" style="display: block; margin: auto;" />
 
 In this document, I review the current coral TGA literature, describe
 the samples I have tested thus far and the proposed analysis
-methodology, and begin to analyze my inital results.
+methodology, and begin to analyze my initial results.
 
 # Literature Review
+
+There are a handful of publications which have used TGA to analyze coral
+skeletons grown or collected under acidified environments. The most
+interesting ones in my opinion are Coronado *et al.* 2019, Moynihan *et
+al.* 2021, and Prada *et al.* 2021 for their use of the method and the
+findings they present. A complete list of references I draw upon is
+included below.
+
+### Coronado *et al.* 2019
+
+This paper sought to disentangle the biological effects on calcification
+to make corals a more reliable paleoclimate proxy (i.e. better their
+understand vital effects). They cultured *Stylophora pistillata* under
+pH 8.2, 7.6, and 7.3 and found differences in the aragonite precipitated
+by the corals under these treatments due to the increased amount of
+intracrystalline organic matrix and water content as measured by TGA.
+
+They heated at a rate of 10°C/min to 1000°C, but limited their analysis
+to discrete regions from ambient to 520°C, focusing mainly on the
+decomposition of water from ambient to 275°C and bulk organic matrix, OH
+groups, and possible ACC from 275-520°C (Table 1). There was no clear
+pattern for water, but for the 275-520°C group there was a lineal
+increase across treatments(Fig. 2).
+
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<caption>
+Table 1: Coronado et al. 2019 analysis Regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;font-weight: bold;">
+Temperature
+</th>
+<th style="text-align:center;font-weight: bold;">
+Name
+</th>
+<th style="text-align:center;font-weight: bold;">
+Reasoning
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+20-150
+</td>
+<td style="text-align:center;">
+Nonstructural water
+</td>
+<td style="text-align:center;">
+evaporation of nonstructural water molecules
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+150-210
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+210-275
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+275-300
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+300-330
+</td>
+<td style="text-align:center;">
+ACC
+</td>
+<td style="text-align:center;">
+crystallization of ACC, which occurs \~ 316
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+330-411
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+411-440
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+transformation of aragonite to calcite, which occurs \~418
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+440-520
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+20-275
+</td>
+<td style="text-align:center;">
+H2O
+</td>
+<td style="text-align:center;">
+Integrates over all nonstructural water
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+275-520
+</td>
+<td style="text-align:center;">
+OM-OH-ACC
+</td>
+<td style="text-align:center;">
+captures all organic matrix, structural water, and ACC crystallization
+</td>
+</tr>
+</tbody>
+</table>
+<h5>
+Figure 2. TGA Results from Coronado et al. 2019
+</h5>
+
+![](/notebook/images/Coronado2019Results.png)<!-- -->
+
+### Moynihan *et al.* 2021
+
+This paper looked at *Porites* coral cores collected from Thailand,
+Singapore, and Taiwan and correlated micro-mechanical properties with
+environmental conditions. They found that corals from low salinity and
+high sedimentation environments (large freshwater influx) had higher
+organic content and increased embrittlement.
+
+Their analysis looked at TGA from 20-500°C, which was achieved by
+heating to a 200C isotherm for 5 minutes followed by a 10°C/min ramp to
+400°C and then followed by a 20°C/min ramp to 500°C. They used the DTG
+curve to identify the temperature of maximum weight loss change (Tmax)
+and then defined three regions to determine percent change: 175 to
+225°C, Tmax-50 - Tmax+50°C, and Tmax+50 to 500°C. They measured
+micro-mechanical properties with an nanoindentation test.
+
+<h5>
+Figure 3. Regression of micro-mechanical properties and TGA, Moynihan et
+al. 2019
+</h5>
+
+![](/notebook/images/Moynihan2021.png)<!-- -->
+
+### Prada *et al.* 2021
+
+This paper looked at four populations of naturally occurring reefs in
+Papa New Guinea, two located by a CO<sub>2</sub> seep and two nearby
+control sites. They measured 32 samples in total (10 for each control
+and seep site at Dobu and 6 for each site at Upa Upasina). Their
+analysis looked at TGA from 20-600°C at 10°C/min incremeents with a
+120°C istotherm for 5 minutes to stabalize the removal of adsorbed
+water. They then focussed their analysis on the region from 125-250°C
+(structured water molecules) and 250-470°C (organix matrix).
+
+They only found significant differences between sites in intraskeletal
+strucutred water and intraskeletal OM at Upa Upasina, suggesting that
+differences may not be solely environmentally controlled and their may
+be physiological control of these parameters which are different between
+different populations. Though further evidence to support this claim is
+not presented here.
+
+<h5>
+Figure 4. TGA Results from Prada et al. 2021
+</h5>
+
+![](/notebook/images/Prada2021.png)<!-- -->
+
+## Takeaways
+
+Each of these papers analyzed TGA data slightly differently. However,
+there is general agreement in the organic matrix limits (250-470°C) and
+the structural water limits (150-225°C). There is potentially other
+regions of interest too including the crystallization of ACC (300-330°C,
+\~316°C) and the monotropic transformation of aragonite to calcite
+(411-440°C, \~418°C).
+
+## References
+
+1.  1.  Coronado, I., Fine, M., Bosellini, F. R. & Stolarski, J. Impact
+        of ocean acidification on crystallographic vital effect of the
+        coral skeleton. Nat. Commun. 10, 1–9 (2019).
+
+2.  Cuif, J. P., Dauphin, Y. Y., Doucet, J., Salome, M. & Susini, J.
+    XANES mapping of organic sulfate in three scleractinian coral
+    skeletons. Geochim. Cosmochim. Acta 67, 75–83 (2003).
+
+3.  Cuif, J. P. et al. Fine-scale growth patterns in coral skeletons:
+    Biochemical control over crystallization of aragonite fibres and
+    assessment of early diagenesis. Geol. Soc. Spec. Publ. 303, 87–96
+    (2008).
+
+4.  Cuif, J. P., Dauphin, Y., Berthet, P. & Jegoudez, J. Associated
+    water and organic compounds in coral skeletons: Quantitative
+    thermogravimetry coupled to infrared absorption spectrometry.
+    Geochemistry, Geophys. Geosystems 5, 1–9 (2004).
+
+5.  Dauphin, Y., Cuif, J. P. & Massard, P. Persistent organic components
+    in heated coral aragonitic skeletons-Implications for
+    palaeoenvironmental reconstructions. Chem. Geol. 231, 26–37 (2006).
+
+6.  Falini, G. et al. Control of aragonite deposition in colonial corals
+    by intra-skeletal macromolecules. J. Struct. Biol. 183, 226–238
+    (2013).
+
+7.  Goffredo, S. et al. Biomineralization control related to population
+    density under ocean acidification. Nat. Clim. Chang. 4, 593–597
+    (2014).
+
+8.  Moynihan, M. A. et al. Environmental impact on the mechanical
+    properties of Porites spp. corals. Coral Reefs 40, 701–717 (2021).
+
+9.  Pasquini, L. et al. Isotropic microscale mechanical properties of
+    coral skeletons. J. R. Soc. Interface 12, 1–9 (2015).
+
+10. Prada, F. et al. Coral micro- and macro-morphological skeletal
+    properties in response to life-long acclimatization at CO2 vents in
+    Papua New Guinea. Sci. Rep. 11, 1–10 (2021).
+
+11. Reggi, M. et al. Biomineralization in mediterranean corals: The role
+    of the intraskeletal organic matrix. Cryst. Growth Des. 14,
+    4310–4320 (2014).
+
+12. Schmidt, M. P., Ilott, A. J., Phillips, B. L. & Reeder, R. J.
+    Structural changes upon dehydration of amorphous calcium carbonate.
+    Cryst. Growth Des. 14, 938–951 (2014).
+
+13. Stolarski, J. & Mazur, M. Nanostructure of biogenic versus abiogenic
+    calcium carbonate crystals. Acta Palaeontol. Pol. 50, 847–865
+    (2005).
 
 # Samples
 
