@@ -116,6 +116,7 @@ capFig = function(x){
 # Overview
 
 Fourier-transform infrared spectroscopy (FTIR) is a semi-quantitative technique that measures how much light a sample transmits (or absorbs) at each wavelength. Each covalent bond will absorb/transmit infrared light reflective of its stretching or bending mode. We can then use known regions (based on the molecular bonding of a substance) to characterize samples. For aragonite, there are four identifiable modes:
+
 1. v3 ~ 1460 and corresponds to the antistretching of the carbonate ion
 2. v1 ~ 1083 and corresponds to the symmetric stretching vibration of the carbonate ion
 3. v2 ~ 855 and corresponds to the bending vibrations of carbonate out of plane
@@ -190,8 +191,11 @@ Since I am working with adult coral skeletons and the topic of ACC in corals is 
 This paper investigated the organic molecules entrapped within the aragonite skeletons of corals. The authors extracted the organic matrix from the skeletons of *Acropora digitifera*, *Lophelia pertusa*, and *Montipora caliculata* with acetic acid and separated the extract into soluble and insoluble fractions. These fractions were analyzed separately with FTIR, polyacrylamide gel electrophoresis (SDS–PAGE) and amino-acidic analyses. Skeletons were additionally analyzed with a TGA to quantify bulk organics within the skeletons.
 
 To estimate the relative amounts of the main functional groups of the organic matrix from the FTIR spectra, three zones were defined:
+
 1. Zone 1 (3000–2800) - absorption due to the methylene and methyl groups’ vibration modes were present, they could mainly be related to the presence of fatty acids, mainly in IOM, or to molecules bearing alkylic chain regions. 
+
 2. Zone 2 (1750–1500) - absorption bands mainly associable to the amide I and II vibration modes of proteins (and of some sugars)
+
 3. Zone 3 (1100–950) ether bonds and C–C single bond vibration modes, mainly associable to polysaccharides.
 
 The authors integrated the intensities of the absorption zones 1 and 3 and normalized to that of zone 2 to compare relative abundances. The only identifiable difference from a Mann-Whitney test within organic fractions was the soluble organic fraction from L. pertusa which showed a significantly higher absorption in zone 3.
@@ -365,13 +369,13 @@ ftir_results %>%
         axis.title.y = element_blank())
 
 #no signifcant results
-ftir_results %>%
-  pivot_longer(v1:ACC,
-               names_to="metric") %>%
-  group_by(metric) %>%
-  nest() %>%
-  mutate(model = map(data, ~aov(value~genotype*Treatment, data=.))) -> mods
-  lapply(mods$model, summary)
+# ftir_results %>%
+#   pivot_longer(v1:ACC,
+#                names_to="metric") %>%
+#   group_by(metric) %>%
+#   nest() %>%
+#   mutate(model = map(data, ~aov(value~genotype*Treatment, data=.))) -> mods
+#   lapply(mods$model, summary)
 ```
 
 When the data is grouped by the coral genotype, no interesting patterns emerge. There is no shift in the v1-v4 peaks, intensities are fairly consistent, and the FWHM of each peak is also within range for each peak. The asymetrical strethcing of carbonate (v3 peak ~ 1460) had the largest variability with peaks ranging from 1443-1480 and the greatest width 110-156, with the means tightly around 140. The intensity of the v2 to v4 peak was consistently around 3.0, indicating that there was no ACC present in the measured samples given the range of I2/I4 values presented in Beniash *et al.* 1997. 

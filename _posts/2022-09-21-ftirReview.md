@@ -75,11 +75,15 @@ at each wavelength. Each covalent bond will absorb/transmit infrared
 light reflective of its stretching or bending mode. We can then use
 known regions (based on the molecular bonding of a substance) to
 characterize samples. For aragonite, there are four identifiable modes:
-1. v3 \~ 1460 and corresponds to the antistretching of the carbonate ion
-2. v1 \~ 1083 and corresponds to the symmetric stretching vibration of
-the carbonate ion 3. v2 \~ 855 and corresponds to the bending vibrations
-of carbonate out of plane 4. v4 \~ 713 and corresponds to the bending
-vibrations of carbonate in plane, see double peak around 699
+
+1.  v3 \~ 1460 and corresponds to the antistretching of the carbonate
+    ion
+2.  v1 \~ 1083 and corresponds to the symmetric stretching vibration of
+    the carbonate ion
+3.  v2 \~ 855 and corresponds to the bending vibrations of carbonate out
+    of plane
+4.  v4 \~ 713 and corresponds to the bending vibrations of carbonate in
+    plane, see double peak around 699
 
 Aragonite differs slightly from calcite (polymorph of calcium
 carbonate), which has a v2 \~ 874.
@@ -176,14 +180,18 @@ amino-acidic analyses. Skeletons were additionally analyzed with a TGA
 to quantify bulk organics within the skeletons.
 
 To estimate the relative amounts of the main functional groups of the
-organic matrix from the FTIR spectra, three zones were defined: 1. Zone
-1 (3000–2800) - absorption due to the methylene and methyl groups’
-vibration modes were present, they could mainly be related to the
-presence of fatty acids, mainly in IOM, or to molecules bearing alkylic
-chain regions. 2. Zone 2 (1750–1500) - absorption bands mainly
-associable to the amide I and II vibration modes of proteins (and of
-some sugars) 3. Zone 3 (1100–950) ether bonds and C–C single bond
-vibration modes, mainly associable to polysaccharides.
+organic matrix from the FTIR spectra, three zones were defined:
+
+1.  Zone 1 (3000–2800) - absorption due to the methylene and methyl
+    groups’ vibration modes were present, they could mainly be related
+    to the presence of fatty acids, mainly in IOM, or to molecules
+    bearing alkylic chain regions.
+
+2.  Zone 2 (1750–1500) - absorption bands mainly associable to the amide
+    I and II vibration modes of proteins (and of some sugars)
+
+3.  Zone 3 (1100–950) ether bonds and C–C single bond vibration modes,
+    mainly associable to polysaccharides.
 
 The authors integrated the intensities of the absorption zones 1 and 3
 and normalized to that of zone 2 to compare relative abundances. The
@@ -364,65 +372,7 @@ and the range of the extracted wavenumbers was identified as the FWHM.
 <img src="/notebook/images/ftirAnalysis/FTIR-Analysis-29.png" width="90%" style="display: block; margin: auto;" />
 \[\[30\]\]
 <img src="/notebook/images/ftirAnalysis/FTIR-Analysis-30.png" width="90%" style="display: block; margin: auto;" />
-<img src="/notebook/images/ftirAnalysis/FTIR-Analysis-31.png" width="90%" style="display: block; margin: auto;" />\[\[1\]\]
-Df Sum Sq Mean Sq F value Pr(&gt;F) genotype 2 0.489 0.2445 0.228 0.798
-Treatment 1 0.053 0.0527 0.049 0.826 genotype:Treatment 2 0.294 0.1470
-0.137 0.873 Residuals 24 25.756 1.0732
-
-\[\[2\]\] Df Sum Sq Mean Sq F value Pr(&gt;F) genotype 2 0.002661
-0.0013305 2.261 0.126 Treatment 1 0.000061 0.0000613 0.104 0.750
-genotype:Treatment 2 0.000294 0.0001471 0.250 0.781 Residuals 24
-0.014121 0.0005884
-
-\[\[3\]\] Df Sum Sq Mean Sq F value Pr(&gt;F)  
-genotype 2 76.78 38.39 3.322 0.0533 . Treatment 1 35.69 35.69 3.088
-0.0916 . genotype:Treatment 2 44.48 22.24 1.924 0.1678  
-Residuals 24 277.35 11.56  
-— Signif. codes: 0 ‘***’ 0.001 ’**’ 0.01 ’*’ 0.05 ‘.’ 0.1 ’ ’ 1
-
-\[\[4\]\] Df Sum Sq Mean Sq F value Pr(&gt;F) genotype 2 0.730 0.3648
-1.290 0.294 Treatment 1 0.013 0.0132 0.047 0.831 genotype:Treatment 2
-0.052 0.0261 0.092 0.912 Residuals 24 6.790 0.2829
-
-\[\[5\]\] Df Sum Sq Mean Sq F value Pr(&gt;F) genotype 2 0.0604 0.03018
-1.879 0.175 Treatment 1 0.0157 0.01569 0.977 0.333 genotype:Treatment 2
-0.0253 0.01263 0.787 0.467 Residuals 24 0.3855 0.01606
-
-\[\[6\]\] Df Sum Sq Mean Sq F value Pr(&gt;F) genotype 2 2.32 1.160
-0.230 0.796 Treatment 1 12.69 12.694 2.518 0.126 genotype:Treatment 2
-15.35 7.677 1.523 0.238 Residuals 24 120.97 5.040
-
-\[\[7\]\] Df Sum Sq Mean Sq F value Pr(&gt;F) genotype 2 72.7 36.34
-0.280 0.758 Treatment 1 100.5 100.46 0.773 0.388 genotype:Treatment 2
-153.7 76.87 0.592 0.561 Residuals 24 3117.3 129.89
-
-\[\[8\]\] Df Sum Sq Mean Sq F value Pr(&gt;F) genotype 2 0.0551 0.027570
-1.534 0.236 Treatment 1 0.0089 0.008873 0.494 0.489 genotype:Treatment 2
-0.0037 0.001858 0.103 0.902 Residuals 24 0.4315 0.017978
-
-\[\[9\]\] Df Sum Sq Mean Sq F value Pr(&gt;F) genotype 2 4.3 2.15 0.034
-0.967 Treatment 1 17.9 17.86 0.283 0.600 genotype:Treatment 2 10.1 5.07
-0.080 0.923 Residuals 24 1514.5 63.10
-
-\[\[10\]\] Df Sum Sq Mean Sq F value Pr(&gt;F)  
-genotype 2 0.276 0.1378 0.447 0.6446  
-Treatment 1 1.548 1.5481 5.027 0.0345 \* genotype:Treatment 2 0.335
-0.1674 0.544 0.5876  
-Residuals 24 7.392 0.3080  
-— Signif. codes: 0 ‘***’ 0.001 ’**’ 0.01 ’*’ 0.05 ‘.’ 0.1 ’ ’ 1
-
-\[\[11\]\] Df Sum Sq Mean Sq F value Pr(&gt;F) genotype 2 0.00305
-0.001527 1.153 0.333 Treatment 1 0.00020 0.000203 0.153 0.699
-genotype:Treatment 2 0.00646 0.003229 2.437 0.109 Residuals 24 0.03180
-0.001325
-
-\[\[12\]\] Df Sum Sq Mean Sq F value Pr(&gt;F) genotype 2 81.1 40.56
-0.915 0.414 Treatment 1 29.6 29.64 0.669 0.422 genotype:Treatment 2 74.8
-37.39 0.844 0.442 Residuals 24 1063.8 44.32
-
-\[\[13\]\] Df Sum Sq Mean Sq F value Pr(&gt;F) genotype 2 0.124 0.06187
-0.370 0.694 Treatment 1 0.109 0.10906 0.653 0.427 genotype:Treatment 2
-0.096 0.04792 0.287 0.753 Residuals 24 4.009 0.16705
+<img src="/notebook/images/ftirAnalysis/FTIR-Analysis-31.png" width="90%" style="display: block; margin: auto;" />
 
 When the data is grouped by the coral genotype, no interesting patterns
 emerge. There is no shift in the v1-v4 peaks, intensities are fairly
