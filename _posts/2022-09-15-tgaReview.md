@@ -431,6 +431,12 @@ including,
 <img src="/notebook/images/tgaAnalysis/TGA-Analysis-6.png" width="90%" style="display: block; margin: auto;" />
 \[\[7\]\]
 <img src="/notebook/images/tgaAnalysis/TGA-Analysis-7.png" width="90%" style="display: block; margin: auto;" />
+\[\[8\]\]
+<img src="/notebook/images/tgaAnalysis/TGA-Analysis-8.png" width="90%" style="display: block; margin: auto;" />
+\[\[9\]\]
+<img src="/notebook/images/tgaAnalysis/TGA-Analysis-9.png" width="90%" style="display: block; margin: auto;" />
+\[\[10\]\]
+<img src="/notebook/images/tgaAnalysis/TGA-Analysis-10.png" width="90%" style="display: block; margin: auto;" />
 <table>
 <caption>
 Table 2: Batch 1 Results
@@ -458,6 +464,46 @@ loss
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:center;">
+147
+</td>
+<td style="text-align:center;">
+caco3
+</td>
+<td style="text-align:center;">
+481.04
+</td>
+<td style="text-align:center;">
+721.23
+</td>
+<td style="text-align:center;">
+806.28
+</td>
+<td style="text-align:center;">
+39.953
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+148
+</td>
+<td style="text-align:center;">
+caco3
+</td>
+<td style="text-align:center;">
+480.22
+</td>
+<td style="text-align:center;">
+728.76
+</td>
+<td style="text-align:center;">
+822.17
+</td>
+<td style="text-align:center;">
+40.729
+</td>
+</tr>
 <tr>
 <td style="text-align:center;">
 149
@@ -540,6 +586,26 @@ caco3
 </tr>
 <tr>
 <td style="text-align:center;">
+40
+</td>
+<td style="text-align:center;">
+caco3
+</td>
+<td style="text-align:center;">
+494.61
+</td>
+<td style="text-align:center;">
+738.14
+</td>
+<td style="text-align:center;">
+783.18
+</td>
+<td style="text-align:center;">
+41.561
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
 58
 </td>
 <td style="text-align:center;">
@@ -596,6 +662,46 @@ caco3
 </td>
 <td style="text-align:center;">
 41.586
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+147
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+245.99
+</td>
+<td style="text-align:center;">
+300.97
+</td>
+<td style="text-align:center;">
+364.31
+</td>
+<td style="text-align:center;">
+1.891
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+148
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+245.19
+</td>
+<td style="text-align:center;">
+301.84
+</td>
+<td style="text-align:center;">
+378.50
+</td>
+<td style="text-align:center;">
+1.965
 </td>
 </tr>
 <tr>
@@ -680,6 +786,26 @@ organics
 </tr>
 <tr>
 <td style="text-align:center;">
+40
+</td>
+<td style="text-align:center;">
+organics
+</td>
+<td style="text-align:center;">
+254.55
+</td>
+<td style="text-align:center;">
+296.21
+</td>
+<td style="text-align:center;">
+387.88
+</td>
+<td style="text-align:center;">
+1.860
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
 58
 </td>
 <td style="text-align:center;">
@@ -749,8 +875,10 @@ Figure 6. Genotype Specific Percent Loss
 
 <img src="/notebook/images/tgaAnalysis/genotypeStats-1.png" width="90%" style="display: block; margin: auto;" />
 The organics figure looks like MB-B has a slight difference, but looking
-at the y axis its median is only 4% less than the median of the other
+at the y axis its median is only 7% less than the median of the other
 two genotypes and currently not showing significant genotype differences
-(F=2.027, p=0.247).
+(F=3.372, p=0.094). However, we still have a handful of more samples to
+run. FTIR analysis may help classify the specific differences rather
+than bulk concentration of organics quantified here.
 
 </div>

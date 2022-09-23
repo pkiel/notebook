@@ -331,7 +331,19 @@ TGAdata %>%
   ggplot(aes(genotype, loss)) +
   geom_boxplot() +
   facet_wrap(~region, scales = "free")
+
+# TGAdata %>%
+#   dplyr::filter(region == "organics") %>%
+#   group_by(genotype) %>%
+#   summarise(n = n(),
+#             mean = mean(loss))
+# 
+# TGAdata %>%
+#   dplyr::filter(region == "organics") %>%
+#   aov(loss ~ genotype, data=.) %>%
+#   tidy() %>%
+#   filter(term=="genotype")
 ```
- The organics figure looks like MB-B has a slight difference, but looking at the y axis its median is only 4% less than the median of the other two genotypes and currently not showing significant genotype differences (F=2.027, p=0.247).
+ The organics figure looks like MB-B has a slight difference, but looking at the y axis its median is only 7% less than the median of the other two genotypes and currently not showing significant genotype differences (F=3.372, p=0.094). However, we still have a handful of more samples to run. FTIR analysis may help classify the specific differences rather than bulk concentration of organics quantified here.
 
 </div>
