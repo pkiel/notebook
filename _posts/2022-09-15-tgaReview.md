@@ -404,11 +404,16 @@ the extract points correspond with the inflection points you can
 visualize.
 
 The other ways I will analyze the data will be over discrete intervals
-including, 1. Non structural water (40-150) 2. Structural water
-(125-250) 3. Total water (40-250) 4. Organic matrix (250-470) 5.
-Crystallization of ACC (300-330) 6. Aragonite to Calcite Transformation
-(411-440) 7. Organic Matrix + ACC + OH Groups (275-520) 8. CaCO3
-(600-800)
+including,
+
+1.  Non structural water (40-150)
+2.  Structural water (125-250)
+3.  Total water (40-250)
+4.  Organic matrix (250-470)
+5.  Crystallization of ACC (300-330)
+6.  Aragonite to Calcite Transformation (411-440)
+7.  Organic Matrix + ACC + OH Groups (275-520)
+8.  CaCO3 (600-800)
 
 # Initial Results
 

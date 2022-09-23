@@ -278,6 +278,7 @@ Here is an example. My inflection function returns the values 12,10,7,6,9,10,12.
 This removes the observed noise and when graphed below, you can see that the extract points correspond with the inflection points you can visualize. 
 
 The other ways I will analyze the data will be over discrete intervals including, 
+
 1. Non structural water (40-150)
 2. Structural water (125-250)
 3. Total water (40-250)
