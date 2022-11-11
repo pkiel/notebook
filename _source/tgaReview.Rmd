@@ -99,18 +99,6 @@ capFig = function(x){
 }
 ```
 
-<!-- The password box -->
-<div id="credentials">
-  <input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
-  <br/>
-  <input id="button" type="button" value="Show Content" onclick="verify()" />
-</div>
-
-<!-- The content we want to show after password -->
-<div id="HIDDENDIV" class="hidden" markdown="1">
-
-<!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
-
 # Overview
 
 Thermogravimetric analysis (TGA) is a quantitative materials technique that linearly heats a sample and simultaneously measures its mass as the sample degrades. By looking at the percent decomposition over discrete regions, we can characterize the coral sample's fractional constituents. The heating occurs in an inert environment (N<sub>2</sub> gas) to avoid sample oxidation. 
@@ -277,6 +265,8 @@ Here is an example. My inflection function returns the values 12,10,7,6,9,10,12.
 
 This removes the observed noise and when graphed below, you can see that the extract points correspond with the inflection points you can visualize. 
 
+## Discrete Analysis
+
 The other ways I will analyze the data will be over discrete intervals including, 
 
 1. Non structural water (40-150)
@@ -309,6 +299,7 @@ TGAdata <- lapply(analysis, function(x) {
 TGAdata %>%
   relocate(sample, .before=region) %>%
   arrange(region) %>%
+  drop_na(peak) %>%
    kbl(align = 'c',
       digits = 4,
       caption = "Table 2: Batch 1 Results")
@@ -318,7 +309,7 @@ TGAdata %>%
 
 # Stats
 
-```{r genotypeStats}
+```{r sampleVariability}
 TGAdata <- TGAdata %>%
   mutate(sample=as.numeric(sample)) %>%
   left_join(read_excel('~/Grad School/ULink 2022/AllysonGenotypedCorals/metadata.xlsx') %>%
@@ -326,24 +317,104 @@ TGAdata <- TGAdata %>%
               select(ID, genotype=Colony),
             by = c('sample'='ID'))
 
-capFig("Genotype Specific Percent Loss")
+
+capFig("Three subsamples of coral 40 were run")
 TGAdata %>%
+  drop_na(peak) %>%
+  filter(sample == 40) %>%
   ggplot(aes(genotype, loss)) +
   geom_boxplot() +
   facet_wrap(~region, scales = "free")
 
-# TGAdata %>%
-#   dplyr::filter(region == "organics") %>%
-#   group_by(genotype) %>%
-#   summarise(n = n(),
-#             mean = mean(loss))
-# 
-# TGAdata %>%
-#   dplyr::filter(region == "organics") %>%
-#   aov(loss ~ genotype, data=.) %>%
-#   tidy() %>%
-#   filter(term=="genotype")
+TGAdata %>%
+  drop_na(peak) %>%
+  group_by(region) %>%
+  summarise(mean = mean(loss),
+            sd = sd(loss),
+            cv = sd/mean) %>%
+  mutate(corals = "all", .before="region") %>%
+  bind_rows(TGAdata %>%
+              drop_na(peak) %>%
+              filter(sample==40) %>%
+              group_by(region) %>%
+              summarise(mean = mean(loss),
+                        sd = sd(loss),
+                        cv = sd/mean) %>%
+                mutate(corals = "40")) %>%
+  arrange(region) %>%
+  kbl(align = 'c',
+      digits = 4,
+      caption = "Table 3: Comparing Variation") %>%
+    kable_classic() %>%
+    row_spec(0, bold = T)
 ```
- The organics figure looks like MB-B has a slight difference, but looking at the y axis its median is only 7% less than the median of the other two genotypes and currently not showing significant genotype differences (F=3.372, p=0.094). However, we still have a handful of more samples to run. FTIR analysis may help classify the specific differences rather than bulk concentration of organics quantified here.
+The coefficient of variation is  smaller for calcium carbonate decomposition than it is for organics (~1.5% compared to 5.1%). Further, the within sample variability is similarly less for calcium carbonate than for organics (0.2% compared to 4.6%). Notably, the within sample variability of organics is nearly as large as the total variability of organics (4.6%/5.2% ~ 88.5%) compared to calcium carbonate (0.2%/1.5% ~ 13.3%). Therefore, genotype-specific differences will need to be proportionately larger for organics for us to detect a difference compared to calcium carbonate decomposition. We can look at the genotype patterns now.
 
-</div>
+```{r genotypeStats}
+capFig("Genotype Specific Percent Loss")
+TGAdata %>%
+  drop_na(peak) %>%
+  ggplot(aes(genotype, loss)) +
+  geom_boxplot() +
+  facet_wrap(~region, scales = "free")
+
+TGAdata %>%
+  drop_na(peak) %>%
+  dplyr::filter(region == "organics") %>%
+  group_by(genotype) %>%
+  summarise(n = n(),
+            mean = mean(loss))
+
+mod <- TGAdata %>%
+  drop_na(peak) %>%
+  dplyr::filter(region == "organics") %>%
+  aov(loss ~ genotype, data=.)
+
+#meets assumptions of ANOVA
+# # QQ-plot
+# library(car)
+# qqPlot(mod$residuals,
+#   id = FALSE # id = FALSE to remove point identification
+# )
+# shapiro.test(mod$residuals)
+
+#TukeyHSD(mod)
+
+capFig("Calcification rates do not vary with organic bulk organic weight")
+TGAdata %>%
+  drop_na(peak) %>%
+  dplyr::filter(region == "organics") %>%
+  left_join(corals %>% select(sample=ID, newMassStd)) %>%
+  ggplot(aes(loss, newMassStd)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  annotate("text",
+           x=1.9, y=3.2,
+           color="red",
+           label="R2=0.03")
+```
+ANOVA testing indicates that there is a statistically significant difference among genotypes (F=4.577, p=0.0313). Post-hoc testing shows that MB-B has slightly less organics than BC-8b (~7%, p=0.028), with all other comparisons p>0.05. While there may be significant differences in growth rates (MB-B is the fastest) and bulk intracrystaline organics (MB-B has the least), these two variables do not vary with one another.
+ 
+# Discrete Analysis Results
+```{r discreteAnalysis}
+TGAdata %>%
+  filter(is.na(peak)) %>%
+  select(-peak) %>%
+  ggplot(aes(genotype, loss)) +
+  geom_boxplot() +
+  facet_wrap(~region, scales = "free")
+
+TGAdata %>%
+  filter(is.na(peak)) %>%
+  select(-peak) %>%
+  group_by(region) %>%
+  anova_test(loss~genotype) %>%
+  kbl(align = 'c',
+    digits = 4,
+    caption = "Table 4: Comparing Genotype-specifc decomposition over discrete regions.") %>%
+  kable_classic() %>%
+  row_spec(0, bold = T)
+
+```
+
+When looking at discrete regions, there is no differences observed.

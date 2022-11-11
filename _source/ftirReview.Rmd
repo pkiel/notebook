@@ -101,18 +101,6 @@ capFig = function(x){
 }
 ```
 
-<!-- The password box -->
-<div id="credentials">
-  <input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
-  <br/>
-  <input id="button" type="button" value="Show Content" onclick="verify()" />
-</div>
-
-<!-- The content we want to show after password -->
-<div id="HIDDENDIV" class="hidden" markdown="1">
-
-<!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
-
 # Overview
 
 Fourier-transform infrared spectroscopy (FTIR) is a semi-quantitative technique that measures how much light a sample transmits (or absorbs) at each wavelength. Each covalent bond will absorb/transmit infrared light reflective of its stretching or bending mode. We can then use known regions (based on the molecular bonding of a substance) to characterize samples. For aragonite, there are four identifiable modes:
@@ -379,5 +367,3 @@ ftir_results %>%
 ```
 
 When the data is grouped by the coral genotype, no interesting patterns emerge. There is no shift in the v1-v4 peaks, intensities are fairly consistent, and the FWHM of each peak is also within range for each peak. The asymetrical strethcing of carbonate (v3 peak ~ 1460) had the largest variability with peaks ranging from 1443-1480 and the greatest width 110-156, with the means tightly around 140. The intensity of the v2 to v4 peak was consistently around 3.0, indicating that there was no ACC present in the measured samples given the range of I2/I4 values presented in Beniash *et al.* 1997. 
-
-</div>

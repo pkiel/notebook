@@ -3,7 +3,7 @@ layout: post
 title:  "ULink 2022 Genotype x OA Growth Analysis"
 author: "Patrick M Kiel"
 date: '2022-08-03'
-categories: [research]
+categories: [research, ULINK]
 description: "Growth analysis of corals in the University of Miami ULINK Genotype x ocean acidifcation experiment to test for mechanisms of resilience to global change within the critically endangered Acropora cervicornis."
 output:
   md_document:
@@ -78,6 +78,28 @@ function verify() {
   display: none;
 }
 ```
+
+
+```{r FigCaptions, echo=FALSE}
+
+#Figure and Table Caption Numbering
+capTabNo = 1; capFigNo = 1;
+
+#Function to add the Table Number
+capTab = function(x){
+    x = paste0("Table ",capTabNo,". ",x)
+    capTabNo <<- capTabNo + 1
+    cat(x)
+}
+
+#Function to add the Figure Number
+capFig = function(x){
+    x = paste0("<h5>Figure ",capFigNo,". ",x,"</h5>")
+    capFigNo <<- capFigNo + 1
+    cat(x)
+}
+```
+
 
 <!-- The password box -->
 <div id="credentials">
@@ -176,7 +198,9 @@ labViewData <- full_join(pH,temp, by=c("time", "tank")) %>%
   select(-c(type,hour))
 ```
 
-```{r diel pot}
+```{r diel plot}
+capFig("10-minute averaged ERL Log")
+
 labViewData %>%
   #only use data once treatment conditions met 4/1
   filter(date(time) > as.Date("2022-04-01")) %>%
@@ -223,8 +247,7 @@ labViewData %>%
                    labels = date_format("%H")) +
   facet_wrap(~tank) +
   theme_bw() +
-  guides(fill = FALSE) +
-  labs(title = "Figure 1: 15-min Averaged Log")
+  guides(fill = FALSE)
 ```
 
 The peaks in the standard deviation are almost certainly caused by aquarium cleaning days when corals are removed into a separate bath and the sensors are capped causing logging errors. CO2 injection is turned off during these times so the aquariums themselves are not experiencing the conditions that the logged data are suggesting. The following graph filters out these spiked values which were programmatically identified by occurring during scheduled cleaning times and affecting multiple aquariums at once since cleaning occurred at the same time for all aquariums.
@@ -244,6 +267,7 @@ cleaningTimes <- labViewData %>%
   group_by(time = round_date(time, "30 minutes")) %>%
   filter(length(unique(tank))>1)
 
+capFig("Cleaned 10-minute Averaged ERL Log")
 labViewData %>%
   #only use data once treatment conditions met 4/1
   filter(date(time) > as.Date("2022-04-01")) %>%
@@ -302,8 +326,7 @@ labViewData %>%
                    labels = date_format("%H")) +
   facet_wrap(~tank) +
   theme_bw() +
-  guides(fill = FALSE) +
-  labs(title = "Figure 2: Cleaned 15-min Averaged Log")
+  guides(fill = FALSE)
 ```
 
 Variability is still present, but the extreme spikes caused by cleaning have been removed. Thus, any variability that remains is due to durafet error or experimental variability that affected the corals. For example, the durafet for T15 had much higher variability than the other aquariums. However, I believe this to be negligible.
@@ -367,6 +390,7 @@ carbSystem <- read.csv("~/Grad School/ULink 2022/carbonateChemistry/carbData.csv
 The bottles were not taken at exactly the same time of day, and thus the programmed variability will be apart of the variability of each sample along with sampling error, durafet error altering amount of CO2 injected into aquaria (shown above in  the LabView data), etc.
 
 ```{r todSampling}
+capFig("Times of Aquarium Bottle Sampling")
 carbSystem %>%
   mutate(hms = as.POSIXct(format(date,
                            format="%H:%M:%S"), 
@@ -378,8 +402,7 @@ carbSystem %>%
   geom_point() +
   theme_bw() +
   labs(x = "Date",
-       y = "Time of Day",
-       title = "Figure 3: Bottle Sampling of Aquariums")
+       y = "Time of Day")
 ```
 
 Sampling time had a mean of  around 10a. 3 sampling times were taken after 12p with one sampling time around 4:20p
@@ -526,6 +549,7 @@ totalGrowth <- bw %>%
 
 
 ```{r growth graphs}
+capFig("Avg Daily Growth Per Week by Genotype ± se")
 weeklyGrowth %>%
   group_by(weekNum,genotype) %>%
   summarise(weeklyG = mean(weeklyG.week, na.rm = T),
@@ -537,7 +561,6 @@ weeklyGrowth %>%
                     ymax = weeklyG + se,
                     fill=genotype),
                 alpha=0.3) + 
-  labs(title = "Figure 4: Avg Daily Growth Per Week by Genotype ± se") +
   scale_x_continuous("Week",
                      breaks = c(seq(1,
                                     max(weeklyGrowth$weekNum, na.rm = T),
@@ -548,6 +571,7 @@ weeklyGrowth %>%
                      expand = c(0, 0)) +
   theme_classic()
 
+capFig("Avg Daily Growth Per Week by Treatment Group ± se")
 weeklyGrowth %>%
   group_by(weekNum,treatment) %>%
   summarise(weeklyG = mean(weeklyG.week, na.rm = T),
@@ -559,7 +583,6 @@ weeklyGrowth %>%
                     ymax = weeklyG + se,
                     fill=treatment),
                 alpha=0.3) + 
-  labs(title = "Figure 5: Avg Daily Growth Per Week by Treatment Group ± se") +
   scale_x_continuous("Week",
                      breaks = c(seq(1,
                                     max(weeklyGrowth$weekNum, na.rm = T),
@@ -574,30 +597,29 @@ weeklyGrowth %>%
 Following April 15 (Weeky 5), the declining health of the corals stabilized and began to split amongst treatment groups.
 
 ```{r calcification graphs}
+capFig("Avg Daily Growth by Treatment")
 totalGrowth %>%
   ggplot(aes(treatment, dailyG, fill=treatment)) +
   geom_boxplot() +
   labs(x = "Treatment",
-       y = "Avg Daily Growth Rate (mg/g/day)",
-       title = "Figure 6: Avg Daily Growth by Treatment") +
+       y = "Avg Daily Growth Rate (mg/g/day)") +
   theme_classic()
 
+capFig("Avg Daily Growth by Genotype")
 totalGrowth %>%
   ggplot(aes(genotype, dailyG)) +
   geom_boxplot() +
   labs(x = "Treatment",
-       y = "Avg Daily Growth Rate (mg/g/day)",
-       title = "Figure 7: Avg Daily Growth by Genotype") +
+       y = "Avg Daily Growth Rate (mg/g/day)") +
   theme_classic()
 
-
+capFig("Avg Daily Growth Per Week by Genotype and Treatment")
 totalGrowth %>%
   ggplot(aes(genotype, dailyG)) +
   geom_boxplot(aes(fill=treatment)) +
               #if quantile lines desired: draw_quantiles = c(0.25, 0.5, 0.75)) +
   labs(x = "Genotype",
-       y = "Avg Daily Growth Rate (mg/g/day)",
-       title = "Figure 8: Avg Daily Growth by Genotype and Treatment") +
+       y = "Avg Daily Growth Rate (mg/g/day)") +
   theme_classic()
 ```
 
@@ -709,14 +731,15 @@ manLegend <- c("13 HCO2"= "#f0786f",
               "15 HCO2"= "#f0786f",
               "16 LCO2" = "#3dbec3")
 
+capFig("Avg Daily Growth by Tank and Treatment")
 totalGrowth %>%
   ggplot(aes(tank, dailyG, fill=treatment)) +
   geom_boxplot() +
   labs(x = "Genotype",
-       y = "Avg Daily Growth Rate (mg/g/day)",
-       title = "Figure 9: Avg Daily Growth by Tank and Treatment") +
+       y = "Avg Daily Growth Rate (mg/g/day)") +
   theme_classic()
 
+capFig("Avg Daily Growth by Genotype, Treatment, and Tank")
 totalGrowth %>%
   mutate(tank = case_when(tank == 13 ~ "13 HCO2",
                           tank == 14 ~ "14 LCO2",
@@ -726,8 +749,7 @@ totalGrowth %>%
   geom_boxplot(aes(fill=tank)) +
   scale_fill_manual(values = manLegend) +
   labs(x = "Genotype",
-       y = "Avg Daily Growth Rate (mg/g/day)",
-       title = "Figure 10: Avg Daily Growth by Genotype,Treatment, and Tank") +
+       y = "Avg Daily Growth Rate (mg/g/day)") +
   theme_classic()
 ```
 
@@ -810,6 +832,7 @@ Pattern is the same as above with the fixed effects. Significance has decreased 
 ## Powder Available
 
 ```{r powder available}
+capFig("Amount of New CaCO3 Precipitated")
 totalGrowth %>%
   ggplot(aes(x=genotype, y=newGrowth.mg)) +
   geom_point(aes(color=treatment)) +
@@ -817,8 +840,7 @@ totalGrowth %>%
   geom_hline(yintercept = 50, color="red") +
   geom_hline(yintercept = 120, color="orange") +
   geom_hline(yintercept = 500, color="green") +
-  labs(title = "Figure 11: Amount of New CaCO3 Precipitated",
-       y = "Precipated Skeleton (mg)") +
+  labs(y = "Precipated Skeleton (mg)") +
   theme_classic()
 ```
 
@@ -860,30 +882,29 @@ height <- read.csv('~/Grad School/ULink 2022/initialHeights.csv') %>%
 ```
 
 ```{r LE graphs}
+capFig("Avg Daily Linear Extension by Treatment")
 height %>%
   ggplot(aes(treatment, prod, fill=treatment)) +
   geom_boxplot() +
   labs(x = "Treatment",
-       y = "Avg Daily LE Rate (mm/cm/day)",
-       title = "Figure 12: Avg Daily Linear Extension by Treatment") +
+       y = "Avg Daily LE Rate (mm/cm/day)") +
   theme_classic()
 
+capFig("Avg Daily Linear Extension by Treatment and Aquarium")
 height %>%
   ggplot(aes(tank, prod, fill=treatment)) +
   geom_boxplot() +
   labs(x = "Treatment",
-       y = "Avg Daily LE Rate (mm/cm/day)",
-       title = "Figure 13: Avg Daily Linear Extension by Treatment and Aquarium") +
+       y = "Avg Daily LE Rate (mm/cm/day)") +
   theme_classic()
 
-
+capFig("Avg Daily Linar Extension by Genotype and Treatment")
 height %>%
   ggplot(aes(genotype, prod)) +
   geom_boxplot(aes(fill=treatment)) +
               #if quantile lines desired: draw_quantiles = c(0.25, 0.5, 0.75)) +
   labs(x = "Genotype",
-       y = "Avg Daily LE Rate (mm/cm/day)",
-       title = "Figure 14: Avg Daily Linear Extension by Genotype and Treatment") +
+       y = "Avg Daily LE Rate (mm/cm/day)") +
   theme_classic()
 ```
 
@@ -979,6 +1000,7 @@ The mean linear extension rate in the HCO2 group was mean `r round(mean(height$p
 ## Tank Effects
 
 ```{r LE tank effects}
+capFig("Avg Daily Linear Extension by Treatment and Aquarium")
 height %>%
    mutate(tank = case_when(tank == 13 ~ "13 HCO2",
                           tank == 14 ~ "14 LCO2",
@@ -988,8 +1010,7 @@ height %>%
   geom_boxplot() +
   scale_fill_manual(values = manLegend) +
   labs(x = "Treatment",
-       y = "Avg Daily LE Rate (mm/cm/day)",
-       title = "Figure 15: Avg Daily Linear Extension by Treatment and Aquarium") +
+       y = "Avg Daily LE Rate (mm/cm/day)") +
   theme_classic()
 
 ```
@@ -1000,7 +1021,7 @@ height %>%
   t_test(data=.,formula = prod ~ tank) %>%
     kbl(align = 'c',
     digits = 3,
-    caption = "Figure 16: Significance testing of tank effect on Linear Extension Rates") %>%
+    caption = "Table 14: Significance testing of tank effect on Linear Extension Rates") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 
@@ -1034,7 +1055,7 @@ emmeans(modRandom, list(pairwise ~genotype*treatment),
   rename(pairwise=`1`) %>%
   kbl(align = 'c',
     digits = 4,
-    caption = "Table 14:Pairwise comparison of genotypes' sensitivity to OA",
+    caption = "Table 15:Pairwise comparison of genotypes' sensitivity to OA",
     escape=F) %>%
   kable_classic() %>%
   row_spec(0, bold = T) %>%
@@ -1050,16 +1071,15 @@ AIC(modFixed, modRandom)
 
 AIC tells us the mixed effects model better describes the data. Post-hoc testing further tells us that indeed SI-A's linear extension rates were significantly different between treatments (p<0.05), yet all other genotype's were not.
 
-
 ```{r total extension}
+capFig("Amount of New Skeleton and Mean New LE (Red Line)")
 height %>%
   ggplot(aes(x=genotype, y=LE)) +
   geom_point(aes(color=treatment)) +
   scale_y_continuous(limits = c(0,30)) +
   geom_hline(yintercept = mean(height$LE),
              color="red") +
-  labs(title = "Figure 17: Amount of New Skeleton and Mean New LE (Red Line)",
-       y = "Linear Extension (mm)") +
+  labs(y = "Linear Extension (mm)") +
   theme_classic()
 ```
 

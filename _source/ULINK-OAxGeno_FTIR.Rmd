@@ -1,0 +1,243 @@
+---
+layout: post
+title:  "ULINK OAxGenotype FTIR Analysis"
+author: "Patrick M Kiel"
+date: '2022-11-11'
+categories: [research, ULINK]
+description: "Fourier-transform infrared spectroscopy (FTIR) analysis of genotyped A. cervicornis skeletons cultured in an ocean acidification experiment."
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, 
+  encoding = encoding, 
+  output_file = paste0('2022-11-11', "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
+  output_dir = "../_posts") })
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#load packages
+library(tidyverse)
+library(kableExtra)
+library(readxl)
+library(ggpubr)
+library(rstatix)
+library(seacarb)
+library(OpenSpecy)
+library(cowplot)
+
+base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
+fig_path <- "images/ULINKftir/" #add a new folder if you want to group output into a single foder
+
+# Set base directories
+knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
+
+# Set figure directories
+knitr::opts_chunk$set(fig.path = fig_path,
+                    cache.path = '../cache/',
+                    fig.align = 'center', out.width = '90%',
+                    message=FALSE, warning=FALSE,
+                    cache = FALSE, results = "asis")
+```
+
+```{js}
+
+window.onload = function() {
+    //query string in the password
+    const urlParams = new URLSearchParams(window.location.search);
+    const pass = urlParams.get('pass')
+    document.getElementById("password").value = pass;
+};
+
+function verify() {
+  <!-- set the password here -->
+  if (document.getElementById('password').value === 'ulink') {
+    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
+    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
+  } else {
+    alert('Invalid Password! You cannot view this content.');
+    password.setSelectionRange(0, password.value.length);
+  }
+  return false;
+}
+```
+
+```{css}
+/*Change content Display */
+.hidden {
+  display: none;
+}
+img {
+    max-width: 90%;
+    margin: 0 auto;
+}
+```
+
+```{r FigCaptions, echo=FALSE}
+
+#Figure and Table Caption Numbering
+capTabNo = 1; capFigNo = 1;
+
+#Function to add the Table Number
+capTab = function(x){
+    x = paste0("Table ",capTabNo,". ",x)
+    capTabNo <<- capTabNo + 1
+    cat(x)
+}
+
+#Function to add the Figure Number
+capFig = function(x){
+    x = paste0("<h5>Figure ",capFigNo,". ",x,"</h5>")
+    capFigNo <<- capFigNo + 1
+    cat(x)
+}
+```
+
+<!-- The password box -->
+<div id="credentials">
+  <input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
+  <br/>
+  <input id="button" type="button" value="Show Content" onclick="verify()" />
+</div>
+
+<!-- The content we want to show after password -->
+<div id="HIDDENDIV" class="hidden" markdown="1">
+
+<!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
+
+# Overview
+
+Fourier-transform infrared spectroscopy (FTIR) is a semi-quantitative technique that measures how much light a sample transmits (or absorbs) at each wavelength. Each covalent bond will absorb/transmit infrared light reflective of its stretching or bending mode. We can then use known regions (based on the molecular bonding of a substance) to characterize samples. I describe the methodology,the regions of interest, and review the literature of FTIR applied to corals in more detail in my previous post about the methodology, <a href="https://patrickmkiel.com/notebook/research/ftirReview/">which you can read here.</a>
+
+Spectra were again captured in the UM Dept of Chemistry using their FTIR with an ATR accessory. Spectra were smoothed with a Savitzky-Golay filter fit with a 3rd order polynomial over 15 cm<sup>-1</sup> and subsequently baseline corrected using the OpenSpecy open source spectral package in R. All data fit the characteristic vibrations peaks of aragonite.
+
+# Samples
+
+The corals for this analysis come from the 2022 ULINK OA x Genotype experiment, where we cultured 4 genotypes of *A. cervicornis* in the Experimental Reef Aquarium under two pCO2 regimes, representing current and predicted 2100 ocean acidification scenarios. <a href="https://patrickmkiel.com/notebook/research/ulink2022GrowthAnalysis/">A complete analysis of culture conditions and observed growth is document here.</>
+
+Below are some brief overview graphs which document the observed growth.
+
+```{r allysonStressHardening}
+corals <- read_excel('~/Grad School/ULink 2022/AllysonGenotypedCorals/metadata.xlsx') %>%
+  mutate(bw_initial_calc = Bw_initial_raw_mass/(1-(rho(S = `bw_initial_salinity (ppt)`,
+                                                       T = bw_initial_temp)/1000)/2.93),
+         bw_final_calc = bw_final_raw_mass/(1-(rho(S = bw_final_salinity,
+                                                   T = bw_final_temp)/1000)/2.93),
+         newMassStd = (bw_final_calc-bw_initial_calc)*1000/
+           bw_initial_calc/
+           as.numeric(bw_final_date-bw_initial_date)) %>%
+  filter(Species == 'Acropora cervicornis',
+         newMassStd>0) %>%
+  filter(ID %in%
+           (read.table('~/Grad School/ULink 2022/AllysonGenotypedCorals/skeletonTag.txt') %>%
+           pull(V1) %>%
+           str_extract(., '[[:digit:]]*') %>%
+           as.numeric(.)))
+
+capFig("Calcification data from Allyson Demerlis's project")
+
+corals %>%
+  ggplot(aes(Colony,newMassStd, fill=Treatment)) +
+  geom_boxplot() +
+  theme_classic() +
+  labs(y = "Daily Calcification Rate (mg/g/day)",
+       x= "Genotype",
+       title = "Genotype x Temperature")
+```
+
+There was a significant effect of the coral genotype (F=23.27, p=7.78e-6), but no observed effect of stress hardening treatment on calcification rates (F=0.91, p=0.352). Following post-hoc testing, the significant genotype effect was driven by genotype MB-B which had much higher rates than BC-8B and SI-C which had similar calcification rates.
+
+Thus, we are conducting these tests with a special focus on genotype MB-B to see if its faster calcification rate results in any observable differences in skeletal properties.
+
+# Proposed Analysis
+
+To identify the peaks, I set a window (+/- 20cm) around the expected peak to identify relative maximum intensity. The maximum intensity and the wavenumber at the identified peak were extracted. For FWHM, the wave numbers around the peak which had intensity > .5*I were extrated, and the range of the extracted wavenumbers was identified as the FWHM. 
+
+# Results
+
+```{r FTIR-Analysis}
+source('~/Grad School/ULink 2022/AllysonGenotypedCorals/ftir/ftirAnalysis.R')
+
+ftir_files <- list.files(path = "~/Grad School/ULink 2022/AllysonGenotypedCorals/ftir/",
+                         pattern = "([0-9])(.csv)",
+                         recursive = T,
+                         full.names = T)
+
+lapply(ftir_files, function(loc) {
+  #load data
+  dat = read.csv(loc, header = FALSE, stringsAsFactors = FALSE,
+                 skip = 2)
+  colnames(dat) = c("wavenumber", "intensity")
+  
+  #adjust from transmittance to absorbance
+  dat = adj_intens(dat,
+                    type = "transmittance")
+  #smooth w/ 3rd order polynomial by the Savitzky-Golay filter
+  dat = smooth_intens(dat, p=1)
+  #baseline correction 
+  dat = subtr_bg(dat)
+  
+  dat %>%
+    ggplot(aes(wavenumber,intensity)) +
+    geom_line() +
+    theme_bw() +
+    scale_x_reverse(limits = c(4000,600)) +
+    labs(x = expression(paste("wavenumber ", cm^-1)),
+         title = paste("Sample:",
+         as.numeric(gsub("[^0-9]", "",basename(loc))))) +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank())
+  
+})
+
+ftir_results <- lapply(ftir_files, analyze_ftir) %>%
+  bind_rows()
+
+ftir_results <- ftir_results %>%
+  left_join(read_excel('~/Grad School/ULink 2022/AllysonGenotypedCorals/metadata.xlsx') %>%
+              filter(Species=='Acropora cervicornis') %>%
+              select(ID, genotype=Colony, Treatment, Random_Tank),
+            by = c('id'='ID'))
+
+ftir_results %>%
+  pivot_longer(v1:ACC,
+               names_to="metric") %>%
+  mutate(metric = factor(metric,
+                         levels = c('v1','I1','fwhm1',
+                                    'v2','I2','fwhm2',
+                                    'v3','I3','fwhm3',
+                                    'v4','I4','fwhm4','ACC'))) %>%
+  ggplot(aes(genotype,value, fill=genotype)) +
+  geom_boxplot() +
+  facet_wrap(~metric,
+             scales = "free",
+            nrow = 3) +
+  labs(title = "No observable genotype differences in any metric") +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        #legend.background = element_rect(size=0.5, color = "black"),
+        legend.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.title.y = element_blank())
+
+#no signifcant results
+# ftir_results %>%
+#   pivot_longer(v1:ACC,
+#                names_to="metric") %>%
+#   group_by(metric) %>%
+#   nest() %>%
+#   mutate(model = map(data, ~aov(value~genotype*Treatment, data=.))) -> mods
+#   lapply(mods$model, summary)
+```
+
+When the data is grouped by the coral genotype, no interesting patterns emerge. There is no shift in the v1-v4 peaks, intensities are fairly consistent, and the FWHM of each peak is also within range for each peak. The asymetrical strethcing of carbonate (v3 peak ~ 1460) had the largest variability with peaks ranging from 1443-1480 and the greatest width 110-156, with the means tightly around 140. The intensity of the v2 to v4 peak was consistently around 3.0, indicating that there was no ACC present in the measured samples given the range of I2/I4 values presented in Beniash *et al.* 1997. 
+
+</div>

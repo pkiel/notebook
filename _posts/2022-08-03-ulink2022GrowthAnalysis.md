@@ -3,7 +3,7 @@ layout: post
 title:  "ULink 2022 Genotype x OA Growth Analysis"
 author: "Patrick M Kiel"
 date: '2022-08-03'
-categories: [research]
+categories: [research, ULINK]
 description: "Growth analysis of corals in the University of Miami ULINK Genotype x ocean acidifcation experiment to test for mechanisms of resilience to global change within the critically endangered Acropora cervicornis."
 output:
   md_document:
@@ -74,7 +74,9 @@ to proceed forward with most of our tests.
 
 ## Labview Data
 
-<img src="/notebook/images/ulinkGrowth2022/diel pot-1.png" width="90%" style="display: block; margin: auto;" />
+    ## <h5>Figure 1. 10-minute averaged ERL Log</h5>
+
+<img src="/notebook/images/ulinkGrowth2022/diel plot-1.png" width="90%" style="display: block; margin: auto;" />
 
 The peaks in the standard deviation are almost certainly caused by
 aquarium cleaning days when corals are removed into a separate bath and
@@ -85,6 +87,8 @@ filters out these spiked values which were programmatically identified
 by occurring during scheduled cleaning times and affecting multiple
 aquariums at once since cleaning occurred at the same time for all
 aquariums.
+
+    ## <h5>Figure 2. Cleaned 10-minute Averaged ERL Log</h5>
 
 <img src="/notebook/images/ulinkGrowth2022/cleaned diel plot-1.png" width="90%" style="display: block; margin: auto;" />
 
@@ -105,6 +109,8 @@ The bottles were not taken at exactly the same time of day, and thus the
 programmed variability will be apart of the variability of each sample
 along with sampling error, durafet error altering amount of CO2 injected
 into aquaria (shown above in the LabView data), etc.
+
+    ## <h5>Figure 3. Times of Aquarium Bottle Sampling</h5>
 
 <img src="/notebook/images/ulinkGrowth2022/todSampling-1.png" width="90%" style="display: block; margin: auto;" />
 
@@ -755,12 +761,28 @@ precision.
 
 # Calcification Analysis
 
-<img src="/notebook/images/ulinkGrowth2022/growth graphs-1.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/growth graphs-2.png" width="90%" style="display: block; margin: auto;" />
+    ## <h5>Figure 4. Avg Daily Growth Per Week by Genotype ± se</h5>
+
+<img src="/notebook/images/ulinkGrowth2022/growth graphs-1.png" width="90%" style="display: block; margin: auto;" />
+
+    ## <h5>Figure 5. Avg Daily Growth Per Week by Treatment Group ± se</h5>
+
+<img src="/notebook/images/ulinkGrowth2022/growth graphs-2.png" width="90%" style="display: block; margin: auto;" />
 
 Following April 15 (Weeky 5), the declining health of the corals
 stabilized and began to split amongst treatment groups.
 
-<img src="/notebook/images/ulinkGrowth2022/calcification graphs-1.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/calcification graphs-2.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/calcification graphs-3.png" width="90%" style="display: block; margin: auto;" />
+    ## <h5>Figure 6. Avg Daily Growth by Treatment</h5>
+
+<img src="/notebook/images/ulinkGrowth2022/calcification graphs-1.png" width="90%" style="display: block; margin: auto;" />
+
+    ## <h5>Figure 7. Avg Daily Growth by Genotype</h5>
+
+<img src="/notebook/images/ulinkGrowth2022/calcification graphs-2.png" width="90%" style="display: block; margin: auto;" />
+
+    ## <h5>Figure 8. Avg Daily Growth Per Week by Genotype and Treatment</h5>
+
+<img src="/notebook/images/ulinkGrowth2022/calcification graphs-3.png" width="90%" style="display: block; margin: auto;" />
 
 There is some obvious genet-specific responses.
 
@@ -1273,7 +1295,13 @@ treatment groups. Here I am analyzing tank effects on the calcification
 rate and investigating if calcification rates were significantly
 different between aquariums within the same treatment group.
 
-<img src="/notebook/images/ulinkGrowth2022/tank effects graph-1.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/tank effects graph-2.png" width="90%" style="display: block; margin: auto;" />
+    ## <h5>Figure 9. Avg Daily Growth by Tank and Treatment</h5>
+
+<img src="/notebook/images/ulinkGrowth2022/tank effects graph-1.png" width="90%" style="display: block; margin: auto;" />
+
+    ## <h5>Figure 10. Avg Daily Growth by Genotype, Treatment, and Tank</h5>
+
+<img src="/notebook/images/ulinkGrowth2022/tank effects graph-2.png" width="90%" style="display: block; margin: auto;" />
 
 ### Tank Effects Statistics
 
@@ -1558,6 +1586,8 @@ individual genotype’s susceptibility to OA.
 
 ## Powder Available
 
+    ## <h5>Figure 11. Amount of New CaCO3 Precipitated</h5>
+
 <img src="/notebook/images/ulinkGrowth2022/powder available-1.png" width="90%" style="display: block; margin: auto;" />
 
 The amount of new aragonite precipated is visualized above. Horizontal
@@ -1567,7 +1597,17 @@ including XRD), &gt;120 mg = orange (complete suite sans XRD), &gt;50mg
 
 # Linear Extension
 
-<img src="/notebook/images/ulinkGrowth2022/LE graphs-1.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/LE graphs-2.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/ulinkGrowth2022/LE graphs-3.png" width="90%" style="display: block; margin: auto;" />
+    ## <h5>Figure 12. Avg Daily Linear Extension by Treatment</h5>
+
+<img src="/notebook/images/ulinkGrowth2022/LE graphs-1.png" width="90%" style="display: block; margin: auto;" />
+
+    ## <h5>Figure 13. Avg Daily Linear Extension by Treatment and Aquarium</h5>
+
+<img src="/notebook/images/ulinkGrowth2022/LE graphs-2.png" width="90%" style="display: block; margin: auto;" />
+
+    ## <h5>Figure 14. Avg Daily Linar Extension by Genotype and Treatment</h5>
+
+<img src="/notebook/images/ulinkGrowth2022/LE graphs-3.png" width="90%" style="display: block; margin: auto;" />
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
@@ -2047,11 +2087,13 @@ statistically significant, t(82) = -1.556, p =0.124, d = -0.34.
 
 ## Tank Effects
 
+    ## <h5>Figure 15. Avg Daily Linear Extension by Treatment and Aquarium</h5>
+
 <img src="/notebook/images/ulinkGrowth2022/LE tank effects-1.png" width="90%" style="display: block; margin: auto;" />
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Figure 16: Significance testing of tank effect on Linear Extension Rates
+Table 14: Significance testing of tank effect on Linear Extension Rates
 </caption>
 <thead>
 <tr>
@@ -2179,7 +2221,7 @@ ns
 
 <table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
-Table 14:Pairwise comparison of genotypes’ sensitivity to OA
+Table 15:Pairwise comparison of genotypes’ sensitivity to OA
 </caption>
 <thead>
 <tr>
@@ -2280,6 +2322,8 @@ AIC tells us the mixed effects model better describes the data. Post-hoc
 testing further tells us that indeed SI-A’s linear extension rates were
 significantly different between treatments (p&lt;0.05), yet all other
 genotype’s were not.
+
+    ## <h5>Figure 16. Amount of New Skeleton and Mean New LE (Red Line)</h5>
 
 <img src="/notebook/images/ulinkGrowth2022/total extension-1.png" width="90%" style="display: block; margin: auto;" />
 

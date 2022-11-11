@@ -51,21 +51,6 @@ img {
     margin: 0 auto;
 }
 </style>
-<!-- The password box -->
-
-<div id="credentials">
-
-<input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
-<br/>
-<input id="button" type="button" value="Show Content" onclick="verify()" />
-
-</div>
-
-<!-- The content we want to show after password -->
-
-<div id="HIDDENDIV" class="hidden" markdown="1">
-
-<!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
 
 # Overview
 
@@ -383,5 +368,3 @@ width 110-156, with the means tightly around 140. The intensity of the
 v2 to v4 peak was consistently around 3.0, indicating that there was no
 ACC present in the measured samples given the range of I2/I4 values
 presented in Beniash *et al.* 1997.
-
-</div>
