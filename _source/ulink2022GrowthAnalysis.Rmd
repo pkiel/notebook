@@ -464,7 +464,7 @@ carbTbl %>%
            background = "red")
 ```
 
-Temperature and total alkalinity were not significantly different between treatments or within treatments (p>>0.05). DIC, pCO2, and $$\Omega_{Ar} $$ (p<0.001) were significantly different between treatment, but not between aquariums within treatment (p>>0.05). In other words, our system reproducibly altered the carbonate chemistry parameters with high precision.
+Temperature and total alkalinity were not significantly different between treatments or within treatments (p>>0.05). DIC, pCO2, and $$\Omega_{Ar}$$ (p<0.001) were significantly different between treatment, but not between aquariums within treatment (p>>0.05). In other words, our system reproducibly altered the carbonate chemistry parameters with high precision.
 
 
 # Calcification Analysis
@@ -639,7 +639,7 @@ tukeyGTbl %>%
 #   row_spec(0, bold = T)
 ```
 
-The mean calcification rate in the HCO2 group was mean `r round(mean(totalGrowth$G[which(totalGrowth$treatment=='HCO2')]),3)`  (SD = `r round(sd(totalGrowth$G[which(totalGrowth$treatment=='HCO2')]),3)`) mg/$cm^2$/day, whereas the mean in the LCO2 group was `r round(mean(totalGrowth$G[which(totalGrowth$treatment=='LCO2')]),3)` (SD = `r round(sd(totalGrowth$G[which(totalGrowth$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p < 0.0001, d = `r round(cohensResults$effsize,3)`. Thus, the ocean acidification group saw on average a `r round((groupMeans$mean[2]-groupMeans$mean[1])/groupMeans$mean[2]*100,0)`% reduction in calcification rates. The effects, however, were not even across the genotypes (Table 5).
+The mean calcification rate in the HCO2 group was mean `r round(mean(totalGrowth$G[which(totalGrowth$treatment=='HCO2')]),3)`  (SD = `r round(sd(totalGrowth$G[which(totalGrowth$treatment=='HCO2')]),3)`) mg/ $$cm^2$$ /day, whereas the mean in the LCO2 group was `r round(mean(totalGrowth$G[which(totalGrowth$treatment=='LCO2')]),3)` (SD = `r round(sd(totalGrowth$G[which(totalGrowth$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p < 0.0001, d = `r round(cohensResults$effsize,3)`. Thus, the ocean acidification group saw on average a `r round((groupMeans$mean[2]-groupMeans$mean[1])/groupMeans$mean[2]*100,0)`% reduction in calcification rates. The effects, however, were not even across the genotypes (Table 5).
 
 ## Tank Effects
 
@@ -721,14 +721,17 @@ modRandom <- totalGrowth %>%
   lmerTest::lmer(G ~ genotype * treatment + (1|tank),
                  data=.)
 modRandom %>%
-  anova()
+  anova() %>%
+  tidy() %>%
+  kbl()
 
 #redefining modRandom w/ REML=F for AIC comparison
 modRandom <- totalGrowth %>%
   lmerTest::lmer(G ~ genotype * treatment + (1|tank), REML = F,
                  data=.)
 
-AIC(modFixed, modRandom)
+AIC(modFixed, modRandom) %>%
+  kbl()
 ```
 
 <!-- Tukey post-hoc analysis of the mixed effects model: -->

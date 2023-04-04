@@ -665,7 +665,7 @@ NS
 
 Temperature and total alkalinity were not significantly different
 between treatments or within treatments (p\>\>0.05). DIC, pCO2, and
-$$\Omega_{Ar} $$ (p\<0.001) were significantly different between
+$$\Omega_{Ar}$$ (p\<0.001) were significantly different between
 treatment, but not between aquariums within treatment (p\>\>0.05). In
 other words, our system reproducibly altered the carbonate chemistry
 parameters with high precision.
@@ -960,9 +960,9 @@ NS
 </table>
 
 The mean calcification rate in the HCO2 group was mean 0.081 (SD =
-0.028) mg/$cm^2$/day, whereas the mean in the LCO2 group was 0.126 (SD =
-0.028). A Student two-samples t-test showed that the difference was
-statistically significant, t(72) = -6.917, p \< 0.0001, d = -1.608.
+0.028) mg/ $$cm^2$$ /day, whereas the mean in the LCO2 group was 0.126
+(SD = 0.028). A Student two-samples t-test showed that the difference
+was statistically significant, t(72) = -6.917, p \< 0.0001, d = -1.608.
 Thus, the ocean acidification group saw on average a 36% reduction in
 calcification rates. The effects, however, were not even across the
 genotypes (Table 5).
@@ -1141,15 +1141,109 @@ modRandom <- totalGrowth %>%
   lmerTest::lmer(G ~ genotype * treatment + (1|tank),
                  data=.)
 modRandom %>%
-  anova()
+  anova() %>%
+  tidy() %>%
+  kbl()
 ```
 
-Type III Analysis of Variance Table with Satterthwaite’s method Sum Sq
-Mean Sq NumDF DenDF F value Pr(\>F)  
-genotype 0.017266 0.0086330 2 66.161 20.042 1.567e-07 *** treatment
-0.026632 0.0266322 1 2.008 61.829 0.01561 *  
-genotype:treatment 0.010157 0.0050785 2 66.161 11.790 4.173e-05 **\* —
-Signif. codes: 0 ‘***’ 0.001 ’**’ 0.01 ’*’ 0.05 ‘.’ 0.1 ’ ’ 1
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+sumsq
+</th>
+<th style="text-align:right;">
+meansq
+</th>
+<th style="text-align:right;">
+NumDF
+</th>
+<th style="text-align:right;">
+DenDF
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+genotype
+</td>
+<td style="text-align:right;">
+0.0172659
+</td>
+<td style="text-align:right;">
+0.0086330
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+66.160817
+</td>
+<td style="text-align:right;">
+20.04205
+</td>
+<td style="text-align:right;">
+0.0000002
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+treatment
+</td>
+<td style="text-align:right;">
+0.0266322
+</td>
+<td style="text-align:right;">
+0.0266322
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2.008131
+</td>
+<td style="text-align:right;">
+61.82861
+</td>
+<td style="text-align:right;">
+0.0156087
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+genotype:treatment
+</td>
+<td style="text-align:right;">
+0.0101570
+</td>
+<td style="text-align:right;">
+0.0050785
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+66.160817
+</td>
+<td style="text-align:right;">
+11.79006
+</td>
+<td style="text-align:right;">
+0.0000417
+</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 #redefining modRandom w/ REML=F for AIC comparison
@@ -1157,13 +1251,48 @@ modRandom <- totalGrowth %>%
   lmerTest::lmer(G ~ genotype * treatment + (1|tank), REML = F,
                  data=.)
 
-AIC(modFixed, modRandom)
+AIC(modFixed, modRandom) %>%
+  kbl()
 ```
 
-          df       AIC
-
-modFixed 7 -354.5075 modRandom 8 -352.5075
-
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+AIC
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+modFixed
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+-354.5075
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+modRandom
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+-352.5075
+</td>
+</tr>
+</tbody>
+</table>
 <!-- Tukey post-hoc analysis of the mixed effects model: -->
 <!-- ```{r random mixed effects table} -->
 <!-- emmeans(modRandom, list(pairwise ~genotype*treatment), -->
