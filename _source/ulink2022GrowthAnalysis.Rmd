@@ -3,7 +3,7 @@ layout: post
 title:  "ULink 2022 Genotype x OA Growth Analysis"
 author: "Patrick M Kiel"
 date: '2022-08-03'
-categories: [research, ULINK]
+categories: [research]
 description: "Growth analysis of corals in the University of Miami ULINK Genotype x ocean acidifcation experiment to test for mechanisms of resilience to global change within the critically endangered Acropora cervicornis."
 output:
   md_document:
@@ -34,6 +34,7 @@ library(rstatix)
 library(openxlsx)
 library(lubridate)
 library(scales)
+library(wesanderson)
 
 base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
 base_url <- "/notebook/" # subdirectory of patrickmkiel.com
@@ -47,7 +48,11 @@ knitr::opts_chunk$set(fig.path = fig_path,
                     cache.path = '../cache/',
                     fig.align = 'center', out.width = '90%',
                     message=FALSE, warning=FALSE,
-                    cache = FALSE)
+                    cache = FALSE, results = 'asis')
+
+#set default color paletes
+options(ggplot2.discrete.fill=wes_palette("Darjeeling1"))
+options(ggplot2.discrete.colour=wes_palette("Darjeeling1"))
 ```
 
 ```{js}
@@ -319,60 +324,58 @@ labViewData %>%
   scale_x_datetime("Hour",
                    limits = as.POSIXct(strptime(c("00:00",
                                                   "23:59"),
-                                                format = "%H:%M")),
-                   breaks = seq(as.POSIXct("00:00", format="%H:%M"),
-                                as.POSIXct("24:00", format="%H:%M"),
+                                                format = "%H:%M", tz = "EST")),
+                   breaks = seq(as.POSIXct("00:00", format="%H:%M",tz = "EST"),
+                                as.POSIXct("24:00", format="%H:%M", tz = "EST"),
                                 by = "3 hours"),
-                   labels = date_format("%H")) +
+                   labels = date_format("%H"),
+                   expand = c(0,0)) +
+  #night/day boxes
+  annotate("rect", xmin = as.POSIXct(strptime("19:00", format = "%H:%M", tz = "EST")),
+                  xmax = as.POSIXct(strptime("23:59", format = "%H:%M", tz = "EST")),
+                  ymin = -Inf, ymax = Inf, alpha = .2) + 
+  annotate("rect", xmin = as.POSIXct(strptime("0:00", format = "%H:%M",tz = "EST")),
+                xmax = as.POSIXct(strptime("7:00", format = "%H:%M", tz = "EST")),
+                ymin = -Inf, ymax = Inf, alpha = .2) + 
   facet_wrap(~tank) +
   theme_bw() +
   guides(fill = FALSE)
 ```
 
-Variability is still present, but the extreme spikes caused by cleaning have been removed. Thus, any variability that remains is due to durafet error or experimental variability that affected the corals. For example, the durafet for T15 had much higher variability than the other aquariums. However, I believe this to be negligible.
+Variability is still present, but the extreme spikes caused by cleaning have been removed. Thus, any variability that remains is due to durafet error or experimental variability that affected the corals. For example, the durafet for T15 had much higher variability than the other aquariums. However, I believe this to be negligible as values are not spiking out of the treatment groups.
 
 ## Carbonate Chemistry Data
 
 500mL water samples were collected every Tuesday for analysis of the complete carbonate chemistry suite. 
 
 ```{r load data from google sheets}
-googlesheets4::gs4_auth("patrick.kiel@noaa.gov")
-ERL <- read_sheet("https://docs.google.com/spreadsheets/d/1Y8L0S9jOiYVoWzMCHqiuJm4vPZARVMvh56td83SO9BA/edit#gid=0",
-                  col_types = "-Ddcdd---d------------------") %>%
-  rename_with(tolower) %>%
-  drop_na(`bottle id`) %>%
-  #filter the tanks in your experiment
-  #PMK OAxGenotype2022 = 13-16
-  filter(tank %in% paste0('T',13:16)) %>%
-  #combine date and time columns
-  mutate(date = parse_datetime(paste(date,
-                                     (time-time%%100)/100,
-                                     ifelse(time%%100 == 0, "00", time%%100)),
-                               format = "%Y-%m-%d %H %M",
-                               locale = locale(tz = "America/New_York"))) %>%
-  #for some reason some T15,T16 times aren't parsing fill down
-  fill(date) %>%
-  select(-c(time), temp.ERL = `tank temp`, pH.ERL = `erl ph`, tag = `bottle id`)
+ERL <- read_csv("~/Grad School/ULink 2022/carbonateChemistry/ERLcollectionData.csv")
 ```
 
 ```{r load data from carb database}
 #load data from Bottle Database - Final_Query_with_Spec_pH
 #one day will be SQL from Mike's DB
-carbSystem <- read.csv("~/Grad School/ULink 2022/carbonateChemistry/carbData.csv") %>%
+carbSystem <- read_csv("~/Grad School/ULink 2022/carbonateChemistry/bottleDB_export.csv") %>%
   filter(ID_Sample %in% ERL$tag) %>%
   select(tag = ID_Sample,
          DIC.kg = Avg_DIC_Kg_CORRECTED,
          TA.kg = Avg_TA_Kg_CORRECTED,
          sal = Calcdsalinity,
-         pH.spec = CORRECTED_pH) %>%
-  mutate(across(everything(), ~ as.numeric(.))) %>%
+         pH.spec = CORRECTED_pH,
+         spec.temp = Spec_pH_TEMP_C) %>%
+  mutate_all(funs(as.numeric(.))) %>%
   left_join(ERL,
-            by = "tag")  %>%
+            by = "tag") %>%
+  #temperature correct pH spec w/ ERL temp data
+  mutate(pH.spec = pHinsi(pH = pH.spec,
+                                    Tinsi = temp.ERL,
+                                    Tlab = spec.temp)) %>%
+  select(-c(spec.temp)) %>%
 #solve carbonate system
   mutate(carb(flag = 15, #flag 15 for Alkalinity and DIC, respectively
        var1 = TA.kg/1000000, 
        var2 = DIC.kg/1000000,
-       S= sal,
+       S = sal,
        T = temp.ERL,
        #use all default constants as recommended by Dickson et al. (2007) 
        k1k2 = "l",
@@ -381,13 +384,14 @@ carbSystem <- read.csv("~/Grad School/ULink 2022/carbonateChemistry/carbData.csv
        pHscale="T",
        b = "u74")) %>%
   select(tank,date,tag,
-         DIC.kg,TA.kg,sal,
-         pH.spec,pH.ERL,temp.ERL,
+         temp.ERL,
+         DIC.kg,TA.kg,
+         pH.spec,pH.ERL,
          pH.solved=pH,pCO2,omega=OmegaAragonite,HCO3,CO3)
 ```
 
 ### Time of Day
-The bottles were not taken at exactly the same time of day, and thus the programmed variability will be apart of the variability of each sample along with sampling error, durafet error altering amount of CO2 injected into aquaria (shown above in  the LabView data), etc.
+The bottles were not taken at exactly the same time of day (my fault). Therefore there will be enhanced variability of these stats since our diel variability is in action.
 
 ```{r todSampling}
 capFig("Times of Aquarium Bottle Sampling")
@@ -412,7 +416,7 @@ Sampling time had a mean of  around 10a. 3 sampling times were taken after 12p w
 carbSystem %>%
   #only use data once treatment conditions met 4/1
   filter(date(date) > as.Date("2022-04-01")) %>%
-  select(tank, sal, temp = temp.ERL, TA = TA.kg, DIC = DIC.kg, pCO2, omega) %>%
+  select(tank, temp = temp.ERL, TA = TA.kg, DIC = DIC.kg, pCO2, omega) %>%
   group_by(tank) %>%
   summarise(across(everything(),
                     ~ paste(format(round(mean(., na.rm=T),2),nsmall = 2),
@@ -432,10 +436,10 @@ carbSystem %>%
 carbTbl <- carbSystem %>%
   #only use data once treatment conditions met 4/1
   filter(date(date) > as.Date("2022-04-01")) %>%
-  select(tank, sal, temp = temp.ERL, TA = TA.kg, DIC = DIC.kg, pCO2, omega) %>%
+  select(tank, temp = temp.ERL, TA = TA.kg, DIC = DIC.kg, pCO2, omega) %>%
   mutate(treatment = case_when(tank %in% c('T13','T15') ~ 'HCO2',
                                TRUE ~ 'LCO2')) %>%
-  pivot_longer(sal:omega,
+  pivot_longer(temp:omega,
                names_to = "parameter") %>%
   group_by(parameter) %>%
   nest() %>%
@@ -460,7 +464,7 @@ carbTbl %>%
            background = "red")
 ```
 
-Salinity, temperature, and total alkalinity were not significantly different between treatments or within treatments (p>>0.05). DIC, pCO2, and $$\Omega_{Ar} $$ (p<0.001) were significantly different between treatment, but not between aquariums (p>>0.05). In other words, our system reproducibly altered the carbonate chemistry parameters with high precision.
+Temperature and total alkalinity were not significantly different between treatments or within treatments (p>>0.05). DIC, pCO2, and $$\Omega_{Ar} $$ (p<0.001) were significantly different between treatment, but not between aquariums within treatment (p>>0.05). In other words, our system reproducibly altered the carbonate chemistry parameters with high precision.
 
 
 # Calcification Analysis
@@ -486,45 +490,15 @@ assignment <- read.csv('~/Grad School/ULink 2022/tankAssignment.csv') %>%
 bw <- bw %>%
   left_join(assignment, by="tag") %>%
   arrange(tank, genotype,tag,date) %>%
-  filter(date > as.Date("2022-03-15"))
-  
-
+  filter(date > as.Date("2022-03-15")) %>%
 #calculate weight in air
-bw <- bw %>%
   mutate(
     #calculate sw density (g/cm3) from YSI, p taken as std atm p
     density = rho(S = salinity,
-                          T = temp)/1000) %>%
-  mutate(
+                  T = temp)/1000,
     #calculate weight in air using Jokiel et al. 1978 eqn
     mass_a = mass/(1-density/2.93)) %>%
   select(-c(mass,temp,salinity, density))
-
-#calculate weekly growth rate for QA/QC
-weeklyGrowth <- bw %>%
-  #week of 05/27/2022 had lots of QC issues, removing data
-  filter(!date %in% c(as.Date('2022-05-27'))) %>%
-  drop_na(genotype, mass_a) %>%
-  group_by(tag = as.numeric(tag)) %>%
-  mutate(weekNum = as.numeric(date-first(date))/7,
-            newGrowth.mg = ifelse(mass_a!=first(mass_a),
-                                  (mass_a - lag(mass_a))*1000,
-                                  NA),
-            weeklyG.day = ifelse(mass_a!=first(mass_a),
-                                  #average daily growth for the week
-                                  #mg/g/day, normalized to initial mass
-                                  newGrowth.mg /
-                                    first(mass_a)/as.numeric(date-lag(date)),
-                                  NA),
-            weeklyG.week = ifelse(mass_a!=first(mass_a),
-                                      #average weekly growth
-                                      #mg/g/week, normalized to initial mass
-                                      newGrowth.mg/
-                                 first(mass_a)/(as.numeric(date-lag(date))),
-                                      NA)) %>%
-  #remove tags that have no weekly growth, i.e. died early on
-  group_by(tag) %>%
-  filter(!all(is.na(weeklyG.day)))
 
 #corals to check
 #weird growth
@@ -535,108 +509,58 @@ weeklyGrowth <- bw %>%
 #calculate total growth
 totalGrowth <- bw %>%
   #set starting date
-  filter(date > as.Date("2022-04-15")) %>%
+  filter(date > as.Date("2022-04-15") & genotype != "Cheetos-B") %>%
+  mutate(tag = as.numeric(tag)) %>%
+    #add SA
+  left_join(read.csv("C:/Users/pkiel/Documents/Grad School/ULink 2022/3dScans/initial/saVol_KielMarch22.csv") %>%
+            select(tag, SA = `SA.cm2_corrected`,
+                   V = `V.mm3_corrected`, SA_V, 
+                   H = `H.cm_corrected`) %>%
+           mutate(tag = as.numeric(str_extract(tag, "[[:digit:]]+"))),
+          by="tag") %>%
   #remove standards
   drop_na(genotype,mass_a) %>%
-  group_by(tag,genotype,tank, treatment) %>%
+  group_by(tag,genotype,tank, treatment, SA) %>%
   summarise(days = as.numeric(last(date)-first(date)),
             newGrowth.mg = (last(mass_a) - first(mass_a))*1000,
             initMass = first(mass_a),
-            dailyG = #mg/g/day, normalized to initial mass
-                           newGrowth.mg/initMass/days,
-            .groups="drop")
+            .groups="drop") %>%
+  #mg cm^-2 day^-1
+  mutate(G = newGrowth.mg/SA/days)
 ```
 
-
-```{r growth graphs}
-capFig("Avg Daily Growth Per Week by Genotype ± se")
-weeklyGrowth %>%
-  group_by(weekNum,genotype) %>%
-  summarise(weeklyG = mean(weeklyG.week, na.rm = T),
-            se = sd(weeklyG.week, na.rm = T)/sqrt(n())) %>%
-  filter(!is.nan(weeklyG)) %>%
-  ggplot(aes(weekNum,weeklyG)) +
-  geom_line(aes(color=genotype)) +
-  geom_ribbon(aes(ymin = weeklyG - se,
-                    ymax = weeklyG + se,
-                    fill=genotype),
-                alpha=0.3) + 
-  scale_x_continuous("Week",
-                     breaks = c(seq(1,
-                                    max(weeklyGrowth$weekNum, na.rm = T),
-                                    by=1))) +
-  scale_y_continuous("Avg Daily Growth Rate (mg/g/day)",
-                     limits = c(0,4),
-                     breaks = c(seq(0,4,by=1)),
-                     expand = c(0, 0)) +
-  theme_classic()
-
-capFig("Avg Daily Growth Per Week by Treatment Group ± se")
-weeklyGrowth %>%
-  group_by(weekNum,treatment) %>%
-  summarise(weeklyG = mean(weeklyG.week, na.rm = T),
-            se = sd(weeklyG.week, na.rm = T)/sqrt(n())) %>%
-  filter(!is.nan(weeklyG)) %>%
-  ggplot(aes(as.integer(weekNum),weeklyG)) +
-  geom_line(aes(color=treatment)) +
-  geom_ribbon(aes(ymin = weeklyG - se,
-                    ymax = weeklyG + se,
-                    fill=treatment),
-                alpha=0.3) + 
-  scale_x_continuous("Week",
-                     breaks = c(seq(1,
-                                    max(weeklyGrowth$weekNum, na.rm = T),
-                                    by=1))) +
-  scale_y_continuous("Avg Daily Growth Rate (mg/g/day)",
-                     limits = c(0,4),
-                     breaks = c(seq(0,4,by=1)),
-                     expand = c(0, 0)) +
-  theme_classic()
-```
-
-Following April 15 (Weeky 5), the declining health of the corals stabilized and began to split amongst treatment groups.
 
 ```{r calcification graphs}
-capFig("Avg Daily Growth by Treatment")
-totalGrowth %>%
-  ggplot(aes(treatment, dailyG, fill=treatment)) +
+#capFig("Avg Daily Growth by Treatment")
+oa_G <- totalGrowth %>%
+  ggplot(aes(treatment, G, fill=treatment)) +
   geom_boxplot() +
   labs(x = "Treatment",
-       y = "Avg Daily Growth Rate (mg/g/day)") +
+       y = expression(paste("Avg Daily Growth Rate (mg  ", cm^-2, " ", day^-1, ")"))) +
   theme_classic()
 
-capFig("Avg Daily Growth by Genotype")
-totalGrowth %>%
-  ggplot(aes(genotype, dailyG)) +
+#capFig("Avg Daily Growth by Genotype")
+geno_G <-totalGrowth %>%
+  filter(tag!=90) %>%
+  ggplot(aes(genotype, G, fill=treatment)) +
   geom_boxplot() +
-  labs(x = "Treatment",
-       y = "Avg Daily Growth Rate (mg/g/day)") +
+  labs(x = "Genotype") +
   theme_classic()
 
-capFig("Avg Daily Growth Per Week by Genotype and Treatment")
-totalGrowth %>%
-  ggplot(aes(genotype, dailyG)) +
-  geom_boxplot(aes(fill=treatment)) +
-              #if quantile lines desired: draw_quantiles = c(0.25, 0.5, 0.75)) +
-  labs(x = "Genotype",
-       y = "Avg Daily Growth Rate (mg/g/day)") +
-  theme_classic()
+capFig("Avg Daily Growth by (A) Treatment and (B) Genotype")
+ggarrange(oa_G, geno_G + rremove("ylab") + rremove("y.text"),
+          labels = c("A", "B"),
+          hjust = c(-0.5,-1.5),
+          ncol = 2,
+          widths = c(2,3),
+          common.legend = T,
+          legend = "right")
 ```
-
-There is some obvious genet-specific responses.
-
-1. Cheetos-B calcification rate was nearly identical across HCO2 and LCO2 groups. This genet also had high initial mortality and the worst survivorship rate throughout the experiment. It is entirely possible that this genotype did not do well in the aquariums and its diminished calcification rate is an effect of overall health and not treatment.
-
-2. SI-A and AC-2 had the highest average calcification rates and there was no significant difference between these two genotypes. However, when you look at the effect of treatment within these genotypes (sensitivity), there is significant differences between them.
-
-3. When looking at just controls, the only significant different genotype is Cheetos-B. Thus, there is a difference in sensitivity to OA but no observable differences in ambient conditions. 
-
-4. The relative rankings extracted from the ol' AcDC are SI-A ~ MB-C > AC-2 > Cheetos-B. The data collected here fits within that framework, yet reveals intraspecifc differences in sensitivities similar to Enochs et al. (2018). Genet identities are unknown for that paper though.
 
 ```{r calcification stats}
 groupMeans <- totalGrowth %>%
   group_by(treatment) %>%
-  get_summary_stats(dailyG, type = "mean_sd")
+  get_summary_stats(G, type = "mean_sd")
 
 groupMeans %>%
   select(-variable) %>%
@@ -647,7 +571,7 @@ groupMeans %>%
   row_spec(0, bold = T)
 
 tTestResults <- totalGrowth %>% 
-  t_test(dailyG ~ treatment, var.equal = T) %>%
+  t_test(G ~ treatment, var.equal = T) %>%
   add_significance()
 
 tTestResults %>%
@@ -659,7 +583,7 @@ tTestResults %>%
   row_spec(0, bold = T)
 
 cohensResults <- totalGrowth %>% 
-  cohens_d(dailyG ~ treatment, var.equal = T) 
+  cohens_d(G ~ treatment, var.equal = T) 
 
 cohensResults %>%
       kbl(align = 'c',
@@ -670,21 +594,17 @@ cohensResults %>%
 
 #fixed effects model
 mod <- totalGrowth %>%
-  aov(dailyG ~ treatment*genotype,
+  aov(G ~ treatment*genotype,
                  data=.)
 
 tukeyGTbl <- mod %>%
   TukeyHSD() %>%
   broom::tidy() %>%
     filter(contrast %in% c('LCO2-HCO2',
-                        'Cheetos-B-AC-2',
                         'MB-C-AC-2,',
                         'SI-A-AC-2',
-                        'MB-C-Cheetos-B',
-                        'SI-A-Cheetos-B',
                         'SI-A-MB-C',
                         'LCO2:AC-2-HCO2:AC-2',
-                        'LCO2:Cheetos-B-HCO2:Cheetos-B',
                         'LCO2:MB-C-HCO2:MB-C',
                         'LCO2:SI-A-HCO2:SI-A')) %>%
   select(term,contrast,adj.p.value) %>%
@@ -707,23 +627,23 @@ tukeyGTbl %>%
          color = "white",
          background = "red")
   
-multcomp::cld(emmeans(mod,
-                      list(pairwise ~ treatment*genotype),
-                      adjust = "tukey"),
-              Letters = letters) %>%
-  select(treatment, genotype, significance = .group) %>%
-    kbl(align = 'c',
-    digits = 4,
-    caption = "Table 6: Significance Letter Groups") %>%
-  kable_classic() %>%
-  row_spec(0, bold = T)
+# multcomp::cld(emmeans(mod,
+#                       list(pairwise ~ treatment*genotype),
+#                       adjust = "tukey"),
+#               Letters = letters) %>%
+#   select(treatment, genotype, significance = .group) %>%
+#     kbl(align = 'c',
+#     digits = 4,
+#     caption = "Table 6: Significance Letter Groups") %>%
+#   kable_classic() %>%
+#   row_spec(0, bold = T)
 ```
 
-The mean calcification rate in the HCO2 group was mean `r round(mean(totalGrowth$dailyG[which(totalGrowth$treatment=='HCO2')]),3)`  (SD = `r round(sd(totalGrowth$dailyG[which(totalGrowth$treatment=='HCO2')]),3)`) mg/g/day, whereas the mean in the LCO2 group was `r round(mean(totalGrowth$dailyG[which(totalGrowth$treatment=='LCO2')]),3)` (SD = `r round(sd(totalGrowth$dailyG[which(totalGrowth$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p < 0.0001, d = `r round(cohensResults$effsize,3)`. Thus, the ocean acidification group saw on average a `r round((groupMeans$mean[2]-groupMeans$mean[1])/groupMeans$mean[2]*100,0)`% reduction in calcification rates.
+The mean calcification rate in the HCO2 group was mean `r round(mean(totalGrowth$G[which(totalGrowth$treatment=='HCO2')]),3)`  (SD = `r round(sd(totalGrowth$G[which(totalGrowth$treatment=='HCO2')]),3)`) mg/$cm^2$/day, whereas the mean in the LCO2 group was `r round(mean(totalGrowth$G[which(totalGrowth$treatment=='LCO2')]),3)` (SD = `r round(sd(totalGrowth$G[which(totalGrowth$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p < 0.0001, d = `r round(cohensResults$effsize,3)`. Thus, the ocean acidification group saw on average a `r round((groupMeans$mean[2]-groupMeans$mean[1])/groupMeans$mean[2]*100,0)`% reduction in calcification rates. The effects, however, were not even across the genotypes (Table 5).
 
 ## Tank Effects
 
-We saw above that tank conditions were significantly different among treatment groups, but not individual aquariums within treatment. We also saw that calcification rates were significantly different among treatment groups. Here I am analyzing tank effects on the calcification rate and investigating if calcification rates were significantly different between aquariums within the same treatment group.
+We saw above that tank conditions were significantly different among treatment groups, but not individual aquariums within treatment. We also saw that calcification rates were significantly different among treatment groups. Here I am analyzing tank effects on the calcification rate and investigating if calcification rates were significantly different between aquariums within the same treatment group. This will dictate whether we need to include tank as a random intercept in our ANOVA models.
 
 ```{r tank effects graph}
 manLegend <- c("13 HCO2"= "#f0786f",
@@ -733,24 +653,24 @@ manLegend <- c("13 HCO2"= "#f0786f",
 
 capFig("Avg Daily Growth by Tank and Treatment")
 totalGrowth %>%
-  ggplot(aes(tank, dailyG, fill=treatment)) +
+  ggplot(aes(tank, G, fill=treatment)) +
   geom_boxplot() +
   labs(x = "Genotype",
-       y = "Avg Daily Growth Rate (mg/g/day)") +
+       y = expression(paste("Avg Daily Growth Rate (mg  ", cm^-2, " ", day^-1, ")"))) +
   theme_classic()
-
-capFig("Avg Daily Growth by Genotype, Treatment, and Tank")
-totalGrowth %>%
-  mutate(tank = case_when(tank == 13 ~ "13 HCO2",
-                          tank == 14 ~ "14 LCO2",
-                          tank == 15 ~ "15 HCO2",
-                          tank == 16 ~ "16 LCO2")) %>%
-  ggplot(aes(genotype, dailyG)) +
-  geom_boxplot(aes(fill=tank)) +
-  scale_fill_manual(values = manLegend) +
-  labs(x = "Genotype",
-       y = "Avg Daily Growth Rate (mg/g/day)") +
-  theme_classic()
+# 
+# capFig("Avg Daily Growth by Genotype, Treatment, and Tank")
+# totalGrowth %>%
+#   mutate(tank = case_when(tank == 13 ~ "13 HCO2",
+#                           tank == 14 ~ "14 LCO2",
+#                           tank == 15 ~ "15 HCO2",
+#                           tank == 16 ~ "16 LCO2")) %>%
+#   ggplot(aes(genotype, G)) +
+#   geom_boxplot(aes(fill=tank)) +
+#   scale_fill_manual(values = manLegend) +
+#   labs(x = "Genotype",
+#        y = expression(paste("Avg Daily Growth Rate (mg  ", cm^-2, " ", day^-1, ")"))) + 
+#   theme_classic()
 ```
 
 ### Tank Effects Statistics
@@ -759,10 +679,10 @@ totalGrowth %>%
 #t-test between tanks
 totalGrowth %>%
   group_by(treatment) %>%
-  t_test(data=.,formula = dailyG ~ tank) %>%
+  t_test(data=.,formula = G ~ tank) %>%
     kbl(align = 'c',
     digits = 3,
-    caption = "Table 7: Significance testing of tank effect on calcification") %>%
+    caption = "Table 6: Significance testing of treatment effect on calcification, using t test") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 
@@ -783,13 +703,13 @@ No observable differences of mean calcification rate when comparing within treat
 
 ### Mixed Effects Model
 
-Here I created a mixed effects model model to account for the lack of independence brought upon by having multiple corals grown in the same tank and the possible tank-specific effects that may have affected calcification rates. Including this random effect decreased the AIC from 66 to 31 as compared to a fixed-effects only model, and therefore the random tank effect should be included for analysis. 
+Here I created a mixed effects model model to account for the lack of independence brought upon by having multiple corals grown in the same tank and the possible tank-specific effects that may have affected calcification rates. Including this random effect increased the AIC from -354 to -352 as compared to a fixed-effects only model, and therefore I will not include random tank effects in my analysis.
 
 As a reminder, here is the fixed effects model as shown above:
 
 ```{r fixed effects reminder, echo=T}
 modFixed <- totalGrowth %>%
-  aov(dailyG ~ genotype*treatment, data=.)
+  aov(G ~ genotype*treatment, data=.)
 
 modFixed %>%
   summary()
@@ -798,36 +718,41 @@ modFixed %>%
 Here is the mixed effects model with the tank identity set as a random factor to give each tank its own, random intercept. Notice, including the random effects decreases the absolute value of the AIC. Therefore, this new model better describes the data.
 ```{r random mixed effects, echo=T}
 modRandom <- totalGrowth %>%
-  lmerTest::lmer(dailyG ~ genotype * treatment + (1|tank),
+  lmerTest::lmer(G ~ genotype * treatment + (1|tank),
                  data=.)
 modRandom %>%
   anova()
 
+#redefining modRandom w/ REML=F for AIC comparison
+modRandom <- totalGrowth %>%
+  lmerTest::lmer(G ~ genotype * treatment + (1|tank), REML = F,
+                 data=.)
+
 AIC(modFixed, modRandom)
 ```
 
-Tukey post-hoc analysis of the mixed effects model:
+<!-- Tukey post-hoc analysis of the mixed effects model: -->
 
-```{r random mixed effects table}
-emmeans(modRandom, list(pairwise ~genotype*treatment),
-        adjust = "tukey")[[2]] %>%
-  broom::tidy() %>%
-  filter(`1` %in% pairwiseString) %>%
-  select(-c(term,df)) %>%
-  rename(pairwise=`1`) %>%
-  kbl(align = 'c',
-    digits = 4,
-    caption = "Table 8: Pairwise comparison of genotypes' sensitivity to OA",
-    escape=F) %>%
-  kable_classic() %>%
-  row_spec(0, bold = T) %>%
-  row_spec(c(1,3),
-         bold = T,
-         color = "white",
-         background = "red")
-```
+<!-- ```{r random mixed effects table} -->
+<!-- emmeans(modRandom, list(pairwise ~genotype*treatment), -->
+<!--         adjust = "tukey")[[2]] %>% -->
+<!--   broom::tidy() %>% -->
+<!--   filter(`1` %in% pairwiseString) %>% -->
+<!--   select(-c(term,df)) %>% -->
+<!--   rename(pairwise=`1`) %>% -->
+<!--   kbl(align = 'c', -->
+<!--     digits = 4, -->
+<!--     caption = "Table 8: Pairwise comparison of genotypes' sensitivity to OA", -->
+<!--     escape=F) %>% -->
+<!--   kable_classic() %>% -->
+<!--   row_spec(0, bold = T) %>% -->
+<!--   row_spec(c(1,3), -->
+<!--          bold = T, -->
+<!--          color = "white", -->
+<!--          background = "red") -->
+<!-- ``` -->
 
-Pattern is the same as above with the fixed effects. Significance has decreased (p values increased) for AC-2 and MB-C, suggesting that there was some variability between tanks in the same treatment (T13 v T15 and T14 v T16) but that this within treatment variability was not significant enough to change our conclusions. Thus, we fail to reject our null hypothesis that there are significant differences between individual genotype's susceptibility to OA.
+<!-- Pattern is the same as above with the fixed effects. Significance has decreased (p values increased) for AC-2 and MB-C, suggesting that there was some variability between tanks in the same treatment (T13 v T15 and T14 v T16) but that this within treatment variability was not significant enough to change our conclusions. Thus, we fail to reject our null hypothesis that there are significant differences between individual genotype's susceptibility to OA. -->
 
 ## Powder Available
 
@@ -877,7 +802,8 @@ height <- read.csv('~/Grad School/ULink 2022/initialHeights.csv') %>%
          LE = fin.mm-init.mm) %>%
   left_join(assignment %>%
               mutate(tag = as.numeric(tag)),
-            by="tag")
+            by="tag") %>%
+  filter(genotype!="Cheetos-B")
 
 ```
 
@@ -902,11 +828,12 @@ capFig("Avg Daily Linar Extension by Genotype and Treatment")
 height %>%
   ggplot(aes(genotype, prod)) +
   geom_boxplot(aes(fill=treatment)) +
-              #if quantile lines desired: draw_quantiles = c(0.25, 0.5, 0.75)) +
   labs(x = "Genotype",
        y = "Avg Daily LE Rate (mm/cm/day)") +
   theme_classic()
 ```
+
+Such large variability in that SI-A ambient group.
 
 ```{r LE stats}
 
@@ -918,7 +845,7 @@ groupMeans %>%
   select(-variable) %>%
       kbl(align = 'c',
     digits = 4,
-    caption = "Table 9:Means of Treatment") %>%
+    caption = "Table 7:Means of Treatment") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 
@@ -929,7 +856,7 @@ tTestResults <- height %>%
 tTestResults %>%
   kbl(align = 'c',
     digits = 4,
-    caption = "Table 10: Stats of Treatment",
+    caption = "Table 8: Stats of Treatment",
     escape=F) %>%
   kable_classic() %>%
   row_spec(0, bold = T)
@@ -940,7 +867,7 @@ cohensResults <- height %>%
 cohensResults %>%
       kbl(align = 'c',
     digits = 4,
-    caption = "Table 11: Effect Size of Treatment") %>%
+    caption = "Table 9: Effect Size of Treatment") %>%
   kable_classic() %>%
   row_spec(0, bold = T)
 
@@ -953,14 +880,10 @@ tukeyLE <- mod %>%
   TukeyHSD() %>%
   broom::tidy() %>%
   filter(contrast %in% c('LCO2-HCO2',
-                        'Cheetos-B-AC-2',
                         'MB-C-AC-2,',
                         'SI-A-AC-2',
-                        'MB-C-Cheetos-B',
-                        'SI-A-Cheetos-B',
                         'SI-A-MB-C',
                         'LCO2:AC-2-HCO2:AC-2',
-                        'LCO2:Cheetos-B-HCO2:Cheetos-B',
                         'LCO2:MB-C-HCO2:MB-C',
                         'LCO2:SI-A-HCO2:SI-A')) %>%
   select(term,contrast,adj.p.value) %>%
@@ -974,7 +897,7 @@ tukeyLE <- mod %>%
 tukeyLE %>%
     kbl(align = 'c',
     digits = 4,
-    caption = "Table 12: TukeyHSD Results of Anova",
+    caption = "Table 10: TukeyHSD Results of Anova",
     escape = F) %>%
   kable_classic() %>%
   row_spec(0, bold = T) %>%
@@ -983,114 +906,111 @@ tukeyLE %>%
        color = "white",
        background = "red")
 
-multcomp::cld(emmeans(mod,
-                      list(pairwise ~ treatment*genotype),
-                      adjust = "tukey"),
-              Letters = letters) %>%
-  select(treatment, genotype, significance = .group) %>%
-    kbl(align = 'c',
-    digits = 4,
-    caption = "Table 13: Significance Letter Groups") %>%
-  kable_classic() %>%
-  row_spec(0, bold = T)
+# multcomp::cld(emmeans(mod,
+#                       list(pairwise ~ treatment*genotype),
+#                       adjust = "tukey"),
+#               Letters = letters) %>%
+#   select(treatment, genotype, significance = .group) %>%
+#     kbl(align = 'c',
+#     digits = 4,
+#     caption = "Table 13: Significance Letter Groups") %>%
+#   kable_classic() %>%
+#   row_spec(0, bold = T)
 ```
 
 The mean linear extension rate in the HCO2 group was mean `r round(mean(height$prod[which(height$treatment=='HCO2')]),3)`  (SD = `r round(sd(height$prod[which(height$treatment=='HCO2')]),3)`) mm/cm/day, whereas the mean in the LCO2 group was `r round(mean(height$prod[which(height$treatment=='LCO2')]),3)` (SD = `r round(sd(height$prod[which(height$treatment=='LCO2')]),3)`). A Student two-samples t-test showed that the difference was not statistically significant, t(`r tTestResults$df`) = `r round(tTestResults$statistic,3)`, p =0.124, d = `r round(cohensResults$effsize,3)`. 
 
-## Tank Effects
+<!-- ## Tank Effects -->
 
-```{r LE tank effects}
-capFig("Avg Daily Linear Extension by Treatment and Aquarium")
-height %>%
-   mutate(tank = case_when(tank == 13 ~ "13 HCO2",
-                          tank == 14 ~ "14 LCO2",
-                          tank == 15 ~ "15 HCO2",
-                          tank == 16 ~ "16 LCO2")) %>%
-  ggplot(aes(genotype, prod, fill=tank)) +
-  geom_boxplot() +
-  scale_fill_manual(values = manLegend) +
-  labs(x = "Treatment",
-       y = "Avg Daily LE Rate (mm/cm/day)") +
-  theme_classic()
+<!-- ```{r LE tank effects} -->
+<!-- capFig("Avg Daily Linear Extension by Treatment and Aquarium") -->
+<!-- height %>% -->
+<!--    mutate(tank = case_when(tank == 13 ~ "13 HCO2", -->
+<!--                           tank == 14 ~ "14 LCO2", -->
+<!--                           tank == 15 ~ "15 HCO2", -->
+<!--                           tank == 16 ~ "16 LCO2")) %>% -->
+<!--   ggplot(aes(genotype, prod, fill=tank)) + -->
+<!--   geom_boxplot() + -->
+<!--   scale_fill_manual(values = manLegend) + -->
+<!--   labs(x = "Treatment", -->
+<!--        y = "Avg Daily LE Rate (mm/cm/day)") + -->
+<!--   theme_classic() -->
 
-```
+<!-- ``` -->
 
-```{r LE Tank effects stats}
-height %>%
-  group_by(treatment) %>%
-  t_test(data=.,formula = prod ~ tank) %>%
-    kbl(align = 'c',
-    digits = 3,
-    caption = "Table 14: Significance testing of tank effect on Linear Extension Rates") %>%
-  kable_classic() %>%
-  row_spec(0, bold = T)
+<!-- ```{r LE Tank effects stats} -->
+<!-- height %>% -->
+<!--   group_by(treatment) %>% -->
+<!--   t_test(data=.,formula = prod ~ tank) %>% -->
+<!--     kbl(align = 'c', -->
+<!--     digits = 3, -->
+<!--     caption = "Table 14: Significance testing of tank effect on Linear Extension Rates") %>% -->
+<!--   kable_classic() %>% -->
+<!--   row_spec(0, bold = T) -->
 
-modFixed <- height %>%
-  aov(prod ~ treatment*genotype,
-                 data=.) 
+<!-- modFixed <- height %>% -->
+<!--   aov(prod ~ treatment*genotype, -->
+<!--                  data=.)  -->
 
-modFixed %>% TukeyHSD() %>%
-  broom::tidy() %>%
-  filter(contrast %in% c('LCO2:SI-A-HCO2:SI-A')) %>%
-  select(term,contrast,adj.p.value) %>%
-  mutate(significance = case_when(adj.p.value <0.001 ~ "xxx",
-                                  adj.p.value <0.01 ~ "xx",
-                                  adj.p.value <0.05 ~ "x",
-                                  TRUE ~ "NS"),
-         adj.p.value = round(adj.p.value, digits=4)) %>%
-  arrange(adj.p.value)
-
-
-modRandom <- height %>%
-  lmerTest::lmer(prod ~ genotype * treatment + (1|tank),
-                 data=.)
-modRandom %>%
-  anova()
-
-emmeans(modRandom, list(pairwise ~genotype*treatment),
-        adjust = "tukey")[[2]] %>%
-  broom::tidy() %>%
-  filter(`1` %in% pairwiseString) %>%
-  select(-c(term,df)) %>%
-  rename(pairwise=`1`) %>%
-  kbl(align = 'c',
-    digits = 4,
-    caption = "Table 15:Pairwise comparison of genotypes' sensitivity to OA",
-    escape=F) %>%
-  kable_classic() %>%
-  row_spec(0, bold = T) %>%
-  row_spec(4,
-         bold = T,
-         color = "white",
-         background = "red")
-
-AIC(modFixed, modRandom)
+<!-- modFixed %>% TukeyHSD() %>% -->
+<!--   broom::tidy() %>% -->
+<!--   filter(contrast %in% c('LCO2:SI-A-HCO2:SI-A')) %>% -->
+<!--   select(term,contrast,adj.p.value) %>% -->
+<!--   mutate(significance = case_when(adj.p.value <0.001 ~ "xxx", -->
+<!--                                   adj.p.value <0.01 ~ "xx", -->
+<!--                                   adj.p.value <0.05 ~ "x", -->
+<!--                                   TRUE ~ "NS"), -->
+<!--          adj.p.value = round(adj.p.value, digits=4)) %>% -->
+<!--   arrange(adj.p.value) -->
 
 
-```
+<!-- modRandom <- height %>% -->
+<!--   lmerTest::lmer(prod ~ genotype * treatment + (1|tank), -->
+<!--                  data=.) -->
+<!-- modRandom %>% -->
+<!--   anova() -->
 
-AIC tells us the mixed effects model better describes the data. Post-hoc testing further tells us that indeed SI-A's linear extension rates were significantly different between treatments (p<0.05), yet all other genotype's were not.
+<!-- emmeans(modRandom, list(pairwise ~genotype*treatment), -->
+<!--         adjust = "tukey")[[2]] %>% -->
+<!--   broom::tidy() %>% -->
+<!--   filter(`1` %in% pairwiseString) %>% -->
+<!--   select(-c(term,df)) %>% -->
+<!--   rename(pairwise=`1`) %>% -->
+<!--   kbl(align = 'c', -->
+<!--     digits = 4, -->
+<!--     caption = "Table 15:Pairwise comparison of genotypes' sensitivity to OA", -->
+<!--     escape=F) %>% -->
+<!--   kable_classic() %>% -->
+<!--   row_spec(0, bold = T) %>% -->
+<!--   row_spec(4, -->
+<!--          bold = T, -->
+<!--          color = "white", -->
+<!--          background = "red") -->
 
-```{r total extension}
-capFig("Amount of New Skeleton and Mean New LE (Red Line)")
-height %>%
-  ggplot(aes(x=genotype, y=LE)) +
-  geom_point(aes(color=treatment)) +
-  scale_y_continuous(limits = c(0,30)) +
-  geom_hline(yintercept = mean(height$LE),
-             color="red") +
-  labs(y = "Linear Extension (mm)") +
-  theme_classic()
-```
+<!-- AIC(modFixed, modRandom) -->
+
+
+<!-- ``` -->
+
+<!-- AIC tells us the mixed effects model better describes the data. Post-hoc testing further tells us that indeed SI-A's linear extension rates were significantly different between treatments (p<0.05), yet all other genotype's were not. -->
+
+<!-- ```{r total extension} -->
+<!-- capFig("Amount of New Skeleton and Mean New LE (Red Line)") -->
+<!-- height %>% -->
+<!--   ggplot(aes(x=genotype, y=LE)) + -->
+<!--   geom_point(aes(color=treatment)) + -->
+<!--   scale_y_continuous(limits = c(0,30)) + -->
+<!--   geom_hline(yintercept = mean(height$LE), -->
+<!--              color="red") + -->
+<!--   labs(y = "Linear Extension (mm)") + -->
+<!--   theme_classic() -->
+<!-- ``` -->
 
 # Takeaways and Next Steps
 
-Overall growth was less than hoped for. However, there is enough new skeleton for nearly all the powder tests that we want to conduct: FTIR, TGA, boron isotopes, and Raman. There is enough powder to run XRD on some samples from genotypes AC-2 (OA=2, control=8) and SI-A (control=5) and a single sample of Cheetos-B. The lack of even replication though may preclude analysis of XRD. For nanoindentation tests, we should have enough new growth to run on a majority of samples.
+Overall growth was less than hoped for. However, there is enough new skeleton for nearly all the powder tests that we want to conduct: FTIR, TGA, boron isotopes, and Raman.For nanoindentation tests, we should have enough new growth to run on a majority of samples.
 
-Linear extension was measured by maximum vertical height as measured with calipers. We additionally have initial 3d scans of all corals and post 3d scans of a subset of 48 corals (n=3 per genotype per tank). From this data, we can extract surface area to volume ratios and see how this changed among genotypes and treatments. This analysis still needs to be done. We can also more accurately measure total linear extension of the corals which may have curving or branching morphologies.
-
-## Plating of Tissue
-Among control corals, I visually noticed significant plating of tissue and a veneer of aragonite above the acrylic tags. This was almost completely absent in OA corals. I can take photos of each coral and calculate surface area of plating.
+Linear extension was measured by maximum vertical height as measured with calipers. We additionally have initial 3d scans of all corals and post 3d scans of a subset of 48 corals (n=3 per genotype per tank). From this data, we can extract surface area to volume ratios and see how this changed among genotypes and treatments. This analysis still needs to be done. 
 
 ## CT Scanning
 The micro-ct scan is currently out of service. We can use the large ct-scanner to determine bulk density. The scanner has a resolution of 0.1mm/scan so we can measure the density of the new growth. This growth is isolated to the highly variable apical tips which may cause some problems. <a href="https://patrickmkiel.com/notebook/research/LangdonSkeletonAnalysis/?pass=acidification" target="_blank">See this post which discusses the ct-scanning analysis of apical tips done on Langdon's OA corals.</a> 

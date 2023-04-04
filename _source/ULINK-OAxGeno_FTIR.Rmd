@@ -29,7 +29,6 @@ library(kableExtra)
 library(readxl)
 library(ggpubr)
 library(rstatix)
-library(seacarb)
 library(OpenSpecy)
 library(cowplot)
 
@@ -125,48 +124,31 @@ The corals for this analysis come from the 2022 ULINK OA x Genotype experiment, 
 
 Below are some brief overview graphs which document the observed growth.
 
-```{r allysonStressHardening}
-corals <- read_excel('~/Grad School/ULink 2022/AllysonGenotypedCorals/metadata.xlsx') %>%
-  mutate(bw_initial_calc = Bw_initial_raw_mass/(1-(rho(S = `bw_initial_salinity (ppt)`,
-                                                       T = bw_initial_temp)/1000)/2.93),
-         bw_final_calc = bw_final_raw_mass/(1-(rho(S = bw_final_salinity,
-                                                   T = bw_final_temp)/1000)/2.93),
-         newMassStd = (bw_final_calc-bw_initial_calc)*1000/
-           bw_initial_calc/
-           as.numeric(bw_final_date-bw_initial_date)) %>%
-  filter(Species == 'Acropora cervicornis',
-         newMassStd>0) %>%
-  filter(ID %in%
-           (read.table('~/Grad School/ULink 2022/AllysonGenotypedCorals/skeletonTag.txt') %>%
-           pull(V1) %>%
-           str_extract(., '[[:digit:]]*') %>%
-           as.numeric(.)))
+   `r capFig("Avg Daily Growth by Treatment")`
+<img src="/notebook/images/ulinkGrowth2022/calcification graphs-1.png" width="90%" style="display: block; margin: auto;" />
 
-capFig("Calcification data from Allyson Demerlis's project")
+   `r capFig("Avg Daily Growth Per Week by Genotype and Treatment")`
+ 
+<img src="/notebook/images/ulinkGrowth2022/calcification graphs-3.png" width="90%" style="display: block; margin: auto;" />
 
-corals %>%
-  ggplot(aes(Colony,newMassStd, fill=Treatment)) +
-  geom_boxplot() +
-  theme_classic() +
-  labs(y = "Daily Calcification Rate (mg/g/day)",
-       x= "Genotype",
-       title = "Genotype x Temperature")
-```
+The mean calcification rate in the HCO2 group was mean 0.316 (SD = 0.139) mg/g/day, whereas the mean in the LCO2 group was 0.569 (SD = 0.237). A Student two-samples t-test showed that the difference was statistically significant, t(87) = -6.194, p < 0.0001, d = -1.314. On average, the ocean acidification group saw a 44% reduction in calcification rates.
 
-There was a significant effect of the coral genotype (F=23.27, p=7.78e-6), but no observed effect of stress hardening treatment on calcification rates (F=0.91, p=0.352). Following post-hoc testing, the significant genotype effect was driven by genotype MB-B which had much higher rates than BC-8B and SI-C which had similar calcification rates.
+When factoring in genotype and accounting for the lack of independence of multiple corals cultured in the same aquarium using a mixed effects model with the aquarium set as a random intercept, **Cheetos-B and SI-A had negligible decreases in calcification rate** (Cheetos-: -8 &#177; 9%, F=-0.91, p=0.98; SI-A: -13.7 &#177; 7.1%, F=-1.93, p=0.571), whereas **MB-C and AC-2 saw significant decreases in calcification rates** (AC-2: -39 &#177; 7.4%, F=-5.32; p<0.01;MB-C: -30 &#177; 7.5%, F=-4.05; p<0.05)
 
-Thus, we are conducting these tests with a special focus on genotype MB-B to see if its faster calcification rate results in any observable differences in skeletal properties.
+Thus, there are some obvious genet-specific responses:
 
-# Proposed Analysis
+1. Cheetos-B calcification rate was nearly identical across HCO2 and LCO2 groups. This genet also had high initial mortality and the worst survivorship rate throughout the experiment. It is entirely possible that this genotype did not do well in the aquariums and its diminished calcification rate is an effect of overall health and not treatment. The corals analyzed above only include corals that survived the length of the experiment and not the corals which died in the beginning of the experiment.
 
-To identify the peaks, I set a window (+/- 20cm) around the expected peak to identify relative maximum intensity. The maximum intensity and the wavenumber at the identified peak were extracted. For FWHM, the wave numbers around the peak which had intensity > .5*I were extrated, and the range of the extracted wavenumbers was identified as the FWHM. 
+2. SI-A and AC-2 had the highest average calcification rates and there was no significant difference between these two genotypes. However, when you look at the effect of treatment within these genotypes (sensitivity), there is significant differences between them. Thus, fast growth and OA sensitivity mechanisms are distinct from one another.
+
+3. When looking at just controls, the only significant different genotype is Cheetos-B. Thus, there is a difference in sensitivity to OA but no observable differences in ambient conditions. 
 
 # Results
 
 ```{r FTIR-Analysis}
-source('~/Grad School/ULink 2022/AllysonGenotypedCorals/ftir/ftirAnalysis.R')
+source('~/Grad School/ULink 2022/ftir/ftirAnalysis.R')
 
-ftir_files <- list.files(path = "~/Grad School/ULink 2022/AllysonGenotypedCorals/ftir/",
+ftir_files <- list.files(path = "~/Grad School/ULink 2022/ftir/",
                          pattern = "([0-9])(.csv)",
                          recursive = T,
                          full.names = T)
@@ -202,25 +184,54 @@ ftir_results <- lapply(ftir_files, analyze_ftir) %>%
   bind_rows()
 
 ftir_results <- ftir_results %>%
-  left_join(read_excel('~/Grad School/ULink 2022/AllysonGenotypedCorals/metadata.xlsx') %>%
-              filter(Species=='Acropora cervicornis') %>%
-              select(ID, genotype=Colony, Treatment, Random_Tank),
-            by = c('id'='ID'))
+  left_join(read.csv('~/Grad School/ULink 2022/tankAssignment.csv'),
+            by = c('id'='tag'))
 
-ftir_results %>%
+
+ftir_results <- ftir_results %>%
+  filter(genotype != 'Cheetos-B') %>%
   pivot_longer(v1:ACC,
                names_to="metric") %>%
   mutate(metric = factor(metric,
                          levels = c('v1','I1','fwhm1',
                                     'v2','I2','fwhm2',
                                     'v3','I3','fwhm3',
-                                    'v4','I4','fwhm4','ACC'))) %>%
+                                    'v4','I4','fwhm4','ACC')))
+
+ftir_results %>%
+  ggplot(aes(treatment,value, fill=treatment)) +
+  geom_boxplot() +
+  facet_wrap(~metric,
+             scales = "free",
+            nrow = 3) +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        #legend.background = element_rect(size=0.5, color = "black"),
+        legend.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.title.y = element_blank())
+
+ftir_results %>%
   ggplot(aes(genotype,value, fill=genotype)) +
   geom_boxplot() +
   facet_wrap(~metric,
              scales = "free",
             nrow = 3) +
   labs(title = "No observable genotype differences in any metric") +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        #legend.background = element_rect(size=0.5, color = "black"),
+        legend.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.title.y = element_blank())
+
+ftir_results %>%
+  ggplot(aes(genotype,value, fill=treatment)) +
+  geom_boxplot() +
+  facet_wrap(~metric,
+             scales = "free",
+            nrow = 3) +
+  #labs(title = "No observable genotype differences in any metric") +
   theme_bw() +
   theme(legend.position = "bottom",
         #legend.background = element_rect(size=0.5, color = "black"),

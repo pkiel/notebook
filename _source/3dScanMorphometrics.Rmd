@@ -1,0 +1,109 @@
+---
+layout: post
+title:  "Morphometrics from 3D Scans"
+author: "Patrick M Kiel"
+date: '`r Sys.Date()`'
+categories: [research]
+description: "Description"
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, 
+  encoding = encoding, 
+  output_file = paste0(Sys.Date(), "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
+  output_dir = "../_posts") })
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#load packages
+library(tidyverse)
+library(kableExtra)
+library(readxl)
+library(ggpubr)
+library(rstatix)
+
+base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
+fig_path <- "images/" #add a new folder if you want to group output into a single foder
+
+# Set base directories
+knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
+
+# Set figure directories
+knitr::opts_chunk$set(fig.path = fig_path,
+                    cache.path = '../cache/',
+                    fig.align = 'center', out.width = '90%',
+                    message=FALSE, warning=FALSE,
+                    cache = FALSE, results = "asis")
+```
+
+```{js}
+
+window.onload = function() {
+    //query string in the password
+    const urlParams = new URLSearchParams(window.location.search);
+    const pass = urlParams.get('pass')
+    document.getElementById("password").value = pass;
+};
+
+function verify() {
+  <!-- set the password here -->
+  if (document.getElementById('password').value === 'password') {
+    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
+    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
+  } else {
+    alert('Invalid Password! You cannot view this content.');
+    password.setSelectionRange(0, password.value.length);
+  }
+  return false;
+}
+```
+
+```{css}
+/*Change content Display */
+.hidden {
+  display: none;
+}
+```
+
+```{r FigCaptions, echo=FALSE}
+
+#Figure and Table Caption Numbering
+capTabNo = 1; capFigNo = 1;
+
+#Function to add the Table Number
+capTab = function(x){
+    x = paste0("Table ",capTabNo,". ",x)
+    capTabNo <<- capTabNo + 1
+    cat(x)
+}
+
+#Function to add the Figure Number
+capFig = function(x){
+    x = paste0("<h5>Figure ",capFigNo,". ",x,"</h5>")
+    capFigNo <<- capFigNo + 1
+    cat(x)
+}
+```
+
+<!-- The password box -->
+<div id="credentials">
+  <input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
+  <br/>
+  <input id="button" type="button" value="Show Content" onclick="verify()" />
+</div>
+
+<!-- The content we want to show after password -->
+<div id="HIDDENDIV" class="hidden" markdown="1">
+
+<!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
+
+</div>

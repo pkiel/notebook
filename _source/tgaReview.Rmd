@@ -283,11 +283,11 @@ The other ways I will analyze the data will be over discrete intervals including
 ```{r TGA-Analysis}
 source('~/Grad School/ULink 2022/TGA/tgaAnalysis.R')
 
-tga <- list.files(path = '~/Grad School/ULink 2022/TGA/allysonGenotypes/',
+tga <- list.files(path = '~/Grad School/ULink 2022/TGA/ulinkOA/',
            pattern = ".txt",
            full.names = T)
 
-analysis <- lapply(tga, analyze_tga)
+analysis <- lapply(tga[c(1:12,14)], analyze_tga)
 
 lapply(analysis, function(x) {
   x[[1]]
@@ -353,10 +353,17 @@ The coefficient of variation is  smaller for calcium carbonate decomposition tha
 ```{r genotypeStats}
 capFig("Genotype Specific Percent Loss")
 TGAdata %>%
-  drop_na(peak) %>%
+  filter(region == 'organics' & method == "inflection") %>%
   ggplot(aes(genotype, loss)) +
   geom_boxplot() +
-  facet_wrap(~region, scales = "free")
+  #facet_wrap(~region*method, scales = "free") +
+  theme_bw()
+
+TGAdata %>%
+  filter(region == 'Organic matrix (250-470)') %>%
+  ggplot(aes(genotype, loss)) +
+  geom_boxplot() +
+  facet_wrap(~method, scales = "free")
 
 TGAdata %>%
   drop_na(peak) %>%
@@ -365,10 +372,11 @@ TGAdata %>%
   summarise(n = n(),
             mean = mean(loss))
 
-mod <- TGAdata %>%
-  drop_na(peak) %>%
-  dplyr::filter(region == "organics") %>%
-  aov(loss ~ genotype, data=.)
+TGAdata %>%
+  dplyr::filter(region == "organics" & method =="inflection") %>%
+  left_join(corals, by=c("sample"="ID")) %>%
+  lm(newMassStd ~ loss, data=.) %>%
+  summary()
 
 #meets assumptions of ANOVA
 # # QQ-plot
@@ -383,15 +391,20 @@ mod <- TGAdata %>%
 capFig("Calcification rates do not vary with organic bulk organic weight")
 TGAdata %>%
   drop_na(peak) %>%
-  dplyr::filter(region == "organics") %>%
-  left_join(corals %>% select(sample=ID, newMassStd)) %>%
+  dplyr::filter(region == "organics" & method =="inflection") %>%
+  left_join(corals %>% select(sample=ID, newMassStd, Colony)) %>%
+  drop_na(Colony) %>%
   ggplot(aes(loss, newMassStd)) +
-  geom_point() +
+  geom_point(aes(color=Colony)) +
   geom_smooth(method = "lm") +
+  labs(title = "No relationship of G ~ % Organics",
+       x = "Wt % organics",
+       y = "G mg/g/day") +
   annotate("text",
            x=1.9, y=3.2,
            color="red",
-           label="R2=0.03")
+           label="R2=0.03") +
+  theme_bw()
 ```
 ANOVA testing indicates that there is a statistically significant difference among genotypes (F=4.577, p=0.0313). Post-hoc testing shows that MB-B has slightly less organics than BC-8b (~7%, p=0.028), with all other comparisons p>0.05. While there may be significant differences in growth rates (MB-B is the fastest) and bulk intracrystaline organics (MB-B has the least), these two variables do not vary with one another.
  
