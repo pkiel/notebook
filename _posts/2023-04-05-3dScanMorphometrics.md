@@ -46,6 +46,10 @@ function verify() {
 .hidden {
   display: none;
 }
+
+img {
+margin: 0 auto;
+}
 </style>
 <!-- The password box -->
 
@@ -64,16 +68,20 @@ function verify() {
 
 # Overview
 
-Fractal dimensions (FD) can describe the complexity of shapes at various
-scales. While coral colonies and coral reefs are not strictly fractals,
-colonial organisms and reef assemblages share some key characteristics
-to fractals, including morphological irregularities, self-similarity and
-high degrees of space filling. FD can align with other traditional
-measurements such as surface area to volume ratio, rugosity, etc; but FD
-offers increased information as seen in the below theoretical example of
-a coral reef (Fig. 1; Torres-Pulliza *et al* 2020). This figure
-illustrates 3 reefs with identical rugosiites but decreasing fractal
-dimensions (FD), a \< b \< c.
+Fractal dimensions (FD) describes space filling of shapes at various
+scales and describes surface complexity. While coral colonies and coral
+reefs are not strictly fractals, colonial organisms and reef assemblages
+share some key characteristics to fractals, including morphological
+irregularities, self-similarity and high degrees of space filling. FD
+can align with other traditional measurements such as surface area to
+volume ratio, rugosity, etc; but FD offers increased information as seen
+in the below theoretical example of a coral reef (Fig. 1; Torres-Pulliza
+*et al* 2020). This figure illustrates 3 reefs with identical rugosiites
+but decreasing fractal dimensions (FD), a \< b \< c.
+
+<h5>
+Figure 1. Theoretical comparison of fractal dimension and rugosity
+</h5>
 
 ![Theoretical fractal
 dimension](https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41559-020-1281-8/MediaObjects/41559_2020_1281_Fig1_HTML.png)
@@ -98,6 +106,10 @@ The toolbox takes in an obj scan file and produces a txt file with 3
 columns: dilation radius, log(dilation radius), and log(influence
 volume). Dilation radius is produced for 1 \<= R \<= 20.
 
+<h5>
+Figure 2. Example photographs and 3D scans in Reichert et al. 2017
+</h5>
+
 ![Examles of corals in the
 analysis](https://besjournals.onlinelibrary.wiley.com/cms/asset/98018c3c-a06e-4a41-ad6a-3e5cd3b1473e/mee312829-fig-0002-m.png)
 
@@ -109,11 +121,11 @@ found that when R = 8, fractal dimensions had the best ability to
 discriminate inter-and-intraspecific differences. Thus, they calculate
 and report all fractal dimensions based on a dilation radius of 8.
 
-Given that the toolbox produces dilation radius from 1 \<= R \<= 20, you
-should be able to subset this data frame to just the integers 3 \<= R
-\<= 20 or all real numbers 3 \<= R \<= 20 to calculate and derive the
-same values reported in Reichert *et al.* (2017). So I’m going to do
-just that.
+Given that the toolbox produces dilation radius from 1 $\le$ R $\le$ 20,
+you should be able to subset this data frame to just the integers 3
+$\le$ R $\le$ 20 or all real numbers 3 $\le$ R $\le$ 20 to calculate and
+derive the same values reported in Reichert *et al.* (2017). So I’m
+going to do just that.
 
 # Formulas
 

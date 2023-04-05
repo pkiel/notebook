@@ -76,6 +76,10 @@ function verify() {
 .hidden {
   display: none;
 }
+
+img {
+margin: 0 auto;
+}
 ```
 
 ```{r FigCaptions, echo=FALSE}
@@ -112,19 +116,26 @@ capFig = function(x){
 
 # Overview
 
-Fractal dimensions (FD) can describe the complexity of shapes at various scales. While coral colonies and coral reefs are not strictly fractals, colonial organisms and reef assemblages share some key characteristics to fractals, including morphological irregularities, self-similarity and high degrees of space filling. FD can align with other traditional measurements such as surface area to volume ratio, rugosity, etc; but FD offers increased information as seen in the below theoretical example of a coral reef (Fig. 1; Torres-Pulliza *et al* 2020). This figure illustrates 3 reefs with identical rugosiites but decreasing fractal dimensions (FD), a < b < c.
-`r capFig("Theoretical comparison of fractal dimension and rugosity")`
+Fractal dimensions (FD) describes space filling of shapes at various scales and describes surface complexity. While coral colonies and coral reefs are not strictly fractals, colonial organisms and reef assemblages share some key characteristics to fractals, including morphological irregularities, self-similarity and high degrees of space filling. FD can align with other traditional measurements such as surface area to volume ratio, rugosity, etc; but FD offers increased information as seen in the below theoretical example of a coral reef (Fig. 1; Torres-Pulliza *et al* 2020). This figure illustrates 3 reefs with identical rugosiites but decreasing fractal dimensions (FD), a < b < c.
+
+```{r}
+capFig("Theoretical comparison of fractal dimension and rugosity")
+```
+
 ![Theoretical fractal dimension](https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41559-020-1281-8/MediaObjects/41559_2020_1281_Fig1_HTML.png)
 Many processes (ecological, growth, resistance to stressors, biophysical pathways with seawater) may scale (linearly, non-linearly/unimodal) with increased morphological complexity. Therefore, using FD to quantitatively describe morphological complexity can be informative. However, its important to note that FD is only a singular metric of morphological complexity and should be placed in appropriate context. Since FD only describes space filling at different scales, dissimilar shapes may share a FD despite rather obvious differences in branching or size. Nevertheless, FD can play an important role in describing coral morphology, especially when comparing ecosystems/coral colonies of approximately the same scale.
 
 Reichert *et al.* (2017) developed an easy to use tool to calculate FD of a 3D coral colony using the Bouligand-Minkowski method. First, I am reanalyzing the 3D scanned files from Reichert *et al.* (2017) to ensure I am using their code correctly. I am using their obj scan files and the analysis toolbox they released as part of the supplementary material. The toolbox takes in an obj scan file and produces a txt file with 3 columns: dilation radius, log(dilation radius), and log(influence volume). Dilation radius is produced for 1 <= R <= 20.
 
-`r capFig("Example photographs and 3D scans in Reichert et al. 2017")`
+```{r}
+capFig("Example photographs and 3D scans in Reichert et al. 2017")
+```
+
 ![Examles of corals in the analysis](https://besjournals.onlinelibrary.wiley.com/cms/asset/98018c3c-a06e-4a41-ad6a-3e5cd3b1473e/mee312829-fig-0002-m.png)
 
 Reichert *et al.* (2017) assessed the influence of dilation radii on the ability to discern inter-and-intraspecific differences among 3d scans (i.e. does a fractal D tell us if a coral fragment is identical to its clonemate/conspecific). They tested all integers 3 $\le$ R $\le$ 20, and found that when R = 8, fractal dimensions had the best ability to discriminate inter-and-intraspecific differences. Thus, they calculate and report all fractal dimensions based on a dilation radius of 8.
 
-Given that the toolbox produces dilation radius from 1 <= R <= 20, you should be able to subset this data frame to just the integers 3 <= R <= 20 or all real numbers 3 <= R <= 20 to calculate and derive the same values reported in Reichert *et al.* (2017). So I'm going to do just that.
+Given that the toolbox produces dilation radius from 1 $\le$ R $\le$ 20, you should be able to subset this data frame to just the integers 3 $\le$ R $\le$ 20 or all real numbers 3 $\le$ R $\le$ 20 to calculate and derive the same values reported in Reichert *et al.* (2017). So I'm going to do just that.
 
 # Formulas
 
@@ -138,8 +149,10 @@ $$
 where R is the dilation radius and V(R) is the influence volume.
 
 Here, you can visualize the measuring principles of the Bouligand-Minkowski method with increasing dilation radii from a-->c. Spheres are located at the vertex of the 3d mesh. Larger radii progressively fill the volume enclosed by the mesh, resulting in a larger influence volume. The limit integrates across these spatial scales (radii a-c) to synthesize a singular characteristic of the mesh's complexity. 
+```{r}
+capFig("Theoretical 3D Application of the Bouligand-Minkowski method with spheres")
+```
 
-`r capFig("Theoretical 3D Application of the Bouligand-Minkowski method with spheres")``
 ![Bouligand-Minkowski Concept](https://besjournals.onlinelibrary.wiley.com/cms/asset/6797afd6-8813-48eb-9457-874fed88814e/mee312829-fig-0001-m.png)
 
 As this is a power law, you can estimate the limit by taking the slope of the log-log plot that fits the curve log(R) x log(V(R)). Thus, D can be estimated as 3-m, where m is the slope of the log-log plot.
