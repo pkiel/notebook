@@ -710,7 +710,7 @@ HCO2
 0.081
 </td>
 <td style="text-align:center;">
-0.028
+0.027
 </td>
 </tr>
 <tr>
@@ -782,7 +782,7 @@ LCO2
 37
 </td>
 <td style="text-align:center;">
--6.9168
+-7.0659
 </td>
 <td style="text-align:center;">
 72
@@ -837,7 +837,7 @@ HCO2
 LCO2
 </td>
 <td style="text-align:center;">
--1.6081
+-1.6428
 </td>
 <td style="text-align:center;">
 37
@@ -922,7 +922,7 @@ genotype
 SI-A-MB-C
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
-0.0004
+0.0001
 </td>
 <td style="text-align:center;font-weight: bold;color: white !important;background-color: red !important;">
 xxx
@@ -936,7 +936,7 @@ genotype
 SI-A-AC-2
 </td>
 <td style="text-align:center;">
-0.0810
+0.1385
 </td>
 <td style="text-align:center;">
 NS
@@ -950,7 +950,7 @@ treatment:genotype
 LCO2:SI-A-HCO2:SI-A
 </td>
 <td style="text-align:center;">
-0.3659
+0.4558
 </td>
 <td style="text-align:center;">
 NS
@@ -960,9 +960,9 @@ NS
 </table>
 
 The mean calcification rate in the HCO2 group was mean 0.081 (SD =
-0.028) mg/ $$cm^2$$ /day, whereas the mean in the LCO2 group was 0.126
+0.027) mg/ $$cm^2$$ /day, whereas the mean in the LCO2 group was 0.126
 (SD = 0.028). A Student two-samples t-test showed that the difference
-was statistically significant, t(72) = -6.917, p \< 0.0001, d = -1.608.
+was statistically significant, t(72) = -7.066, p \< 0.0001, d = -1.643.
 Thus, the ocean acidification group saw on average a 36% reduction in
 calcification rates. The effects, however, were not even across the
 genotypes (Table 5).
@@ -1049,16 +1049,16 @@ G
 18
 </td>
 <td style="text-align:center;">
-1.279
+0.991
 </td>
 <td style="text-align:center;">
-34.049
+34.650
 </td>
 <td style="text-align:center;">
-0.209
+0.329
 </td>
 <td style="text-align:center;">
-0.209
+0.329
 </td>
 <td style="text-align:center;">
 ns
@@ -1126,9 +1126,9 @@ modFixed %>%
 
                    Df  Sum Sq Mean Sq F value   Pr(>F)    
 
-genotype 2 0.01426 0.00713 16.27 1.68e-06 *** treatment 1 0.03963
-0.03963 90.47 4.06e-14 *** genotype:treatment 2 0.01023 0.00512 11.68
-4.36e-05 \*\*\* Residuals 68 0.02979 0.00044  
+genotype 2 0.01374 0.00687 17.46 7.61e-07 *** treatment 1 0.03956
+0.03956 100.54 4.89e-15 *** genotype:treatment 2 0.01169 0.00584 14.85
+4.46e-06 \*\*\* Residuals 68 0.02676 0.00039  
 — Signif. codes: 0 ‘***’ 0.001 ’**’ 0.01 ’*’ 0.05 ‘.’ 0.1 ’ ’ 1
 
 Here is the mixed effects model with the tank identity set as a random
@@ -1178,22 +1178,22 @@ p.value
 genotype
 </td>
 <td style="text-align:right;">
-0.0172659
+0.0167813
 </td>
 <td style="text-align:right;">
-0.0086330
+0.0083906
 </td>
 <td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
-66.160817
+66.206864
 </td>
 <td style="text-align:right;">
-20.04205
+21.46841
 </td>
 <td style="text-align:right;">
-0.0000002
+0.0000001
 </td>
 </tr>
 <tr>
@@ -1201,22 +1201,22 @@ genotype
 treatment
 </td>
 <td style="text-align:right;">
-0.0266322
+0.0340982
 </td>
 <td style="text-align:right;">
-0.0266322
+0.0340982
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-2.008131
+2.012228
 </td>
 <td style="text-align:right;">
-61.82861
+87.24428
 </td>
 <td style="text-align:right;">
-0.0156087
+0.0110507
 </td>
 </tr>
 <tr>
@@ -1224,22 +1224,22 @@ treatment
 genotype:treatment
 </td>
 <td style="text-align:right;">
-0.0101570
+0.0116516
 </td>
 <td style="text-align:right;">
-0.0050785
+0.0058258
 </td>
 <td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
-66.160817
+66.206864
 </td>
 <td style="text-align:right;">
-11.79006
+14.90602
 </td>
 <td style="text-align:right;">
-0.0000417
+0.0000045
 </td>
 </tr>
 </tbody>
@@ -1277,7 +1277,7 @@ modFixed
 7
 </td>
 <td style="text-align:right;">
--354.5075
+-362.4413
 </td>
 </tr>
 <tr>
@@ -1288,7 +1288,7 @@ modRandom
 8
 </td>
 <td style="text-align:right;">
--352.5075
+-360.4413
 </td>
 </tr>
 </tbody>

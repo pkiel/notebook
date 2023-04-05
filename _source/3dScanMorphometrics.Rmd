@@ -2,9 +2,9 @@
 layout: post
 title:  "Morphometrics from 3D Scans"
 author: "Patrick M Kiel"
-date: '`r Sys.Date()`'
+date: '2023-04-04'
 categories: [research]
-description: "Description"
+description: "Geometric complexity is the heart of coral reefs from ecosystem to organismal scales. Here, I provide an outline to apply morphometrics to 3D scans of coral fragments and relate the morphology to growth rates and ocen acidification sensitivity."
 output:
   md_document:
     variant: gfm
@@ -29,10 +29,14 @@ library(kableExtra)
 library(readxl)
 library(ggpubr)
 library(rstatix)
+library(rgl)
+library(wesanderson)
+library(googlesheets4)
+library(seacarb)
 
 base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
 base_url <- "/notebook/" # subdirectory of patrickmkiel.com
-fig_path <- "images/" #add a new folder if you want to group output into a single foder
+fig_path <- "images/3dmorphometrics/" #add a new folder if you want to group output into a single foder
 
 # Set base directories
 knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
@@ -56,7 +60,7 @@ window.onload = function() {
 
 function verify() {
   <!-- set the password here -->
-  if (document.getElementById('password').value === 'password') {
+  if (document.getElementById('password').value === 'ulink') {
     document.getElementById('HIDDENDIV').classList.remove("hidden"); 
     document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
   } else {
@@ -105,5 +109,673 @@ capFig = function(x){
 <div id="HIDDENDIV" class="hidden" markdown="1">
 
 <!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
+
+# Overview
+
+Fractal dimensions (FD) can describe the complexity of shapes at various scales. While coral colonies and coral reefs are not strictly fractals, colonial organisms and reef assemblages share some key characteristics to fractals, including morphological irregularities, self-similarity and high degrees of space filling. FD can align with other traditional measurements such as surface area to volume ratio, rugosity, etc; but FD offers increased information as seen in the below theoretical example of a coral reef (Fig. 1; Torres-Pulliza *et al* 2020). This figure illustrates 3 reefs with identical rugosiites but decreasing fractal dimensions (FD), a < b < c.
+`r capFig("Theoretical comparison of fractal dimension and rugosity")`
+![Theoretical fractal dimension](https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41559-020-1281-8/MediaObjects/41559_2020_1281_Fig1_HTML.png)
+Many processes (ecological, growth, resistance to stressors, biophysical pathways with seawater) may scale (linearly, non-linearly/unimodal) with increased morphological complexity. Therefore, using FD to quantitatively describe morphological complexity can be informative. However, its important to note that FD is only a singular metric of morphological complexity and should be placed in appropriate context. Since FD only describes space filling at different scales, dissimilar shapes may share a FD despite rather obvious differences in branching or size. Nevertheless, FD can play an important role in describing coral morphology, especially when comparing ecosystems/coral colonies of approximately the same scale.
+
+Reichert *et al.* (2017) developed an easy to use tool to calculate FD of a 3D coral colony using the Bouligand-Minkowski method. First, I am reanalyzing the 3D scanned files from Reichert *et al.* (2017) to ensure I am using their code correctly. I am using their obj scan files and the analysis toolbox they released as part of the supplementary material. The toolbox takes in an obj scan file and produces a txt file with 3 columns: dilation radius, log(dilation radius), and log(influence volume). Dilation radius is produced for 1 <= R <= 20.
+
+`r capFig("Example photographs and 3D scans in Reichert et al. 2017")`
+![Examles of corals in the analysis](https://besjournals.onlinelibrary.wiley.com/cms/asset/98018c3c-a06e-4a41-ad6a-3e5cd3b1473e/mee312829-fig-0002-m.png)
+
+Reichert *et al.* (2017) assessed the influence of dilation radii on the ability to discern inter-and-intraspecific differences among 3d scans (i.e. does a fractal D tell us if a coral fragment is identical to its clonemate/conspecific). They tested all integers 3 $\le$ R $\le$ 20, and found that when R = 8, fractal dimensions had the best ability to discriminate inter-and-intraspecific differences. Thus, they calculate and report all fractal dimensions based on a dilation radius of 8.
+
+Given that the toolbox produces dilation radius from 1 <= R <= 20, you should be able to subset this data frame to just the integers 3 <= R <= 20 or all real numbers 3 <= R <= 20 to calculate and derive the same values reported in Reichert *et al.* (2017). So I'm going to do just that.
+
+# Formulas
+
+Reichert *et al.* (2017) use the Bouligand–Minkowski method to estimate a colony's fractal dimension as, "it is one of the most accurate methods for computing fractal dimensions and it is highly sensitive to detecting small changes in models (Tricot, 1995). Due to its use of Euclidean distances, the approach is invariant to rotation. Thus, prior normalization steps are not necessary (Tricot, 1995)."
+
+They define D as,
+
+$$
+D = 3 - \lim_{R \to 0} \frac{log(V(R))}{log(R)}  
+$$
+where R is the dilation radius and V(R) is the influence volume.
+
+Here, you can visualize the measuring principles of the Bouligand-Minkowski method with increasing dilation radii from a-->c. Spheres are located at the vertex of the 3d mesh. Larger radii progressively fill the volume enclosed by the mesh, resulting in a larger influence volume. The limit integrates across these spatial scales (radii a-c) to synthesize a singular characteristic of the mesh's complexity. 
+
+`r capFig("Theoretical 3D Application of the Bouligand-Minkowski method with spheres")``
+![Bouligand-Minkowski Concept](https://besjournals.onlinelibrary.wiley.com/cms/asset/6797afd6-8813-48eb-9457-874fed88814e/mee312829-fig-0001-m.png)
+
+As this is a power law, you can estimate the limit by taking the slope of the log-log plot that fits the curve log(R) x log(V(R)). Thus, D can be estimated as 3-m, where m is the slope of the log-log plot.
+
+You can progressively slide the curve from the beginning (R=2) to a maximum radii, and then calculate the slope over each defined region. For example, if you wanted to evaluate dilation radii from 2-15, you would first take the slope of the curve from (0,2), then (0,3), and so on until (0,15). You would calculate the FD at each R in the series and evaluate its discriminatory power.The code is as follows,
+
+```{r, eval=F, echo=T}
+  #calculate linear model over the region
+  m = lm(log.infl.vol ~ log.dil.rad,
+          #filter data to integers only between 3 & 20
+          #R is the desired dilation radius
+          data = dat %>% filter(dil.rad<= & R))
+
+  #extract the slope
+  m$coefficients[[2]]
+  
+```
+
+# Example Data
+
+Using the 3D scans from Reichert *et al.* (2017), I independently calculated the Fractal Dimension using their toolbox. Below is a table of the data where I exclusively looked at time point 0 data. 
+
+```{r load-example-data}
+files <- list.files(path="C:/Users/pkiel/Downloads/Reichert2017-Fractals/",
+                    pattern = ".txt",
+                    full.names = T)
+
+lapply(files, function(x) {
+  #load data
+  dat = read.table(x, quote="\"", comment.char="")
+  dat = dat[,2:4]
+  names(dat) = c("dil.rad",
+                "log.dil.rad",
+                "log.infl.vol")
+  
+  #extract metadata from filename
+  id = str_sub(basename(x),1,8)
+  t = str_sub(basename(x),11,11)
+  
+  #calculate an m for all radii [3,20]
+  m = c()
+  for(i in 1:20) {
+  m[i] = lm(log.infl.vol ~ log.dil.rad,
+   data =  dat %>% filter(dil.rad <= i))$coefficients[[2]]
+  }
+
+  return(c('ID' = id, 'time_point' = t, 'D' = 3-m))
+}) %>%
+  bind_rows() %>%
+  filter(time_point==0) %>%
+  left_join(read_xlsx('C:/Users/pkiel/Downloads/Raw_fractals_D.xlsx') %>%
+  select(ID, Species, Genus, Colony, ReichD = Fractal.dimension_t0),
+         by="ID") %>%
+    select(-c(time_point, D1)) -> dat
+
+#ouput tbl
+dat %>%
+  select(ID, Species:ReichD, D8) %>%
+  mutate(D8 = signif(as.numeric(D8,digits=7))) %>%
+  kbl(caption = "Table 1: Comparison of Fractal Dimensions. I can replicate their FD.",
+      booktabs = T, longtable = T) %>%
+  kable_styling(latex_options = c("striped", "repeat_header"))
+```
+
+As you can see, I am calculating their data the same way. So all calculations are working. Let's proceed with discriminatory analyses.
+
+## Radii Analysis
+
+I calculated a FD for radii 2-20 to conduct a discriminatory test similar to the Reichert *et al.* (2017) analysis. They found that r=8 had the highest discriminatory power.
+
+## Interspecific Detection
+```{r interspecificDiscriminatoryAnalysis}
+inter <- dat %>%
+  select(ID, Species:Colony, D2:D20) %>%
+  pivot_longer(D2:D20,
+               names_to = "radii",
+               values_to = "FD") %>%
+  mutate(radii = as.numeric(str_extract(radii,
+                            "[[:digit:]]+")),
+         FD = as.numeric(FD),
+         Species=as.factor(Species))
+
+capFig("Interspecific discriminaotry power of FD at different radii")
+inter %>%
+  ggplot() +
+  geom_boxplot(aes(x=FD, y=fct_rev(Species),
+                  fill=Species, color=Species)) +
+  theme_void() +
+  facet_wrap(~radii, scales = "free") +
+  theme(panel.margin=unit(.05, "lines"),
+        strip.text = element_text(face="bold", size = 12))
+
+mod_inter <-inter %>%
+  nest(.by=radii) %>% 
+  mutate(
+    # Apply ANOVA for each level of radii, for FD~Species
+    anova = map(.x = data,
+                .f = ~aov(FD~Species,data = .x)),
+    # Get results of ANOVA
+    results = map(anova,tidy),
+    tukey = map(anova, tukey_hsd)
+    )
+
+mod_inter %>%
+  # "Show" the results for each gear level
+  unnest(tukey) %>%
+  filter(p.adj.signif == "ns" & radii %in% c(7,8,19,20)) %>%
+  mutate(pairWise = paste(group1,group2,
+                           sep="-")) %>%
+  pull(pairWise) %>% unique() -> no_FD_diff
+
+mod_inter %>%
+  # "Show" the results for each gear level
+  unnest(tukey) %>%
+  filter(p.adj.signif != "ns") %>%
+  group_by(radii) %>%
+  count() %>%
+  arrange(-n) %>%
+  kbl(caption = "Table 2: Interspecific radii discriminaotry power. N represents the number of significantly different pairwise comparisons, and is ordered by the most signifcant values.",
+      booktabs = T, longtable = T) %>%
+  kable_styling(latex_options = c("striped", "repeat_header"))
+
+mod_inter %>%
+  # "Show" the results for each geno level
+  unnest(tukey) %>%
+  filter(radii %in% c(7:8,19:20) & p.adj.signif != "ns") %>%
+  group_by(radii) %>%
+  summarise(p.avg = mean(p.adj),
+            n = n()) %>%
+  arrange(-n, p.avg) %>%
+  kbl(caption = "Table 3: Avg significance of radii interspecific discriminaotry power. Radius is the dilation radius, and p.avg is the average signficant pairwise difference between the 12 groups.",
+      booktabs = T, longtable = T) %>%
+  kable_styling(latex_options = c("striped", "repeat_header"))
+```
+
+Dilation radii of 7 and 8 produce the highest interspecific discriminatory power. Using these radii, we can differentiate between all species except: `r paste(no_FD_diff, collapse=", ") `. When looking at the average pairwise significance from radii 7 and 8, 8 performs better than 7. 19 and 20 follow close behind, with these radii not being able to discriminate between Ahu and Pda, but there average pairwise significance is still better than a radii of 8. So we cannot differentiate the Acroporas and the *Pocillopora verrucosa* with radii of 7 and 8, and we add *Pocillopora damicornis* to that list when we change the radii to 19 or 20. **Therefore, we are really only able to differentiate between the Porites and the branching corals. **
+
+## Intraspecific Detection
+
+Running these tests on only a subset of radii where the n from Table 2 is greater than or equal to 10 (the 8 best performing radii).
+```{r intraspecificDiscriminatoryAnalysis}
+intra <- inter %>%
+  filter(radii %in% 
+          #grabbing the best performing radii from interspecific analyses
+           (mod_inter %>%
+            unnest(tukey) %>%
+            filter(p.adj.signif != "ns") %>%
+            group_by(radii) %>%
+            count() %>%
+            filter(n>=10) %>%
+            pull(radii)))
+
+capFig("Intraspecific discriminaotry power of FD at different radii")
+intra %>%
+  filter(radii %in% c(8,18:20)) %>%
+  ggplot() +
+    geom_boxplot(aes(x=FD, y=fct_rev(Colony),
+                  fill=Species)) +
+  facet_wrap(~radii, nrow=3, scales = "free") +
+  theme_void() +
+  theme(panel.margin=unit(.05, "lines"),
+        strip.text = element_text(face="bold", size = 12),
+        panel.border = element_rect(color = "black", fill = NA, size = 1))
+
+mod_intra <-intra %>%
+  nest(.by=c(radii,Species)) %>% 
+  mutate(
+    # Apply ANOVA for each level of radii, for FD~Species
+    anova = map(.x = data,
+                .f = ~aov(FD~Colony,data = .x)),
+    # Get results of ANOVA
+    results = map(anova,tidy),
+    tukey = map(anova, tukey_hsd)
+    )
+
+mod_intra %>%
+  # "Show" the results for each gear level
+  unnest(tukey) %>%
+  filter(p.adj.signif != "ns") %>%
+  group_by(radii) %>%
+  count() %>%
+  arrange(-n) %>%
+  kbl(caption = "Table 4: Intraspecific radii discriminaotry power. N represents the number of significantly different pairwise comparisons, and is ordered by the most signifcant values.",
+      booktabs = T, longtable = T) %>%
+  kable_styling(latex_options = c("striped", "repeat_header"))
+
+mod_intra %>%
+  # "Show" the results for each geno level
+  unnest(tukey) %>%
+  filter(p.adj.signif != "ns") %>%
+  group_by(radii) %>%
+  summarise(p.avg = mean(p.adj),
+            n = n()) %>%
+  arrange(-n, p.avg) %>%
+  kbl(caption = "Table 5: Avg significance of radii intraspecific discriminaotry power. Radius is the dilation radius, and p.avg is the average signficant pairwise difference between the significantly diffrent groups.",
+      booktabs = T, longtable = T) %>%
+  kable_styling(latex_options = c("striped", "repeat_header"))
+```
+For intraspecific differences, dilation radii 19 & 20 produced optimal results, followed closely behind by 18 (Table 3). This is different from interspecific variation; 7 and 8 performed much worse here (< half of detected pair-wise differences compared to 19,20). 18, 19 and 20 could detect intraspecific differences in all 6 species, while 7 and 8 could only detect intraspecific differences in 2 species (Acroporas). Differences in all 3 Ami colonies could be detected with a radii of 8, 9, 18, 19 or 20, suggesting consistently different morphologies for each of the colonies of this species. Ahu (6 radii),  Pcy (2 r) and Pda (2 r) could detect 2 pairwise differences, indicating a single colony was significantly different than the other two.
+
+These results are interesting. While fractal dimensions cannot distinguish between Acroporas and other branching species, it can consistently distinguish intraspecific variation among these species, especially *Acropora humilis*. This might suggest that these species have plastic morphologies that vary among the population, but that this variation can be parsed apart by colony-specific morphology. Further, Reichert *et al.* (2017) report the fractal dimension analyses were superior in quantifying intraspecific changes of colonies over time compared to traditional morphological characteristics, indicating that these analyses are sensitive to small scale changes. Are these colonies collected from distinct environments, which uniquely shaped the colony morphology? Are genetics at play? From these data alone, it's impossible to tell. But we can begin to explore these questions using my data below.
+
+The take away from these analyses are:
+1. morphological complexity can be described with fractal dimensions
+2. FD can generally discern between inter- and intra-specific, but its not perfect
+3. Dilation radii must be selected according to resolution of analyses
+
+# Analyzing Our Scans
+```{r loadAcerData}
+files <- list.files(path="C:/Users/pkiel/Documents/Grad School/ULink 2022/3dScans/initial/FD/",
+                    pattern = ".txt",
+                    full.names = T)
+
+lapply(files, function(x) {
+  #load data
+  dat = read.table(x, quote="\"", comment.char="")
+  dat = dat[,2:4]
+  names(dat) = c("dil.rad",
+                "log.dil.rad",
+                "log.infl.vol")
+  
+  #extract metadata from filename
+  id = str_sub(basename(x),1,4)
+  
+  #calculate an m for all radii [3,20]
+  m = c()
+  for(i in 1:20) {
+  m[i] = lm(log.infl.vol ~ log.dil.rad,
+   data =  dat %>% filter(dil.rad <= i))$coefficients[[2]]
+  }
+
+  return(c('tag' = id, 'D' = 3-m))
+}) %>%
+  bind_rows() %>%
+  select(-D1) -> dat
+
+#load SA,V & metadata
+dat <- dat %>%
+  left_join(read.csv("C:/Users/pkiel/Documents/Grad School/ULink 2022/3dScans/initial/saVol_KielMarch22.csv") %>%
+              select(tag, SA = `SA.cm2_corrected`,
+                     V = `V.mm3_corrected`, SA_V, 
+                     H = `H.cm_corrected`),
+            by="tag") %>%
+  mutate(tag = as.numeric(str_extract(tag, "[[:digit:]]+"))) %>%
+  left_join(read.csv("C:/Users/pkiel/Documents/Grad School/ULink 2022/tankAssignment.csv") %>%
+            mutate(tag = as.numeric(tag)),
+            by="tag") %>%
+  #not sure what 61 is, need to dive in
+  drop_na(genotype) %>%
+  #remove the cheetos genotypes
+  filter(genotype!="Cheetos-B")
+```
+
+```{r genetSpecificAnalysis}
+FD_geno <- dat %>%
+  select(tag, genotype, D2:D20) %>%
+  pivot_longer(D2:D20,
+               names_to = "radii",
+               values_to = "FD") %>%
+  mutate(radii = as.numeric(str_extract(radii,
+                            "[[:digit:]]+")),
+         FD = as.numeric(FD))
+
+capFig("Genotype-specific discriminaotry power of FD at different radii")
+FD_geno %>%
+  ggplot() +
+  geom_boxplot(aes(x=FD, y=fct_rev(genotype),
+                  fill=genotype)) +
+  theme_void() +
+  facet_wrap(~radii, scales = "free") +
+  theme(panel.margin=unit(.05, "lines"),
+        strip.text = element_text(face="bold", size = 12))
+
+mod_FDgeno <-FD_geno %>%
+  mutate(genotype = as.factor(genotype)) %>%
+  nest(.by=radii) %>% 
+  mutate(
+    # Apply ANOVA for each level of radii, for FD~Species
+    anova = map(.x = data,
+                .f = ~aov(FD~genotype,data = .x)),
+    # Get results of ANOVA
+    results = map(anova,tidy),
+    tukey = map(anova, tukey_hsd)
+    )
+
+mod_FDgeno %>%
+  # "Show" the results for each geno level
+  unnest(tukey) %>%
+  group_by(radii, p.adj.signif) %>%
+  count() %>%
+  pivot_wider(names_from="p.adj.signif",
+              values_from = "n") %>%
+  arrange(-`****`,-`***`,-`**`,-`*`,-ns) %>%
+  select(radius = radii,`****`,`***`,`**`,`*`,ns) %>%
+  kbl(caption = "Table 6: Genotype radii discriminaotry power. Radius is the dilation radius, and the remaining columns indicate the level and number of significantly different pair-wise comparisons among the genotypes",
+      booktabs = T, longtable = T) %>%
+  kable_styling(latex_options = c("striped", "repeat_header"))
+
+mod_FDgeno %>%
+  # "Show" the results for each geno level
+  unnest(tukey) %>%
+  filter(radii %in% 6:17 & p.adj.signif != "ns") %>%
+  group_by(radii) %>%
+  summarise(p.avg = mean(p.adj)) %>%
+  arrange(p.avg) %>%
+  kbl(caption = "Table 7: Avg significance of genotype radii discriminaotry power. Radius is the dilation radius, and p.avg is the average signficant pairwise difference between the three groups.",
+      booktabs = T, longtable = T) %>%
+  kable_styling(latex_options = c("striped", "repeat_header"))
+```
+
+Dilation radii 6-17 perform the best and have identical significance levels. If we take a look at the average pairwise significance between the 3 groups, using a radius of 11 produces the best results. However, choosing any radius 6-17 will produce a very significant average p value <0.00001, which adds confidence that there is a difference in the fractal dimensions of these 3 genotypes.
+
+This is interesting because these fragments were picked to be,
+1. around the same size ~7cm, 
+2. from unique colony in nursery (a tree had >60 colonies all of one genotype)
+3. minimal branching, 1 apical tip
+
+So even though we selected to have visually identical fragments, genotype specific morphology is evident. Let's investigate other classical morphometrics to see if these genotypes were different.  For all analyses below, I am using FD11 as the measurement of FD. 
+
+```{r classicMorphometrics}
+classMorph <- dat %>%
+  select(tag, genotype, SA:H) %>%
+  pivot_longer(SA:H,
+               names_to = "metric",
+               values_to = "value") %>%
+  mutate(genotype=as.factor(genotype))
+
+capFig("Traditional morphometric comparisons of fragment height, surface area, volume, and surface area:volume ratio")
+classMorph %>%
+  ggplot() +
+  geom_boxplot(aes(x=value, y=fct_rev(genotype),
+                  fill=genotype, color=genotype)) +
+  theme_void() +
+  facet_wrap(~metric, scales = "free") +
+  theme(panel.margin=unit(.05, "lines"),
+        strip.text = element_text(face="bold", size = 12))
+
+mod_morphGeno <-classMorph  %>%
+  nest(.by=metric) %>%
+  mutate(
+    # Apply ANOVA for each level of radii, for FD~Species
+    anova = map(.x = data,
+                .f = ~aov(value~genotype,data = .x)),
+    # Get results of ANOVA
+    results = map(anova,tidy),
+    tukey = map(anova, tukey_hsd)
+    )
+
+mod_morphGeno %>%
+  # "Show" the results for each geno level
+  unnest(tukey) 
+```
+
+The three genotypes did not have significantly different surface area to volume ratio or heights. However, there were significant pairwise differences between surface area and volumes between SI-A and the other genotypes. Standardizing all growth rates to surface area is therefore critical for this data.
+
+```{r FD-corrs}
+morphCorrs <- dat %>%
+  select(tag, genotype, SA:H,FD=D11) %>%
+  pivot_longer(SA:H,
+               names_to = "metric",
+               values_to = "value") %>%
+  mutate(genotype=as.factor(genotype),
+         value = as.numeric(value),
+         FD = as.numeric(FD))
+
+mod_morphCorrs <- morphCorrs %>%
+  nest(.by=metric) %>% 
+  mutate(
+    # Apply ANOVA for each level of radii, for FD~Species
+    lm = map(.x = data,
+                .f = ~lm(value~FD,data = .x)),
+    # Get results of ANOVA
+    results = map(lm,summary),
+    R = map_dbl(lm, ~ summary(.)$adj.r.squared))
+
+capFig("Linear regression of traditional morphometrics to FD")
+morphCorrs %>%
+left_join(mod_morphCorrs %>% select(metric, R), by="metric") %>%
+mutate(metric = paste0(metric, "~R^{2}==", signif(R,3))) %>%
+ggplot(aes(FD,value)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  facet_wrap(~metric, scales = "free_y",
+             labeller = label_parsed) +
+  theme_bw() +
+  theme(strip.text = element_text(face="bold", size = 12))
+```
+
+There's a pretty strong relationship between surface area and volume with FD, with FD explaining about 61% and 44% of the variance in SA and V, respectively. There is no relationship between height and surface area to volume ratio with fractal dimension.
+
+
+```{r growthAnalysis}
+#selet the authorized tokens
+googledrive::drive_auth("p.kiel98@gmail.com")
+gs4_auth("p.kiel98@gmail.com")
+
+#load data from google drive
+bw <- googledrive::drive_ls(path = "~/GradSchool/ULink_OAxGenotype/",
+                            pattern = "buoyantWeight$") %>%
+  read_sheet(col_types = "Dcdddc") %>%
+  mutate(tag = as.character(tag)) %>%
+  drop_na(mass)
+
+#load tank assignment + genotype data
+assignment <- read.csv('~/Grad School/ULink 2022/tankAssignment.csv') %>%
+  filter(treatment != "") %>%
+  mutate(tag = as.character(tag),
+         tank = as.factor(tank))
+
+bw <- bw %>%
+  left_join(assignment, by="tag") %>%
+  arrange(tank, genotype,tag,date) %>%
+  filter(date > as.Date("2022-03-15")) %>%
+#calculate weight in air
+  mutate(
+    #calculate sw density (g/cm3) from YSI, p taken as std atm p
+    density = rho(S = salinity,
+                  T = temp)/1000,
+    #calculate weight in air using Jokiel et al. 1978 eqn
+    mass_a = mass/(1-density/2.93)) %>%
+  select(-c(mass,temp,salinity, density))
+
+#calculate total growth
+totalGrowth <- bw %>%
+  #set starting date
+  filter(date > as.Date("2022-04-15") & genotype != "Cheetos-B") %>%
+  mutate(tag = as.numeric(tag)) %>%
+    #add SA
+  left_join(read.csv("C:/Users/pkiel/Documents/Grad School/ULink 2022/3dScans/initial/saVol_KielMarch22.csv") %>%
+            select(tag, SA = `SA.cm2_corrected`,
+                   V = `V.mm3_corrected`, SA_V, 
+                   H = `H.cm_corrected`) %>%
+           mutate(tag = as.numeric(str_extract(tag, "[[:digit:]]+"))),
+          by="tag") %>%
+  #remove standards
+  drop_na(genotype,mass_a) %>%
+  group_by(tag,genotype,tank, treatment, SA) %>%
+  summarise(days = as.numeric(last(date)-first(date)),
+            newGrowth.mg = (last(mass_a) - first(mass_a))*1000,
+            initMass = first(mass_a),
+            .groups="drop") %>%
+  #mg cm^-2 day^-1
+  mutate(G = newGrowth.mg/SA/days)
+```
+
+```{r growthStats}
+#capFig("Avg Daily Growth by Treatment")
+oa_G <- totalGrowth %>%
+  ggplot(aes(treatment, G, fill=treatment)) +
+  geom_boxplot() +
+  labs(x = "Treatment",
+       y = expression(paste("Avg Daily Growth Rate (mg  ", cm^-2, " ", day^-1, ")"))) +
+  theme_classic()
+
+#capFig("Avg Daily Growth by Genotype")
+geno_G <-totalGrowth %>%
+  filter(tag!=90) %>%
+  ggplot(aes(genotype, G, fill=treatment)) +
+  geom_boxplot() +
+  labs(x = "Genotype") +
+  theme_classic()
+
+capFig("Avg Daily Growth by (A) Treatment and (B) Genotype")
+ggarrange(oa_G, geno_G + rremove("ylab") + rremove("y.text"),
+          labels = c("A", "B"),
+          hjust = c(-0.5,-1.5),
+          ncol = 2,
+          widths = c(2,3),
+          common.legend = T,
+          legend = "right")
+```
+
+Growth rates are lower than anticipated. This is a combination of actually depressed growth from what I was expecting and the high resolution of our 3D scanner where estimated SA is much higher than usually measured. To try and make comparable, I looked at some other published work on the 'ol AcDC and found some SA derived from stitched together images on imajeJ in a Muller et al paper. Their average SA was ~ 7$cm^2$, which is in comparison to our avg SA ~ `r round(mean(totalGrowth$SA))`. If we simply divide the two and scale the growth rates accordingly, we get an avg LCO2 growth rate of `r round(mean(totalGrowth$SA)/7*0.13,2)` mg/cm^-2/day. However, numerous papers from NOAA AOML Coral Program lab have used the same 3D scanner setup to derive growth rates that were higher than what I observed. I do not know the exact SA from these studies, but they were significantly shorter than the experiment I ran which may explain the depressed growth rates (Enochs *et al* 2018 for instance). Nevertheless, the patterns are interesting and what I will be focussing on.
+
+```{r gMorphCorrs}
+FD_G <- totalGrowth %>%
+  left_join(morphCorrs %>% select(tag, FD) %>% distinct(),
+            by=c("tag"))
+
+#absolute growth ~ SA
+SA_mg_corrs <- FD_G %>%
+  nest(.by=treatment) %>% 
+  mutate(
+    # Apply ANOVA for each level of radii, for FD~Species
+    lm = map(.x = data,
+                .f = ~lm(newGrowth.mg~SA,data = .x)),
+    # Get results of ANOVA
+    results = map(lm,summary),
+    R = map_dbl(lm, ~ summary(.)$adj.r.squared),
+    p = map_dbl(lm, ~summary(.)$coefficients[2,4]),
+    m = map_dbl(lm, ~summary(.)$coefficients[2,1]))
+
+#absolute growth ~ FD
+FD_mg_corrs <- FD_G %>%
+  nest(.by=treatment) %>% 
+  mutate(
+    # Apply ANOVA for each level of radii, for FD~Species
+    lm = map(.x = data,
+                .f = ~lm(newGrowth.mg~FD,data = .x)),
+    # Get results of ANOVA
+    results = map(lm,summary),
+    R = map_dbl(lm, ~ summary(.)$adj.r.squared),
+    p = map_dbl(lm, ~summary(.)$coefficients[2,4]),
+    m = map_dbl(lm, ~summary(.)$coefficients[2,1]))
+
+SA_mg_p <- FD_G %>%
+  left_join(SA_mg_corrs %>% select(treatment, R), by="treatment") %>%
+  mutate(treatment = paste0(treatment, "~R^{2}==", signif(R,3))) %>%
+  ggplot(aes(SA, newGrowth.mg)) +
+  geom_point(aes(color=genotype)) +
+  geom_smooth(method="lm", se=F) +
+  facet_wrap(~treatment,
+             labeller = label_parsed) +
+  labs(y = "Absolute Growth (mg)") +
+  theme_bw() +
+  theme(strip.text = element_text(face="bold", size = 12))
+
+FD_mg_p <- FD_G %>%
+  left_join(FD_mg_corrs %>% select(treatment, R), by="treatment") %>%
+  mutate(treatment = paste0(treatment, "~R^{2}==", signif(R,3))) %>%
+  ggplot(aes(FD, newGrowth.mg)) +
+  geom_point(aes(color=genotype)) +
+  geom_smooth(method="lm", se=F) +
+  facet_wrap(~treatment,
+             labeller = label_parsed) +
+  labs(x = "FD") +
+  theme_bw() +
+  theme(strip.text = element_text(face="bold", size = 12))
+
+capFig("Regression of absolute growth (mg) to (A) surface area and (B) fractal dimension, separated by treatment group")
+ggarrange(SA_mg_p, FD_mg_p + rremove("ylab") + rremove("y.text"),
+          labels = c("A", "B"),
+          hjust = c(-0.5, 0.3),
+          ncol = 2,
+          common.legend = T,
+          legend = "right")
+ 
+FD_G_corrs <- FD_G %>%
+  nest(.by=treatment) %>% 
+  mutate(
+    # Apply ANOVA for each level of radii, for FD~Species
+    lm = map(.x = data,
+                .f = ~lm(G~FD,data = .x)),
+    # Get results of ANOVA
+    results = map(lm,summary),
+    R = map_dbl(lm, ~ summary(.)$adj.r.squared),
+    p = map_dbl(lm, ~summary(.)$coefficients[2,4]),
+    m = map_dbl(lm, ~summary(.)$coefficients[2,1]))
+
+SA_G_corrs <- FD_G %>%
+  nest(.by=treatment) %>% 
+  mutate(
+    # Apply ANOVA for each level of radii, for FD~Species
+    lm = map(.x = data,
+                .f = ~lm(G~SA,data = .x)),
+    # Get results of ANOVA
+    results = map(lm,summary),
+    R = map_dbl(lm, ~ summary(.)$adj.r.squared),
+    p = map_dbl(lm, ~summary(.)$coefficients[2,4]),
+    m = map_dbl(lm, ~summary(.)$coefficients[2,1]))
+
+FD_G_p <- FD_G %>%
+  left_join(FD_G_corrs %>% select(treatment, R), by="treatment") %>%
+  mutate(treatment = paste0(treatment, "~R^{2}==", signif(R,3))) %>%
+  ggplot(aes(FD, G)) +
+  geom_point(aes(color=genotype)) +
+  #geom_text(aes(label=tag, color=genotype), show.legend = F) +
+  geom_smooth(method="lm", se=F) +
+  facet_wrap(~treatment,
+             labeller = label_parsed) +
+  theme_bw() +
+  theme(strip.text = element_text(face="bold", size = 12))
+
+SA_G_p <- FD_G %>%
+  left_join(SA_G_corrs %>% select(treatment, R), by="treatment") %>%
+  mutate(treatment = paste0(treatment, "~R^{2}==", signif(R,3))) %>%
+  ggplot(aes(SA, G)) +
+  geom_point(aes(color=genotype)) +
+  #geom_text(aes(label=tag, color=genotype), show.legend = F) +
+  geom_smooth(method="lm", se=F) +
+  facet_wrap(~treatment,
+             labeller = label_parsed) +
+  theme_bw() +
+  theme(strip.text = element_text(face="bold", size = 12))
+
+capFig("Regression of daily growth rate (mg/cm^2/day) to (A) surface area and (B) fractal dimension, separated by treatment group")
+ggarrange(SA_G_p, FD_G_p + rremove("ylab") + rremove("y.text"),
+          labels = c("A", "B"),
+          hjust = c(-0.5, 0.3),
+          ncol = 2,
+          common.legend = T,
+          legend = "right")
+```
+
+Absolute growth scales with both surface area and fractal dimension. Surface area and FD explain more variance in the HCO2 (69% v 60%) than the LCO2 (43% v 44%) groups. Overall, surface area explains more variance in absolute growth than FD, but it is roughly negligible.
+
+When standardizing absolute growth to surface area, an interesting pattern emerges. Here, the amount of variance in growth rates explained by FD is nearly twice that of surface area. Further, for the LCO2 groups, none of the variance in growth rates is explained by either of the morphometrics, which is in contrast to the HCO2 groups where surface area and FD explain 25% and 47% of the variance, respectively.
+
+We cannot separate SA and FD from each other completely. Since FD describes how surface area fills space at different scales, it makes sense that as FD increases, SA will increase as well. Not in a perfect 1:1 relationship, but a general trend. This data, therefore, demonstrates that resistance to OA (maintained growth rates) is driven more by fractal dimensions (measurement of surface complexity) than by total surface area. Further, since SA standardized growth rates still increased as surface area increased, it is likely that growth rates do not scale linearly with SA.
+
+# What does this all mean?
+
+Let's dive into that second plot more and the hypotheses that this data may support.
+```{r plotItAgain}
+FD_G_p
+```
+This data supports the hypothesis that surface complexity confers resistance to OA but does not confer increased growth rates under ambient conditions. This hypothesis aligns closesly with the hypothesis outlined in Chan *et al.* (2016). Briefly, surface complexity slows water flow around the colony, thickening the diffusive boundary layer (DBL) and increasing water residence time in the thin layer directly surrounding the coral. Therefore, the coral's metabolism has a greater influence on the properties of this seawater: during the day this water will have a higher pH than bulk seawater (photosynthesis) and at night this water will have a lower pH than bulk seawater (respiration). Coral metabolism and water residence time is well investigated at the ecosystem scale where these same properties are at play, but how these properties play out at the organismal scale remains largely unexplored. Together, these relative highs and lows create a variable pH environment that could stress harden a coral where it has adapted and/or acclimated and can, therefore, better withstand OA. Alternatively, this diel variability could work in concert with day to night calcification ratios to enhance daytime calcification to counteract the mean decrease in pH, effectively ameliorating OA (Enochs *et al.* 2018; Chan & Higgins 2017). 
+
+Chan *et al.* (2016) supported this hypothesis by measuring pH changes in the DBL under different morphologies at different flow rates. They saw that under low flow velocities and complex morphologies (they did not quantify complexity, just had 2 different species w/ obvious surface complexity differences), pH upregulation in the DBL was quite high and had the potential to ameliorate the effects of OA in the DBL (DBL pH under OA = DBL pH under ambient due to elevations). These data closely approximated their modeled pH increases based on photosynthesis and calcification rates. How these DBL pH increases manifest to growth rates/OA resistance remains to be seen. Comeau *et al* (2019) measured pH in DBL (microprobes), pH in calcifying fluids (boron systematics), and growth rates under different light and flow regimes. For the *Acropora* congeneric, they did not detect any elevations in DBL pH during the day, but did detect large decreases during the night. However, for *Plesiastrea veripora*, they detected a large increase in DBL pH which increased under OA treatments in low flow identical to the findings in Chan *et al.* (2016). These same corals did not, however, have elevated pH in the calcifying fluid or maintain growth rates under OA. It is important to note that Comeau *et al* (2019) did not have variable pH treatments and did not measure pH DBL under darkness.
+
+Unfortunately, I was unable to measure the DBL pH with microsensors, and I did not measure the metabolism of the corals. But, this is the first dataset I am aware of that has experimental evidence of surface complexity driving OA resistance. How the potential pH variability caused by the surface complexity affects calcifying fluid pH as determined by boron systematics remains to be seen. We should have that data soon. Comeau *et al.* (2022) used boron systematics to probe the calcifying fluid pH of corals collected from volcanic CO2 seeps in Papua New Guinea. These seeps had low, but highly variable pH. The corals from this environment maintained constant calcifying pH, relative to nearby controls, despite the low mean pH. The growth rates of these corals are not known.
+
+# Next steps
+
+I think there is an interesting story here of genotype-specific surface complexity correlating with OA resistance. First, I'd like to explore some more metrics of surface complexity from these 3D scans. I'm excited to finish up the boron chemistry work to see how that plays into this story. Finally, I'd like to import a characteristic 3D model of each genotype into a computational model to see if surface complexity measures due indeed create a thicker DBL. From this model, I can measure water residence times, expected pH increases, etc.
+
+# References
+
+1. Chan NCS, Wangpraseurt D, Kühl M, Connolly SR (2016) Flow and coral morphology control coral surface pH: Implications for the effects of ocean acidification. *Frontiers in Marine Science* 3:1-11.
+
+2. Chan WY, Eggins SM (2017) Calcification responses to diurnal variation in seawater carbonate chemistry by the coral Acropora formosa. *Coral Reefs* 36:763–772.
+
+3. Comeau S, Cornwall CE, Pupier CA, DeCarlo TM, Alessi C, Trehern R, McCulloch M (2019) Flow-driven micro-scale pH variability affects the physiology of corals and coralline algae under ocean acidification. *Scientific Reports* 9:1–12.
+
+4. Comeau S, Cornwall CE, Shlesinger T, Hoogenboom MO, Mana R, McCulloch MT, Rodolfo-Metalpa R (2022) pH variability at volcanic CO2 seeps regulates coral calcifying fluid chemistry. *Global Change Biology* 28(8):2751–2763. 
+
+5. Enochs IC, Manzello DP, Jones P, Aguilar C, Cohen K, Valentino L, Schopmeyer S, Kolodzeij G, Jankulak M, Lirman D (2018) The influence of diel carbonate chemistry fluctuations on the calcification rate of Acropora cervicornis under present day and future acidification conditions. *Journal of Experimental Marine Biology and Ecology* 506:135–143.
+
+6. Reichert J, Backes AR, Schubert P, Wilke T (2017) The power of 3D fractal dimensions for comparative shape and structural complexity analyses of irregularly shaped organisms. *Methods in Ecology and Evolution* 8(12):1650–1658. 
+
+7. Torres-Pulliza D, Dornelas MA, Pizarro O, Bewley M, Blowes SA, Boutros N, Brambilla V, Chase TJ, Frank G, Friedman A, *et al.* (2020) A geometric basis for surface habitat complexity and biodiversity. *Nature Ecology & Evolution* 4:1495-1501.
+
+
+
+
+
 
 </div>
