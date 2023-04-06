@@ -67,8 +67,8 @@ margin: 0 auto;
 <!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
 
 I begin with theory and testing of my methods against published data. If
-you’d like to jump ahead to our data,
-<a hreaf="#analyzing-our-scans">please click here.</a>
+you’d like to jump ahead to our data and my current thoughts,
+<a href="#analyzing-our-scans">please click here.</a>
 
 # Overview
 
@@ -213,16 +213,16 @@ diff
 <tbody>
 <tr>
 <td style="text-align:left;">
-Pda_1\_02
+Pda_1\_05
 </td>
 <td style="text-align:left;">
 Pda
 </td>
 <td style="text-align:right;">
-1.95601
+1.94734
 </td>
 <td style="text-align:right;">
-1.95601
+1.94734
 </td>
 <td style="text-align:right;">
 0
@@ -230,33 +230,16 @@ Pda
 </tr>
 <tr>
 <td style="text-align:left;">
-Plu_1\_05
+Plu_2\_02
 </td>
 <td style="text-align:left;">
 Plu
 </td>
 <td style="text-align:right;">
-1.92641
+1.93255
 </td>
 <td style="text-align:right;">
-1.92641
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_1\_06
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:right;">
-1.95508
-</td>
-<td style="text-align:right;">
-1.95508
+1.93255
 </td>
 <td style="text-align:right;">
 0
@@ -264,16 +247,16 @@ Pve
 </tr>
 <tr>
 <td style="text-align:left;">
-Pda_2\_07
+Pda_3\_01
 </td>
 <td style="text-align:left;">
 Pda
 </td>
 <td style="text-align:right;">
-1.95238
+1.94558
 </td>
 <td style="text-align:right;">
-1.95238
+1.94558
 </td>
 <td style="text-align:right;">
 0
@@ -281,16 +264,33 @@ Pda
 </tr>
 <tr>
 <td style="text-align:left;">
-Plu_1\_02
+Ahu_1\_03
 </td>
 <td style="text-align:left;">
-Plu
+Ahu
 </td>
 <td style="text-align:right;">
-1.91507
+1.95678
 </td>
 <td style="text-align:right;">
-1.91507
+1.95678
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pcy_1\_02
+</td>
+<td style="text-align:left;">
+Pcy
+</td>
+<td style="text-align:right;">
+1.93516
+</td>
+<td style="text-align:right;">
+1.93516
 </td>
 <td style="text-align:right;">
 0
@@ -1261,7 +1261,7 @@ published work on the ’ol AcDC and found some SA derived from stitched
 together images on imajeJ in a Muller *et al* paper. Their average SA
 was about 7$cm^2$, which is in comparison to our avg SA 39 $cm^2$. If we
 simply divide the two and scale the growth rates accordingly, we get an
-avg LCO2 growth rate of 0.73 mg $cm^-2$ $day^-1$. However, numerous
+avg LCO2 growth rate of 0.73 mg $cm^{-2}$ $day^{-1}$. However, numerous
 papers from the NOAA AOML Coral Program lab have used the same 3D
 scanner setup to derive growth rates that were higher than what I
 observed. I do not know the exact SA from these studies, but they were
@@ -1311,23 +1311,29 @@ may support.
 
 This data supports the hypothesis that surface complexity confers
 resistance to OA but does not confer increased growth rates under
-ambient conditions. This hypothesis aligns closesly with the hypothesis
-outlined in Chan *et al* (2016). Briefly, surface complexity slows water
-flow around the colony, thickening the diffusive boundary layer (DBL)
-and increasing water residence time in the thin layer directly
-surrounding the coral. Therefore, the coral’s metabolism has a greater
-influence on the properties of this seawater: during the day this water
-will have a higher pH than bulk seawater (photosynthesis) and at night
-this water will have a lower pH than bulk seawater (respiration). Coral
-metabolism and water residence time is well investigated at the
-ecosystem scale where these same properties are at play, but how these
-properties play out at the organismal scale remains largely unexplored.
-Together, these relative highs and lows create a variable pH environment
-that could stress harden a coral where it has adapted and/or acclimated
-and can, therefore, better withstand OA. Alternatively, this diel
-variability could work in concert with day to night calcification ratios
-to enhance daytime calcification to counteract the mean decrease in pH,
-effectively ameliorating OA (Enochs *et al* 2018; Chan & Eggins 2017).
+ambient conditions. One immediate question I have is does the FD mean
+anything for the coral microenvironment? The range of FD is 2.175-2.25,
+which although derived from log-log slope and limited between 0-3, seems
+quite narrow of a range to be divergently meaningful. See notes on next
+steps where I will try to test this using computational models.
+
+This hypothesis aligns closely with the hypothesis outlined in Chan *et
+al* (2016). Briefly, surface complexity slows water flow around the
+colony, thickening the diffusive boundary layer (DBL) and increasing
+water residence time in the thin layer directly surrounding the coral.
+Therefore, the coral’s metabolism has a greater influence on the
+properties of this seawater: during the day this water will have a
+higher pH than bulk seawater (photosynthesis) and at night this water
+will have a lower pH than bulk seawater (respiration). Coral metabolism
+and water residence time is well investigated at the ecosystem scale
+where these same properties are at play, but how these properties play
+out at the organismal scale remains largely unexplored. Together, these
+relative highs and lows create a variable pH environment that could
+stress harden a coral where it has adapted and/or acclimated and can,
+therefore, better withstand OA. Alternatively, this diel variability
+could work in concert with day to night calcification ratios to enhance
+daytime calcification to counteract the mean decrease in pH, effectively
+ameliorating OA (Enochs *et al* 2018; Chan & Eggins 2017).
 
 Chan *et al* (2016) supported this hypothesis by measuring pH changes in
 the DBL under different morphologies at different flow rates. They saw
@@ -1348,7 +1354,8 @@ DBL pH which increased under OA treatments in low flow identical to the
 findings in Chan *et al* (2016). These same corals did not, however,
 have elevated pH in the calcifying fluid or maintain growth rates under
 OA. It is important to note that Comeau *et al* (2019) did not have
-variable pH treatments and did not measure pH DBL under darkness.
+variable pH treatments and did not systematically measure pH DBL under
+darkness.
 
 Unfortunately, I was unable to measure the DBL pH with microsensors, and
 I did not measure the metabolism of the corals. But, this is the first
