@@ -213,33 +213,16 @@ diff
 <tbody>
 <tr>
 <td style="text-align:left;">
-Pda_1\_05
+Pda_2\_04
 </td>
 <td style="text-align:left;">
 Pda
 </td>
 <td style="text-align:right;">
-1.94734
+1.93659
 </td>
 <td style="text-align:right;">
-1.94734
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_2\_02
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:right;">
-1.93255
-</td>
-<td style="text-align:right;">
-1.93255
+1.93659
 </td>
 <td style="text-align:right;">
 0
@@ -247,16 +230,16 @@ Plu
 </tr>
 <tr>
 <td style="text-align:left;">
-Pda_3\_01
+Pve_2\_01
 </td>
 <td style="text-align:left;">
-Pda
+Pve
 </td>
 <td style="text-align:right;">
-1.94558
+1.95938
 </td>
 <td style="text-align:right;">
-1.94558
+1.95938
 </td>
 <td style="text-align:right;">
 0
@@ -264,16 +247,16 @@ Pda
 </tr>
 <tr>
 <td style="text-align:left;">
-Ahu_1\_03
+Ami_1\_01
 </td>
 <td style="text-align:left;">
-Ahu
+Ami
 </td>
 <td style="text-align:right;">
-1.95678
+1.95252
 </td>
 <td style="text-align:right;">
-1.95678
+1.95252
 </td>
 <td style="text-align:right;">
 0
@@ -281,16 +264,33 @@ Ahu
 </tr>
 <tr>
 <td style="text-align:left;">
-Pcy_1\_02
+Pcy_1\_05
 </td>
 <td style="text-align:left;">
 Pcy
 </td>
 <td style="text-align:right;">
-1.93516
+1.93652
 </td>
 <td style="text-align:right;">
-1.93516
+1.93652
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ahu_1\_07
+</td>
+<td style="text-align:left;">
+Ahu
+</td>
+<td style="text-align:right;">
+1.95487
+</td>
+<td style="text-align:right;">
+1.95487
 </td>
 <td style="text-align:right;">
 0
@@ -1311,7 +1311,8 @@ may support.
 
 This data supports the hypothesis that surface complexity confers
 resistance to OA but does not confer increased growth rates under
-ambient conditions. One immediate question I have is does the FD mean
+ambient conditions. Its far from a perfect relationship, but I think
+*something* is here. One immediate question I have is does the FD mean
 anything for the coral microenvironment? The range of FD is 2.175-2.25,
 which although derived from log-log slope and limited between 0-3, seems
 quite narrow of a range to be divergently meaningful. See notes on next
