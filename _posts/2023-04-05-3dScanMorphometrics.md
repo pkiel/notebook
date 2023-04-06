@@ -93,7 +93,7 @@ Many processes (ecological, growth, resistance to stressors, biophysical
 pathways with seawater) may scale (linearly, non-linearly/unimodal) with
 increased morphological complexity. Therefore, using FD to
 quantitatively describe morphological complexity can be informative.
-However, its important to note that FD is only a singular metric of
+However, its important to note that FD is only a single metric of
 morphological complexity and should be placed in appropriate context.
 Since FD only describes space filling at different scales, dissimilar
 shapes may share a FD despite rather obvious differences in branching or
@@ -213,33 +213,33 @@ diff
 <tbody>
 <tr>
 <td style="text-align:left;">
-Pda_2\_04
+Plu_2\_01
+</td>
+<td style="text-align:left;">
+Plu
+</td>
+<td style="text-align:right;">
+1.92456
+</td>
+<td style="text-align:right;">
+1.92456
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pda_3\_02
 </td>
 <td style="text-align:left;">
 Pda
 </td>
 <td style="text-align:right;">
-1.93659
+1.93626
 </td>
 <td style="text-align:right;">
-1.93659
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_2\_01
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:right;">
-1.95938
-</td>
-<td style="text-align:right;">
-1.95938
+1.93626
 </td>
 <td style="text-align:right;">
 0
@@ -247,16 +247,16 @@ Pve
 </tr>
 <tr>
 <td style="text-align:left;">
-Ami_1\_01
+Pda_3\_03
 </td>
 <td style="text-align:left;">
-Ami
+Pda
 </td>
 <td style="text-align:right;">
-1.95252
+1.95097
 </td>
 <td style="text-align:right;">
-1.95252
+1.95097
 </td>
 <td style="text-align:right;">
 0
@@ -264,16 +264,16 @@ Ami
 </tr>
 <tr>
 <td style="text-align:left;">
-Pcy_1\_05
+Pda_2\_03
 </td>
 <td style="text-align:left;">
-Pcy
+Pda
 </td>
 <td style="text-align:right;">
-1.93652
+1.96075
 </td>
 <td style="text-align:right;">
-1.93652
+1.96075
 </td>
 <td style="text-align:right;">
 0
@@ -281,16 +281,16 @@ Pcy
 </tr>
 <tr>
 <td style="text-align:left;">
-Ahu_1\_07
+Pda_1\_05
 </td>
 <td style="text-align:left;">
-Ahu
+Pda
 </td>
 <td style="text-align:right;">
-1.95487
+1.94734
 </td>
 <td style="text-align:right;">
-1.95487
+1.94734
 </td>
 <td style="text-align:right;">
 0
@@ -437,7 +437,7 @@ discriminatory power. Using these radii, we can differentiate between
 all species except: Ahu-Ami, Ahu-Pve, Ami-Pve, Ahu-Pda, Pda-Pve. When
 looking at the average pairwise significance from radii 7 and 8, 8
 performs better than 7. 19 and 20 follow close behind, with these radii
-not being able to discriminate between Ahu and Pda, but there average
+not being able to discriminate between Ahu and Pda, but their average
 pairwise significance is still better than a radii of 8. So we cannot
 differentiate the Acroporas and the *Pocillopora verrucosa* with radii
 of 7 and 8, and we add *Pocillopora damicornis* to that list when we
@@ -1243,8 +1243,8 @@ area to volume ratio with fractal dimension.
 
 ### Growth Analysis
 
-An indepth analysis of treatments and growth
-<a hrf="https://patrickmkiel.com/notebook/research/ulink2022GrowthAnalysis?pass=ulink">can
+An in depth analysis of treatments and growth
+<a href="https://patrickmkiel.com/notebook/research/ulink2022GrowthAnalysis?pass=ulink">can
 be viewed here.</a>
 
 <h5>
@@ -1264,10 +1264,12 @@ simply divide the two and scale the growth rates accordingly, we get an
 avg LCO2 growth rate of 0.73 mg $cm^{-2}$ $day^{-1}$. However, numerous
 papers from the NOAA AOML Coral Program lab have used the same 3D
 scanner setup to derive growth rates that were higher than what I
-observed. I do not know the exact SA from these studies, but they were
-significantly shorter than the experiment I ran which may explain the
-depressed growth rates (Enochs et al. 2018 for instance). Nevertheless,
-the patterns are interesting and what I will be focussing on.
+observed. I do not know the exact SA from these studies to scale
+accordingly, but these experiments were significantly shorter than the
+experiment I ran which may explain their elevated growth rates since a
+long time in the lab generally decreases growth rates compared to corals
+in the field (Enochs et al. 2018 for instance). Nevertheless, the
+patterns are interesting and what I will be focusing on.
 
 <h5>
 Figure 10. Regression of absolute growth (mg) to (A) surface area and
@@ -1291,17 +1293,22 @@ pattern emerges. Here, the amount of variance in growth rates explained
 by FD is nearly twice that of surface area. Further, for the LCO2
 groups, none of the variance in growth rates is explained by either of
 the morphometrics, which is in contrast to the HCO2 groups where surface
-area and FD explain 25% and 47% of the variance, respectively.
+area and FD explain 25% and 47% of the variance, respectively. This
+brings the hypothesis that surface complexity “only matters” for OA
+resistance and not for increased growth rates under ambient conditions.
+I’ll explore more on this below.
 
 We cannot separate SA and FD from each other completely. Since FD
 describes how surface area fills space at different scales, it makes
-sense that as FD increases, SA will increase as well. Not in a perfect
-1:1 relationship, but a general trend. This data, therefore,
-demonstrates that resistance to OA (maintained growth rates) is driven
-more by fractal dimensions (measurement of surface complexity) than by
-total surface area. Further, since SA standardized growth rates still
-increased as surface area increased, it is likely that growth rates do
-not scale linearly with SA.
+sense that as FD increases, SA could increase as well. Not necessarily
+(see Fig 1 for instance, they all have the same SA if the lines were
+extended to a plane) and not in a linear relationship, since they are
+describing two different aspects of the geometry. Nevertheless, SA and
+FD are intertwined. This data, therefore, demonstrates that resistance
+to OA (maintained growth rates) is driven more by fractal dimensions
+(measurement of surface complexity) than by total surface area. Further,
+since SA standardized growth rates still increased as surface area
+increased, it is likely that growth rates do not scale linearly with SA.
 
 # What does this all mean?
 
@@ -1313,7 +1320,7 @@ This data supports the hypothesis that surface complexity confers
 resistance to OA but does not confer increased growth rates under
 ambient conditions. Its far from a perfect relationship, but I think
 *something* is here. One immediate question I have is does the FD mean
-anything for the coral microenvironment? The range of FD is 2.175-2.25,
+anything for the coral micro environment? The range of FD is 2.175-2.25,
 which although derived from log-log slope and limited between 0-3, seems
 quite narrow of a range to be divergently meaningful. See notes on next
 steps where I will try to test this using computational models.
@@ -1328,7 +1335,7 @@ higher pH than bulk seawater (photosynthesis) and at night this water
 will have a lower pH than bulk seawater (respiration). Coral metabolism
 and water residence time is well investigated at the ecosystem scale
 where these same properties are at play, but how these properties play
-out at the organismal scale remains largely unexplored. Together, these
+out at the organism scale remains largely unexplored. Together, these
 relative highs and lows create a variable pH environment that could
 stress harden a coral where it has adapted and/or acclimated and can,
 therefore, better withstand OA. Alternatively, this diel variability
@@ -1346,7 +1353,7 @@ under OA = DBL pH under ambient due to elevations). These data closely
 approximated their modeled pH increases based on photosynthesis and
 calcification rates. How these DBL pH increases manifest to growth
 rates/OA resistance remains to be seen. Comeau *et al* (2019) measured
-pH in DBL (microprobes), pH in calcifying fluids (boron systematics),
+pH in DBL (micro probes), pH in calcifying fluids (boron systematics),
 and growth rates under different light and flow regimes. For the
 *Acropora* congeneric, they did not detect any elevations in DBL pH
 during the day, but did detect large decreases during the night.
@@ -1358,9 +1365,9 @@ OA. It is important to note that Comeau *et al* (2019) did not have
 variable pH treatments and did not systematically measure pH DBL under
 darkness.
 
-Unfortunately, I was unable to measure the DBL pH with microsensors, and
-I did not measure the metabolism of the corals. But, this is the first
-dataset I am aware of that has experimental evidence of surface
+Unfortunately, I was unable to measure the DBL pH with micro sensors,
+and I did not measure the metabolism of the corals. But, this is the
+first dataset I am aware of that has experimental evidence of surface
 complexity driving OA resistance. How the potential pH variability
 caused by the surface complexity affects calcifying fluid pH as
 determined by boron systematics remains to be seen. We should have that
