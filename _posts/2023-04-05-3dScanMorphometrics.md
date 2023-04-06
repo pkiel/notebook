@@ -66,10 +66,14 @@ margin: 0 auto;
 
 <!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
 
+I begin with theory and testing of my methods against published data. If
+you’d like to jump ahead to our data,
+<a hreaf="#analyzing-our-scans">please click here.</a>
+
 # Overview
 
-Fractal dimensions (FD) describes space filling of shapes at various
-scales and describes surface complexity. While coral colonies and coral
+Fractal dimensions (FD) describe space filling of shapes at various
+scales and describe surface complexity. While coral colonies and coral
 reefs are not strictly fractals, colonial organisms and reef assemblages
 share some key characteristics to fractals, including morphological
 irregularities, self-similarity and high degrees of space filling. FD
@@ -97,9 +101,9 @@ size. Nevertheless, FD can play an important role in describing coral
 morphology, especially when comparing ecosystems/coral colonies of
 approximately the same scale.
 
-Reichert *et al.* (2017) developed an easy to use tool to calculate FD
-of a 3D coral colony using the Bouligand-Minkowski method. First, I am
-reanalyzing the 3D scanned files from Reichert *et al.* (2017) to ensure
+Reichert *et al* (2017) developed an easy to use tool to calculate FD of
+a 3D coral colony using the Bouligand-Minkowski method. First, I am
+reanalyzing the 3D scanned files from Reichert *et al* (2017) to ensure
 I am using their code correctly. I am using their obj scan files and the
 analysis toolbox they released as part of the supplementary material.
 The toolbox takes in an obj scan file and produces a txt file with 3
@@ -107,13 +111,13 @@ columns: dilation radius, log(dilation radius), and log(influence
 volume). Dilation radius is produced for 1 \<= R \<= 20.
 
 <h5>
-Figure 2. Example photographs and 3D scans in Reichert et al. 2017
+Figure 2. Example photographs and 3D scans in Reichert et al 2017
 </h5>
 
 ![Examles of corals in the
 analysis](https://besjournals.onlinelibrary.wiley.com/cms/asset/98018c3c-a06e-4a41-ad6a-3e5cd3b1473e/mee312829-fig-0002-m.png)
 
-Reichert *et al.* (2017) assessed the influence of dilation radii on the
+Reichert *et al* (2017) assessed the influence of dilation radii on the
 ability to discern inter-and-intraspecific differences among 3d scans
 (i.e. does a fractal D tell us if a coral fragment is identical to its
 clonemate/conspecific). They tested all integers 3 $\le$ R $\le$ 20, and
@@ -124,23 +128,20 @@ and report all fractal dimensions based on a dilation radius of 8.
 Given that the toolbox produces dilation radius from 1 $\le$ R $\le$ 20,
 you should be able to subset this data frame to just the integers 3
 $\le$ R $\le$ 20 or all real numbers 3 $\le$ R $\le$ 20 to calculate and
-derive the same values reported in Reichert *et al.* (2017). So I’m
-going to do just that.
+derive the same values reported in Reichert *et al* (2017). So I’m going
+to do just that.
 
 # Formulas
 
-Reichert *et al.* (2017) use the Bouligand–Minkowski method to estimate
-a colony’s fractal dimension as, “it is one of the most accurate methods
+Reichert *et al* (2017) use the Bouligand–Minkowski method to estimate a
+colony’s fractal dimension as, “it is one of the most accurate methods
 for computing fractal dimensions and it is highly sensitive to detecting
 small changes in models (Tricot, 1995). Due to its use of Euclidean
 distances, the approach is invariant to rotation. Thus, prior
 normalization steps are not necessary (Tricot, 1995).”
 
-They define D as,
-
-$$
-D = 3 - \lim_{R \to 0} \frac{log(V(R))}{log(R)}  
-$$ where R is the dilation radius and V(R) is the influence volume.
+They define D as, $D = 3 - \lim_{R \to 0} \frac{log(V(R))}{log(R)}$
+where R is the dilation radius and V(R) is the influence volume.
 
 Here, you can visualize the measuring principles of the
 Bouligand-Minkowski method with increasing dilation radii from
@@ -149,8 +150,12 @@ progressively fill the volume enclosed by the mesh, resulting in a
 larger influence volume. The limit integrates across these spatial
 scales (radii a-c) to synthesize a singular characteristic of the mesh’s
 complexity.
+<h5>
+Figure 3. Theoretical 3D Application of the Bouligand-Minkowski method
+with spheres
+</h5>
 
-\` ![Bouligand-Minkowski
+![Bouligand-Minkowski
 Concept](https://besjournals.onlinelibrary.wiley.com/cms/asset/6797afd6-8813-48eb-9457-874fed88814e/mee312829-fig-0001-m.png)
 
 As this is a power law, you can estimate the limit by taking the slope
@@ -177,13 +182,14 @@ evaluate its discriminatory power.The code is as follows,
 
 # Example Data
 
-Using the 3D scans from Reichert *et al.* (2017), I independently
+Using the 3D scans from Reichert *et al* (2017), I independently
 calculated the Fractal Dimension using their toolbox. Below is a table
 of the data where I exclusively looked at time point 0 data.
 
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 Table 1: Comparison of Fractal Dimensions. I can replicate their FD.
+Only chose a random subset since it’s a long table.
 </caption>
 <thead>
 <tr>
@@ -193,1321 +199,18 @@ ID
 <th style="text-align:left;">
 Species
 </th>
-<th style="text-align:left;">
-Genus
-</th>
-<th style="text-align:left;">
-Colony
-</th>
 <th style="text-align:right;">
 ReichD
 </th>
 <th style="text-align:right;">
 D8
 </th>
+<th style="text-align:right;">
+diff
+</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Ahu_1\_01
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 1
-</td>
-<td style="text-align:right;">
-1.947933
-</td>
-<td style="text-align:right;">
-1.94793
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_1\_02
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 1
-</td>
-<td style="text-align:right;">
-1.958113
-</td>
-<td style="text-align:right;">
-1.95811
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_1\_03
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 1
-</td>
-<td style="text-align:right;">
-1.956783
-</td>
-<td style="text-align:right;">
-1.95678
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_1\_04
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 1
-</td>
-<td style="text-align:right;">
-1.960783
-</td>
-<td style="text-align:right;">
-1.96078
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_1\_06
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 1
-</td>
-<td style="text-align:right;">
-1.950659
-</td>
-<td style="text-align:right;">
-1.95066
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_1\_07
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 1
-</td>
-<td style="text-align:right;">
-1.954873
-</td>
-<td style="text-align:right;">
-1.95487
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_1\_08
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 1
-</td>
-<td style="text-align:right;">
-1.953186
-</td>
-<td style="text-align:right;">
-1.95319
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_2\_01
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 2
-</td>
-<td style="text-align:right;">
-1.956169
-</td>
-<td style="text-align:right;">
-1.95617
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_2\_02
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 2
-</td>
-<td style="text-align:right;">
-1.962931
-</td>
-<td style="text-align:right;">
-1.96293
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_2\_03
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 2
-</td>
-<td style="text-align:right;">
-1.950780
-</td>
-<td style="text-align:right;">
-1.95078
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_2\_04
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 2
-</td>
-<td style="text-align:right;">
-1.948467
-</td>
-<td style="text-align:right;">
-1.94847
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_2\_05
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 2
-</td>
-<td style="text-align:right;">
-1.957679
-</td>
-<td style="text-align:right;">
-1.95768
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_2\_06
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 2
-</td>
-<td style="text-align:right;">
-1.968450
-</td>
-<td style="text-align:right;">
-1.96845
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_2\_07
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 2
-</td>
-<td style="text-align:right;">
-1.942573
-</td>
-<td style="text-align:right;">
-1.94257
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_2\_08
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 2
-</td>
-<td style="text-align:right;">
-1.944379
-</td>
-<td style="text-align:right;">
-1.94438
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_3\_01
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 3
-</td>
-<td style="text-align:right;">
-1.975106
-</td>
-<td style="text-align:right;">
-1.97511
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_3\_02
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 3
-</td>
-<td style="text-align:right;">
-1.972426
-</td>
-<td style="text-align:right;">
-1.97243
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_3\_03
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 3
-</td>
-<td style="text-align:right;">
-1.972287
-</td>
-<td style="text-align:right;">
-1.97229
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_3\_04
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 3
-</td>
-<td style="text-align:right;">
-1.966668
-</td>
-<td style="text-align:right;">
-1.96667
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_3\_05
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 3
-</td>
-<td style="text-align:right;">
-1.959671
-</td>
-<td style="text-align:right;">
-1.95967
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_3\_06
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 3
-</td>
-<td style="text-align:right;">
-1.978112
-</td>
-<td style="text-align:right;">
-1.97811
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ahu_3\_07
-</td>
-<td style="text-align:left;">
-Ahu
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ahu 3
-</td>
-<td style="text-align:right;">
-1.952993
-</td>
-<td style="text-align:right;">
-1.95299
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_1\_01
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 1
-</td>
-<td style="text-align:right;">
-1.952524
-</td>
-<td style="text-align:right;">
-1.95252
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_1\_02
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 1
-</td>
-<td style="text-align:right;">
-1.965593
-</td>
-<td style="text-align:right;">
-1.96559
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_1\_03
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 1
-</td>
-<td style="text-align:right;">
-1.953116
-</td>
-<td style="text-align:right;">
-1.95312
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_1\_05
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 1
-</td>
-<td style="text-align:right;">
-1.961815
-</td>
-<td style="text-align:right;">
-1.96182
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_1\_06
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 1
-</td>
-<td style="text-align:right;">
-1.964092
-</td>
-<td style="text-align:right;">
-1.96409
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_1\_07
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 1
-</td>
-<td style="text-align:right;">
-1.948878
-</td>
-<td style="text-align:right;">
-1.94888
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_1\_08
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 1
-</td>
-<td style="text-align:right;">
-1.948296
-</td>
-<td style="text-align:right;">
-1.94830
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_1\_09
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 1
-</td>
-<td style="text-align:right;">
-1.959278
-</td>
-<td style="text-align:right;">
-1.95928
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_2\_01
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 2
-</td>
-<td style="text-align:right;">
-1.977577
-</td>
-<td style="text-align:right;">
-1.97758
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_2\_02
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 2
-</td>
-<td style="text-align:right;">
-1.977062
-</td>
-<td style="text-align:right;">
-1.97706
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_2\_03
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 2
-</td>
-<td style="text-align:right;">
-1.977408
-</td>
-<td style="text-align:right;">
-1.97741
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_2\_04
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 2
-</td>
-<td style="text-align:right;">
-1.969991
-</td>
-<td style="text-align:right;">
-1.96999
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_2\_05
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 2
-</td>
-<td style="text-align:right;">
-1.968271
-</td>
-<td style="text-align:right;">
-1.96827
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_2\_06
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 2
-</td>
-<td style="text-align:right;">
-1.975237
-</td>
-<td style="text-align:right;">
-1.97524
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_3\_01
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 3
-</td>
-<td style="text-align:right;">
-1.955278
-</td>
-<td style="text-align:right;">
-1.95528
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_3\_02
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 3
-</td>
-<td style="text-align:right;">
-1.955035
-</td>
-<td style="text-align:right;">
-1.95504
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_3\_03
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 3
-</td>
-<td style="text-align:right;">
-1.958062
-</td>
-<td style="text-align:right;">
-1.95806
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_3\_04
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 3
-</td>
-<td style="text-align:right;">
-1.935490
-</td>
-<td style="text-align:right;">
-1.93549
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_3\_05
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 3
-</td>
-<td style="text-align:right;">
-1.944109
-</td>
-<td style="text-align:right;">
-1.94411
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_3\_06
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 3
-</td>
-<td style="text-align:right;">
-1.945086
-</td>
-<td style="text-align:right;">
-1.94509
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_3\_07
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 3
-</td>
-<td style="text-align:right;">
-1.936752
-</td>
-<td style="text-align:right;">
-1.93675
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ami_3\_08
-</td>
-<td style="text-align:left;">
-Ami
-</td>
-<td style="text-align:left;">
-Acropora
-</td>
-<td style="text-align:left;">
-Ami 3
-</td>
-<td style="text-align:right;">
-1.946074
-</td>
-<td style="text-align:right;">
-1.94607
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_1\_01
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 1
-</td>
-<td style="text-align:right;">
-1.944737
-</td>
-<td style="text-align:right;">
-1.94474
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_1\_02
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 1
-</td>
-<td style="text-align:right;">
-1.935159
-</td>
-<td style="text-align:right;">
-1.93516
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_1\_03
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 1
-</td>
-<td style="text-align:right;">
-1.936948
-</td>
-<td style="text-align:right;">
-1.93695
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_1\_04
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 1
-</td>
-<td style="text-align:right;">
-1.935638
-</td>
-<td style="text-align:right;">
-1.93564
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_1\_05
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 1
-</td>
-<td style="text-align:right;">
-1.936519
-</td>
-<td style="text-align:right;">
-1.93652
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_1\_06
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 1
-</td>
-<td style="text-align:right;">
-1.934990
-</td>
-<td style="text-align:right;">
-1.93499
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_2\_01
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 2
-</td>
-<td style="text-align:right;">
-1.937472
-</td>
-<td style="text-align:right;">
-1.93747
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_2\_02
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 2
-</td>
-<td style="text-align:right;">
-1.926380
-</td>
-<td style="text-align:right;">
-1.92638
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_2\_03
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 2
-</td>
-<td style="text-align:right;">
-1.924577
-</td>
-<td style="text-align:right;">
-1.92458
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_2\_04
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 2
-</td>
-<td style="text-align:right;">
-1.930265
-</td>
-<td style="text-align:right;">
-1.93027
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_2\_05
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 2
-</td>
-<td style="text-align:right;">
-1.945649
-</td>
-<td style="text-align:right;">
-1.94565
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_2\_06
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 2
-</td>
-<td style="text-align:right;">
-1.932566
-</td>
-<td style="text-align:right;">
-1.93257
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_2\_07
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 2
-</td>
-<td style="text-align:right;">
-1.919607
-</td>
-<td style="text-align:right;">
-1.91961
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_3\_01
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 3
-</td>
-<td style="text-align:right;">
-1.930831
-</td>
-<td style="text-align:right;">
-1.93083
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_3\_02
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 3
-</td>
-<td style="text-align:right;">
-1.949956
-</td>
-<td style="text-align:right;">
-1.94996
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_3\_03
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 3
-</td>
-<td style="text-align:right;">
-1.925206
-</td>
-<td style="text-align:right;">
-1.92521
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_3\_04
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 3
-</td>
-<td style="text-align:right;">
-1.936933
-</td>
-<td style="text-align:right;">
-1.93693
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_3\_05
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 3
-</td>
-<td style="text-align:right;">
-1.938964
-</td>
-<td style="text-align:right;">
-1.93896
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_3\_06
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 3
-</td>
-<td style="text-align:right;">
-1.937276
-</td>
-<td style="text-align:right;">
-1.93728
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pcy_3\_07
-</td>
-<td style="text-align:left;">
-Pcy
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Pcy 3
-</td>
-<td style="text-align:right;">
-1.943986
-</td>
-<td style="text-align:right;">
-1.94399
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_1\_01
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 1
-</td>
-<td style="text-align:right;">
-1.950075
-</td>
-<td style="text-align:right;">
-1.95007
-</td>
-</tr>
 <tr>
 <td style="text-align:left;">
 Pda_1\_02
@@ -1515,377 +218,14 @@ Pda_1\_02
 <td style="text-align:left;">
 Pda
 </td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 1
-</td>
 <td style="text-align:right;">
-1.956012
+1.95601
 </td>
 <td style="text-align:right;">
 1.95601
 </td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_1\_03
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 1
-</td>
 <td style="text-align:right;">
-1.946938
-</td>
-<td style="text-align:right;">
-1.94694
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_1\_04
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 1
-</td>
-<td style="text-align:right;">
-1.943154
-</td>
-<td style="text-align:right;">
-1.94315
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_1\_05
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 1
-</td>
-<td style="text-align:right;">
-1.947336
-</td>
-<td style="text-align:right;">
-1.94734
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_1\_06
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 1
-</td>
-<td style="text-align:right;">
-1.952487
-</td>
-<td style="text-align:right;">
-1.95249
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_2\_01
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 2
-</td>
-<td style="text-align:right;">
-1.937791
-</td>
-<td style="text-align:right;">
-1.93779
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_2\_03
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 2
-</td>
-<td style="text-align:right;">
-1.960746
-</td>
-<td style="text-align:right;">
-1.96075
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_2\_04
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 2
-</td>
-<td style="text-align:right;">
-1.936594
-</td>
-<td style="text-align:right;">
-1.93659
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_2\_05
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 2
-</td>
-<td style="text-align:right;">
-1.950042
-</td>
-<td style="text-align:right;">
-1.95004
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_2\_06
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 2
-</td>
-<td style="text-align:right;">
-1.952868
-</td>
-<td style="text-align:right;">
-1.95287
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_2\_07
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 2
-</td>
-<td style="text-align:right;">
-1.952384
-</td>
-<td style="text-align:right;">
-1.95238
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_3\_01
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 3
-</td>
-<td style="text-align:right;">
-1.945583
-</td>
-<td style="text-align:right;">
-1.94558
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_3\_02
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 3
-</td>
-<td style="text-align:right;">
-1.936259
-</td>
-<td style="text-align:right;">
-1.93626
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_3\_03
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 3
-</td>
-<td style="text-align:right;">
-1.950971
-</td>
-<td style="text-align:right;">
-1.95097
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_3\_05
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 3
-</td>
-<td style="text-align:right;">
-1.944535
-</td>
-<td style="text-align:right;">
-1.94454
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pda_3\_07
-</td>
-<td style="text-align:left;">
-Pda
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pda 3
-</td>
-<td style="text-align:right;">
-1.943428
-</td>
-<td style="text-align:right;">
-1.94343
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_1\_02
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 1
-</td>
-<td style="text-align:right;">
-1.915073
-</td>
-<td style="text-align:right;">
-1.91507
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_1\_03
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 1
-</td>
-<td style="text-align:right;">
-1.914772
-</td>
-<td style="text-align:right;">
-1.91477
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_1\_04
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 1
-</td>
-<td style="text-align:right;">
-1.913889
-</td>
-<td style="text-align:right;">
-1.91389
+0
 </td>
 </tr>
 <tr>
@@ -1895,397 +235,14 @@ Plu_1\_05
 <td style="text-align:left;">
 Plu
 </td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 1
-</td>
 <td style="text-align:right;">
-1.926412
+1.92641
 </td>
 <td style="text-align:right;">
 1.92641
 </td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_1\_06
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 1
-</td>
 <td style="text-align:right;">
-1.921944
-</td>
-<td style="text-align:right;">
-1.92194
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_1\_07
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 1
-</td>
-<td style="text-align:right;">
-1.927036
-</td>
-<td style="text-align:right;">
-1.92704
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_2\_01
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 2
-</td>
-<td style="text-align:right;">
-1.924559
-</td>
-<td style="text-align:right;">
-1.92456
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_2\_02
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 2
-</td>
-<td style="text-align:right;">
-1.932550
-</td>
-<td style="text-align:right;">
-1.93255
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_2\_03
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 2
-</td>
-<td style="text-align:right;">
-1.919497
-</td>
-<td style="text-align:right;">
-1.91950
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_2\_04
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 2
-</td>
-<td style="text-align:right;">
-1.933703
-</td>
-<td style="text-align:right;">
-1.93370
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_2\_05
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 2
-</td>
-<td style="text-align:right;">
-1.932976
-</td>
-<td style="text-align:right;">
-1.93298
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_2\_06
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 2
-</td>
-<td style="text-align:right;">
-1.928865
-</td>
-<td style="text-align:right;">
-1.92886
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_3\_01
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 3
-</td>
-<td style="text-align:right;">
-1.925979
-</td>
-<td style="text-align:right;">
-1.92598
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_3\_02
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 3
-</td>
-<td style="text-align:right;">
-1.930310
-</td>
-<td style="text-align:right;">
-1.93031
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_3\_03
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 3
-</td>
-<td style="text-align:right;">
-1.935038
-</td>
-<td style="text-align:right;">
-1.93504
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_3\_04
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 3
-</td>
-<td style="text-align:right;">
-1.923040
-</td>
-<td style="text-align:right;">
-1.92304
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_3\_05
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 3
-</td>
-<td style="text-align:right;">
-1.935577
-</td>
-<td style="text-align:right;">
-1.93558
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Plu_3\_06
-</td>
-<td style="text-align:left;">
-Plu
-</td>
-<td style="text-align:left;">
-Porites
-</td>
-<td style="text-align:left;">
-Plu 3
-</td>
-<td style="text-align:right;">
-1.919738
-</td>
-<td style="text-align:right;">
-1.91974
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_1\_01
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 1
-</td>
-<td style="text-align:right;">
-1.966073
-</td>
-<td style="text-align:right;">
-1.96607
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_1\_02
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 1
-</td>
-<td style="text-align:right;">
-1.964679
-</td>
-<td style="text-align:right;">
-1.96468
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_1\_03
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 1
-</td>
-<td style="text-align:right;">
-1.964669
-</td>
-<td style="text-align:right;">
-1.96467
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_1\_04
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 1
-</td>
-<td style="text-align:right;">
-1.960303
-</td>
-<td style="text-align:right;">
-1.96030
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_1\_05
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 1
-</td>
-<td style="text-align:right;">
-1.957218
-</td>
-<td style="text-align:right;">
-1.95722
+0
 </td>
 </tr>
 <tr>
@@ -2295,297 +252,48 @@ Pve_1\_06
 <td style="text-align:left;">
 Pve
 </td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 1
-</td>
 <td style="text-align:right;">
-1.955084
+1.95508
 </td>
 <td style="text-align:right;">
 1.95508
 </td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_1\_07
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 1
-</td>
 <td style="text-align:right;">
-1.955287
-</td>
-<td style="text-align:right;">
-1.95529
+0
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Pve_1\_08
+Pda_2\_07
 </td>
 <td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 1
+Pda
 </td>
 <td style="text-align:right;">
-1.963527
+1.95238
 </td>
 <td style="text-align:right;">
-1.96353
+1.95238
+</td>
+<td style="text-align:right;">
+0
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Pve_2\_01
+Plu_1\_02
 </td>
 <td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 2
+Plu
 </td>
 <td style="text-align:right;">
-1.959375
+1.91507
 </td>
 <td style="text-align:right;">
-1.95938
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_2\_02
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 2
+1.91507
 </td>
 <td style="text-align:right;">
-1.950475
-</td>
-<td style="text-align:right;">
-1.95047
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_2\_03
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 2
-</td>
-<td style="text-align:right;">
-1.958198
-</td>
-<td style="text-align:right;">
-1.95820
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_2\_04
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 2
-</td>
-<td style="text-align:right;">
-1.972118
-</td>
-<td style="text-align:right;">
-1.97212
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_2\_05
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 2
-</td>
-<td style="text-align:right;">
-1.957665
-</td>
-<td style="text-align:right;">
-1.95767
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_2\_06
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 2
-</td>
-<td style="text-align:right;">
-1.944179
-</td>
-<td style="text-align:right;">
-1.94418
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_3\_01
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 3
-</td>
-<td style="text-align:right;">
-1.959757
-</td>
-<td style="text-align:right;">
-1.95976
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_3\_02
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 3
-</td>
-<td style="text-align:right;">
-1.952404
-</td>
-<td style="text-align:right;">
-1.95240
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_3\_03
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 3
-</td>
-<td style="text-align:right;">
-1.960369
-</td>
-<td style="text-align:right;">
-1.96037
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_3\_04
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 3
-</td>
-<td style="text-align:right;">
-1.954793
-</td>
-<td style="text-align:right;">
-1.95479
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_3\_05
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 3
-</td>
-<td style="text-align:right;">
-1.949538
-</td>
-<td style="text-align:right;">
-1.94954
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pve_3\_06
-</td>
-<td style="text-align:left;">
-Pve
-</td>
-<td style="text-align:left;">
-Pocillopora
-</td>
-<td style="text-align:left;">
-Pve 3
-</td>
-<td style="text-align:right;">
-1.967342
-</td>
-<td style="text-align:right;">
-1.96734
+0
 </td>
 </tr>
 </tbody>
@@ -2597,8 +305,8 @@ calculations are working. Let’s proceed with discriminatory analyses.
 ## Radii Analysis
 
 I calculated a FD for radii 2-20 to conduct a discriminatory test
-similar to the Reichert *et al.* (2017) analysis. They found that r=8
-had the highest discriminatory power.
+similar to the Reichert *et al* (2017) analysis. They found that r=8 had
+the highest discriminatory power.
 
 ## Interspecific Detection
 
@@ -2653,126 +361,6 @@ n
 </td>
 <td style="text-align:right;">
 11
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-18
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-9
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-9
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-9
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:right;">
-9
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:right;">
-9
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
-9
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-14
-</td>
-<td style="text-align:right;">
-9
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-15
-</td>
-<td style="text-align:right;">
-9
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-16
-</td>
-<td style="text-align:right;">
-9
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-17
-</td>
-<td style="text-align:right;">
-9
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-7
 </td>
 </tr>
 </tbody>
@@ -2853,8 +441,8 @@ not being able to discriminate between Ahu and Pda, but there average
 pairwise significance is still better than a radii of 8. So we cannot
 differentiate the Acroporas and the *Pocillopora verrucosa* with radii
 of 7 and 8, and we add *Pocillopora damicornis* to that list when we
-change the radii to 19 or 20. **Therefore, we are really only able to
-differentiate between the Porites and the branching corals. **
+change the radii to 19 or 20. <strong>Therefore, we are really only able
+to differentiate between the Porites and the branching corals.</strong>
 
 ## Intraspecific Detection
 
@@ -3057,7 +645,7 @@ consistently distinguish intraspecific variation among these species,
 especially *Acropora humilis*. This might suggest that these species
 have plastic morphologies that vary among the population, but that this
 variation can be parsed apart by colony-specific morphology. Further,
-Reichert *et al.* (2017) report the fractal dimension analyses were
+Reichert *et al* (2017) report the fractal dimension analyses were
 superior in quantifying intraspecific changes of colonies over time
 compared to traditional morphological characteristics, indicating that
 these analyses are sensitive to small scale changes. Are these colonies
@@ -3066,12 +654,16 @@ morphology? Are genetics at play? From these data alone, it’s impossible
 to tell. But we can begin to explore these questions using my data
 below.
 
-The take away from these analyses are: 1. morphological complexity can
-be described with fractal dimensions 2. FD can generally discern between
-inter- and intra-specific, but its not perfect 3. Dilation radii must be
-selected according to resolution of analyses
+The take away from these analyses are:
+
+1.  morphological complexity can be described with fractal dimensions,
+2.  FD can generally discern between inter- and intra-specific, but its
+    not perfect, and
+3.  dilation radii must be selected according to resolution of analyses.
 
 # Analyzing Our Scans
+
+### Morphometrics
 
 <h5>
 Figure 6. Genotype-specific discriminaotry power of FD at different
@@ -3613,9 +1205,12 @@ choosing any radius 6-17 will produce a very significant average p value
 \<0.00001, which adds confidence that there is a difference in the
 fractal dimensions of these 3 genotypes.
 
-This is interesting because these fragments were picked to be, 1. around
-the same size \~7cm, 2. from unique colony in nursery (a tree had \>60
-colonies all of one genotype) 3. minimal branching, 1 apical tip
+This is interesting because these fragments were picked to be,
+
+1.  around the same size \~7cm,
+2.  from unique colony in nursery (a tree had \>60 colonies all of one
+    genotype), and
+3.  minimal branching w/ only 1 apical tip.
 
 So even though we selected to have visually identical fragments,
 genotype specific morphology is evident. Let’s investigate other
@@ -3624,25 +1219,10 @@ all analyses below, I am using FD11 as the measurement of FD.
 
 <h5>
 Figure 7. Traditional morphometric comparisons of fragment height,
-surface area, volume, and surface area:volume ratio
+surface area, volume, and surface area: volume ratio
 </h5>
 
-<img src="/notebook/images/3dmorphometrics/classicMorphometrics-1.png" width="90%" style="display: block; margin: auto;" />\#
-A tibble: 12 x 13 metric data anova results term group1 group2 null.\~1
-estim\~2 conf.\~3 <chr> <list> <list> <list> <chr> <chr> <chr> <dbl>
-<dbl> <dbl> 1 SA <tibble> <aov> <tibble> genoty\~ AC-2 MB-C 0 -4.42
--8.98 2 SA <tibble> <aov> <tibble> genoty\~ AC-2 SI-A 0 8.48 4.10 3 SA
-<tibble> <aov> <tibble> genoty\~ MB-C SI-A 0 12.9 8.47 4 V <tibble>
-<aov> <tibble> genoty\~ AC-2 MB-C 0 -0.693 -1.58 5 V <tibble> <aov>
-<tibble> genoty\~ AC-2 SI-A 0 1.34 0.479 6 V <tibble> <aov> <tibble>
-genoty\~ MB-C SI-A 0 2.03 1.16 7 SA_V <tibble> <aov> <tibble> genoty\~
-AC-2 MB-C 0 0.121 -0.380 8 SA_V <tibble> <aov> <tibble> genoty\~ AC-2
-SI-A 0 -0.358 -0.840 9 SA_V <tibble> <aov> <tibble> genoty\~ MB-C SI-A 0
--0.479 -0.966 10 H <tibble> <aov> <tibble> genoty\~ AC-2 MB-C 0 -0.263
--0.638 11 H <tibble> <aov> <tibble> genoty\~ AC-2 SI-A 0 -0.118 -0.479
-12 H <tibble> <aov> <tibble> genoty\~ MB-C SI-A 0 0.145 -0.220 \# … with
-3 more variables: conf.high <dbl>, p.adj <dbl>, p.adj.signif <chr>, \#
-and abbreviated variable names 1: null.value, 2: estimate, 3: conf.low
+<img src="/notebook/images/3dmorphometrics/classicMorphometrics-1.png" width="90%" style="display: block; margin: auto;" />
 
 The three genotypes did not have significantly different surface area to
 volume ratio or heights. However, there were significant pairwise
@@ -3661,6 +1241,12 @@ with FD, with FD explaining about 61% and 44% of the variance in SA and
 V, respectively. There is no relationship between height and surface
 area to volume ratio with fractal dimension.
 
+### Growth Analysis
+
+An indepth analysis of treatments and growth
+<a hrf="https://patrickmkiel.com/notebook/research/ulink2022GrowthAnalysis?pass=ulink">can
+be viewed here.</a>
+
 <h5>
 Figure 9. Avg Daily Growth by (A) Treatment and (B) Genotype
 </h5>
@@ -3672,16 +1258,16 @@ actually depressed growth from what I was expecting and the high
 resolution of our 3D scanner where estimated SA is much higher than
 usually measured. To try and make comparable, I looked at some other
 published work on the ’ol AcDC and found some SA derived from stitched
-together images on imajeJ in a Muller et al paper. Their average SA was
-\~ 7$cm^2$, which is in comparison to our avg SA \~ 39. If we simply
-divide the two and scale the growth rates accordingly, we get an avg
-LCO2 growth rate of 0.73 mg/cm^-2/day. However, numerous papers from
-NOAA AOML Coral Program lab have used the same 3D scanner setup to
-derive growth rates that were higher than what I observed. I do not know
-the exact SA from these studies, but they were significantly shorter
-than the experiment I ran which may explain the depressed growth rates
-(Enochs *et al* 2018 for instance). Nevertheless, the patterns are
-interesting and what I will be focussing on.
+together images on imajeJ in a Muller *et al* paper. Their average SA
+was about 7$cm^2$, which is in comparison to our avg SA 39 $cm^2$. If we
+simply divide the two and scale the growth rates accordingly, we get an
+avg LCO2 growth rate of 0.73 mg $cm^-2$ $day^-1$. However, numerous
+papers from the NOAA AOML Coral Program lab have used the same 3D
+scanner setup to derive growth rates that were higher than what I
+observed. I do not know the exact SA from these studies, but they were
+significantly shorter than the experiment I ran which may explain the
+depressed growth rates (Enochs et al. 2018 for instance). Nevertheless,
+the patterns are interesting and what I will be focussing on.
 
 <h5>
 Figure 10. Regression of absolute growth (mg) to (A) surface area and
@@ -3722,12 +1308,13 @@ not scale linearly with SA.
 Let’s dive into that second plot more and the hypotheses that this data
 may support.
 <img src="/notebook/images/3dmorphometrics/plotItAgain-1.png" width="90%" style="display: block; margin: auto;" />
+
 This data supports the hypothesis that surface complexity confers
 resistance to OA but does not confer increased growth rates under
 ambient conditions. This hypothesis aligns closesly with the hypothesis
-outlined in Chan *et al.* (2016). Briefly, surface complexity slows
-water flow around the colony, thickening the diffusive boundary layer
-(DBL) and increasing water residence time in the thin layer directly
+outlined in Chan *et al* (2016). Briefly, surface complexity slows water
+flow around the colony, thickening the diffusive boundary layer (DBL)
+and increasing water residence time in the thin layer directly
 surrounding the coral. Therefore, the coral’s metabolism has a greater
 influence on the properties of this seawater: during the day this water
 will have a higher pH than bulk seawater (photosynthesis) and at night
@@ -3740,12 +1327,12 @@ that could stress harden a coral where it has adapted and/or acclimated
 and can, therefore, better withstand OA. Alternatively, this diel
 variability could work in concert with day to night calcification ratios
 to enhance daytime calcification to counteract the mean decrease in pH,
-effectively ameliorating OA (Enochs *et al.* 2018; Chan & Higgins 2017).
+effectively ameliorating OA (Enochs *et al* 2018; Chan & Eggins 2017).
 
-Chan *et al.* (2016) supported this hypothesis by measuring pH changes
-in the DBL under different morphologies at different flow rates. They
-saw that under low flow velocities and complex morphologies (they did
-not quantify complexity, just had 2 different species w/ obvious surface
+Chan *et al* (2016) supported this hypothesis by measuring pH changes in
+the DBL under different morphologies at different flow rates. They saw
+that under low flow velocities and complex morphologies (they did not
+quantify complexity, just had 2 different species w/ obvious surface
 complexity differences), pH upregulation in the DBL was quite high and
 had the potential to ameliorate the effects of OA in the DBL (DBL pH
 under OA = DBL pH under ambient due to elevations). These data closely
@@ -3758,7 +1345,7 @@ and growth rates under different light and flow regimes. For the
 during the day, but did detect large decreases during the night.
 However, for *Plesiastrea veripora*, they detected a large increase in
 DBL pH which increased under OA treatments in low flow identical to the
-findings in Chan *et al.* (2016). These same corals did not, however,
+findings in Chan *et al* (2016). These same corals did not, however,
 have elevated pH in the calcifying fluid or maintain growth rates under
 OA. It is important to note that Comeau *et al* (2019) did not have
 variable pH treatments and did not measure pH DBL under darkness.
@@ -3769,7 +1356,7 @@ dataset I am aware of that has experimental evidence of surface
 complexity driving OA resistance. How the potential pH variability
 caused by the surface complexity affects calcifying fluid pH as
 determined by boron systematics remains to be seen. We should have that
-data soon. Comeau *et al.* (2022) used boron systematics to probe the
+data soon. Comeau *et al* (2022) used boron systematics to probe the
 calcifying fluid pH of corals collected from volcanic CO2 seeps in Papua
 New Guinea. These seeps had low, but highly variable pH. The corals from
 this environment maintained constant calcifying pH, relative to nearby
@@ -3792,36 +1379,30 @@ water residence times, expected pH increases, etc.
 1.  Chan NCS, Wangpraseurt D, Kühl M, Connolly SR (2016) Flow and coral
     morphology control coral surface pH: Implications for the effects of
     ocean acidification. *Frontiers in Marine Science* 3:1-11.
-
 2.  Chan WY, Eggins SM (2017) Calcification responses to diurnal
     variation in seawater carbonate chemistry by the coral Acropora
     formosa. *Coral Reefs* 36:763–772.
-
 3.  Comeau S, Cornwall CE, Pupier CA, DeCarlo TM, Alessi C, Trehern R,
     McCulloch M (2019) Flow-driven micro-scale pH variability affects
     the physiology of corals and coralline algae under ocean
     acidification. *Scientific Reports* 9:1–12.
-
 4.  Comeau S, Cornwall CE, Shlesinger T, Hoogenboom MO, Mana R,
     McCulloch MT, Rodolfo-Metalpa R (2022) pH variability at volcanic
     CO2 seeps regulates coral calcifying fluid chemistry. *Global Change
     Biology* 28(8):2751–2763.
-
 5.  Enochs IC, Manzello DP, Jones P, Aguilar C, Cohen K, Valentino L,
     Schopmeyer S, Kolodzeij G, Jankulak M, Lirman D (2018) The influence
     of diel carbonate chemistry fluctuations on the calcification rate
     of Acropora cervicornis under present day and future acidification
     conditions. *Journal of Experimental Marine Biology and Ecology*
     506:135–143.
-
 6.  Reichert J, Backes AR, Schubert P, Wilke T (2017) The power of 3D
     fractal dimensions for comparative shape and structural complexity
     analyses of irregularly shaped organisms. *Methods in Ecology and
     Evolution* 8(12):1650–1658.
-
 7.  Torres-Pulliza D, Dornelas MA, Pizarro O, Bewley M, Blowes SA,
     Boutros N, Brambilla V, Chase TJ, Frank G, Friedman A, *et
-    al.* (2020) A geometric basis for surface habitat complexity and
+    al* (2020) A geometric basis for surface habitat complexity and
     biodiversity. *Nature Ecology & Evolution* 4:1495-1501.
 
 </div>
