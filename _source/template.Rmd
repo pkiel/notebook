@@ -76,6 +76,15 @@ function verify() {
 img {
 margin: 0 auto;
 }
+
+table {
+    width: 90%;
+    border: 0px solid #fff;
+    border-collapse: collapse;
+    overflow-x: auto;
+    margin: 0 auto;
+    display: block;
+}
 ```
 
 ```{r FigCaptions, echo=FALSE}

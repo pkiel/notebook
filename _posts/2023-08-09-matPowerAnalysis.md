@@ -51,11 +51,11 @@ margin: 0 auto;
 
 table {
     width: 90%;
-    border: 1px solid #e5e5e5;
+    border: 0px solid #fff;
     border-collapse: collapse;
-    overflow-x: scroll;
+    overflow-x: auto;
     margin: 0 auto;
-    display: inherit;
+    display: block;
 }
 </style>
 <!-- The content we want to show after password -->
@@ -1055,7 +1055,7 @@ density.
 
 <div class="sketchfab-embed-wrapper">
 
-<iframe title="MATsetup" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/1a9983e7bd37458b8810e8aee72231d1/embed" width="50%" style="margin: 0 auto; height=30vh;">
+<iframe title="MATsetup" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/1a9983e7bd37458b8810e8aee72231d1/embed" width="60%" style="height:35vh;">
 </iframe>
 <p style="font-size: 13px; font-weight: normal; margin: 5px; color: #4A4A4A;">
 <a href="https://sketchfab.com/3d-models/matsetup-1a9983e7bd37458b8810e8aee72231d1?utm_medium=embed&utm_campaign=share-popup&utm_content=1a9983e7bd37458b8810e8aee72231d1" target="_blank" rel="nofollow" style="font-weight: bold; color: #1CAAD9;">
