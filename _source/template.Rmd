@@ -72,6 +72,10 @@ function verify() {
 .hidden {
   display: none;
 }
+
+img {
+margin: 0 auto;
+}
 ```
 
 ```{r FigCaptions, echo=FALSE}

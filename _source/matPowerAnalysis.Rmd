@@ -1,0 +1,331 @@
+---
+layout: post
+title:  "Mineral Accretion Technology Power Analysis"
+author: "Patrick M Kiel"
+date: '2023-08-09'
+categories: [research]
+description: "Statistical power analysis to determine the appropriate sample size for testing the efficiacy of mineral accretion technology to enhance coral growth rates."
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, 
+  encoding = encoding, 
+  output_file = paste0("2023-08-09", "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
+  output_dir = "../_posts") })
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#load packages
+library(tidyverse)
+library(kableExtra)
+library(readxl)
+library(ggpubr)
+library(rstatix)
+library(Superpower)
+library(pwr2)
+
+base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
+fig_path <- "images/matPowerAnalysis/" #add a new folder if you want to group output into a single foder
+
+# Set base directories
+knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
+
+# Set figure directories
+knitr::opts_chunk$set(fig.path = fig_path,
+                    cache.path = '../cache/',
+                    fig.align = 'center', out.width = '90%',
+                    message=FALSE, warning=FALSE,
+                    cache = FALSE, results = "asis")
+```
+
+<!-- ```{js} -->
+<!-- window.onload = function() { -->
+<!--     //query string in the password -->
+<!--     const urlParams = new URLSearchParams(window.location.search); -->
+<!--     const pass = urlParams.get('pass') -->
+<!--     document.getElementById("password").value = pass; -->
+<!-- }; -->
+
+<!-- function verify() { -->
+<!-- set the password here -->
+<!--   if (document.getElementById('password').value === 'password') { -->
+<!--     document.getElementById('HIDDENDIV').classList.remove("hidden");  -->
+<!--     document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials -->
+<!--   } else { -->
+<!--     alert('Invalid Password! You cannot view this content.'); -->
+<!--     password.setSelectionRange(0, password.value.length); -->
+<!--   } -->
+<!--   return false; -->
+<!-- } -->
+<!-- ``` -->
+
+```{css}
+/*Change content Display */
+<!-- .hidden { -->
+<!--   display: none; -->
+<!-- } -->
+
+img {
+margin: 0 auto;
+}
+```
+
+```{r FigCaptions, echo=FALSE}
+
+#Figure and Table Caption Numbering
+capTabNo = 1; capFigNo = 1;
+
+#Function to add the Table Number
+capTab = function(x){
+    x = paste0("Table ",capTabNo,". ",x)
+    capTabNo <<- capTabNo + 1
+    cat(x)
+}
+
+#Function to add the Figure Number
+capFig = function(x){
+    x = paste0("<h5>Figure ",capFigNo,". ",x,"</h5>")
+    capFigNo <<- capFigNo + 1
+    cat(x)
+}
+
+integer_breaks <- function(n = 5, ...) {
+  fxn <- function(x) {
+    breaks <- floor(pretty(x, n, ...))
+    names(breaks) <- attr(breaks, "labels")
+    breaks
+  }
+  return(fxn)
+}
+```
+
+
+<!-- The content we want to show after password -->
+<div id="HIDDENDIV" class="hidden" markdown="1">
+
+<!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
+# Overview
+
+My goal with this first mineral accretion technology (MAT) experiment is to understand 1) if the technology enhances growth rates, and 2) if certain morphologies (branching v. massive) preferentially respond to MAT. The results from this preliminary experiment will inform subsequent experiments, which will first identify the optimal electrochemical conditions and then incorporate ocean acidification and genotype effects. Since this is a preliminary experiment to robustly assess the efficacy of MAT, I want to have adequate statistical power to setup success for future experiments. In other words, if MAT doesn't work, why bother with the more arduous experiments. Thus, the goal of this exercise is to estimate the number of fragments per species needed to maintain appropriate statistical power.  
+
+The idea behind the morphologies responding differently to MAT is the distance of the primary growth axis from the steel cathode. In branching species, such as *A. cervicornis*, the fast-growing apical tip is farthest from the cathode, where carbonates are being converted during electrolysis. Conversely, massive coral species with their compact morphology places the actively growing polyps more proximate to the site of altered water chemistry. Thus, an initial hypothesis is that massive corals will have a greater percentage increase in growth rates than branching corals.
+
+I want to incorporate the two most commonly used species in Florida coral restoration, *Acropora cervicornis* (ACER) and *Pseudodiploria strigosa* (PSTR) <u>OR</u> *Montastrea cavernosa* (MCAV)*. There will be two treatment groups (electrified/non-electrified), and an n=2 for each treatment. All parameters (presence of platinum anode, steel cathode as the coral base structure, wires connecting everything, peristaltic pump in the center of the aquarium, etc.) will be equal, except that the wires will not be connected to the power supply in the non-electrified aquaria. To account for genet-specific growth rates, I will collect multiple four ramets from each genet and divide equally among the four experimental aquaria. Thus each genet will be represented twice within treatment and once within each aquaria. 
+
+```{r}
+list.files(path = 'C:/Users/pkiel/Downloads/',
+          pattern = 'Sample Registry',
+          full.names = T) %>%
+  lapply(., read_xls) %>%
+  bind_rows() %>%
+  mutate(Species = paste(Genus, Species)) %>%
+  filter(Country!="Australia" & `Sample Type` !="Sexual Recruit") -> CaribCorals
+
+capTab("Count of putative genets in the Caribbean and Florida restoration networks, aggregrated from Coral Sample Registry database. Florida data is a subset of Caribbean data.")
+CaribCorals %>%
+  group_by(Species) %>%
+  count() %>%
+  rename(Caribbean = n) %>%
+  full_join(CaribCorals %>%
+              filter(!Region %in% c('Cozumel', NA, 'Bayahibe', 'Kingston', 'Puerto Rico', 
+                                      'Puerto Rico - South-western', 'Not Provided')) %>%
+              group_by(Species) %>%
+              count() %>%
+              rename(Florida = n)) %>%
+  mutate(`% Florida` = round(Florida/Caribbean*100,1),
+         `% Florida` = ifelse(is.na(`% Florida`), 0, `% Florida`)) %>%
+  arrange(-Florida) %>%
+  kbl()
+```
+
+
+Within the wider Caribbean region, *Acropora palmata* (504) is the dominant species in coral restoration due to its preponderance in Puerto Rico restoration efforts led by Sea Ventures/NOAA (322 records of the 504 putative genets). *A. palmata* is followed by *A. cervicornis* (420), *Orbicella faveolata* (313), *M. cavernosa* (264), and  *P. strigosa* (254). When we focus solely on Florida coral restoration efforts, *A. cervicornis* (327) is the most cultivated species as expected followed by *M. cavernosa* (228) and *P. strigosa* (225). <u>Thus, using  *A. cervicornis* as the branching species and *M. cavernosa* or *P. strigosa* as the massive species in this preliminary experiment would be appropriate.</u>
+
+# Estimating MAT Mean Effect
+
+The following is a table of published and unpublished data I have aggregated. While I have encountered many more references, their results section are incomplete (missing averages and/or standard deviations of control and treatment groups) and were unable to be cast into this analysis.
+
+```{r}
+litReview <- read_csv('C:/Users/pkiel/Github/notebook/images/matPowerAnalysis/matLitReview.csv')
+
+capTab("Summary of literature review effect sizes")
+litReview %>%
+  mutate(growth = paste(growth*100,"%")) %>%
+  kbl()
+```
+
+If we trust this data (which I don't; hence why I'm running this preliminary experiment instead of jumping in), then we can expect a median percentage increase in coral growth of `r paste(median(litReview$growth)*100,"%")`.
+
+# Calculating Group Sizes
+
+I collected growth rates from the Perry coral growth database, which aggregates calcification data for their ReefBudget surveys. While these data are likely not predictive of what we will observe in the laboratory with the buoyant weight methodology since these refer to two-dimensional reef planar area and not three-dimensional coral colony surface area, the relative differences in growth rates among species provides a framework for us to build this statistical power model. 
+
+Next, I estimated power-sample size curves with pooled standard deviations (SD) varying from 0.05 - 0.25 $g \text{ } cm^{-2} \text{ } yr^{-1}$ with 0.05 increments and percent increases in growth rates relative to control from 5-50% in 5% increments. Effect sizes at each combination of pooled SD and percent increase were estimated.
+
+Our 2-factor anova will have the following form: aov(G ~ treatment * species). There will be 2 levels to treatment and 2 levels to species. The significance of an interactive effect (treatment:species) suggests that at least one of the species responded differently to the MAT compared to the other two.
+
+```{r, calculating }
+dat <- data.frame(species = c("ACER", "MCAV", "PSTR"),
+         growth = c(7.2720,
+                    0.6198,
+                    0.5888))
+
+dat <- lapply(seq(0.00,0.5, 0.05), function(x) {
+   dat %>%
+     mutate(matMultpiplier = paste0(x*100, "%"),
+            .after = "species") %>%
+     mutate(growth = growth*(1+x))
+ }) %>%
+   bind_rows %>%
+  pivot_wider(names_from = "matMultpiplier",
+              values_from = "growth") %>%
+  rename(Control = "0%")
+
+capTab("Estimated mean growth rates per species per % increase in growth rate conferred by MAT. % increase are arbitrary numbers ranging from 5-50% increased growth rates")
+dat %>%
+  kbl()
+
+power <- lapply(seq(0.8,0.05, -0.05), function (beta) {
+  lapply(seq(0.05,0.25,0.05), function(sd) {
+  lapply(seq(0.05,0.5, 0.05), function(multiplier) {
+      ss.2way(a=2,
+              b=2,
+              alpha=0.05,
+              beta = beta,
+              delta.A=multiplier,
+              delta.B=6, #expected difference between Acer & massive G
+              sigma.A=sd,
+              sigma.B=sd,
+              B=100) %>%
+        broom::tidy() %>%
+      mutate(matMultpiplier = multiplier,
+             sd = sd)
+  }) %>%
+    bind_rows()
+}) %>% 
+  bind_rows()
+}) %>%
+  bind_rows() %>%
+  select(matMultpiplier, power, sd, n) %>%
+  arrange(matMultpiplier) %>%
+  mutate(across(c(matMultpiplier), ~paste0(.x*100,"%")))
+  
+power$matMultpiplier <- factor(power$matMultpiplier,
+                               levels = c('5%', '10%', '15%',
+                                          '20%', '25%', '30%',
+                                          '35%', '40%', '45%', '50%')) 
+capFig("Group-size power curves for estimated % increase in growth rates. Vertical line denotes 80% power.")
+power %>%
+  ggplot(aes(power,n, color=as.factor(sd))) +
+  geom_point() +
+  geom_smooth(se=F) +
+  geom_vline(xintercept = 0.8) +
+  facet_wrap(~matMultpiplier, scales = "free_y") +
+  scale_x_continuous(limits = c(0,1), breaks = seq(0,1,.25), labels = scales::label_percent(),
+                    name = "Power (%)") +
+  scale_y_continuous(breaks = integer_breaks()) +
+  theme_bw() +
+  labs(color = "Pooled Standard Deviation")
+
+power %>%
+  filter(matMultpiplier == "10%" & sd == 0.25)
+
+```
+
+From these power-sample size curves, we can see that we need at least 14 fragments per treatment group to have 80% power and detect a 20% increase in MAT if the pooled SD is less than or equal to 0.25 $g \text{ } cm^{-2} \text{ } yr^{-1}$. With that same treatment size and goal of at least 80% power, we would be able to detect a 15% increase in growth rates if the pooled SD was less than or equal to 0.15 $g \text{ } cm^{-2} \text{ } yr^{-1}$, a 10% increase in growth rates if the pooled SD was less than or equal to 0.10 $g \text{ } cm^{-2} \text{ } yr^{-1}$, or a 5% increase in growth rates if the pooled SD was less than or equal to 0.05. When the observed increase in growth rates due to MAT is greater than or equal to 25%, there is greater than 95% power when the standard deviation is 0.25 $g \text{ } cm^{-2} \text{ } yr^{-1}$ or less.
+
+If the observed growth rate is a modest 10% and the pooled SD is 0.25 $g \text{ } cm^{-2} \text{ } yr^{-1}$, then we would only have 30% power with an n=14. We would need 50 fragments per group to detect a 10% increase with the same pooled SD, which is unfeasible. However, if MAT only increases growth rates this much, it would not be able to overcome the decreases in growth rates expected by ocean acidification.
+
+Since we have two aquariums per treatment, we can divide the required sample size evenly and have seven fragments per species per aquarium. When we run the final analysis, we will create two models. One model will be a two way anova as described above. The second model will incorporate the aquarium as a random effect, which will be compared against the fixed effects model. Ideally, there is no statistical advantage gained from the mixed effects model (as judged by AIC) since the two aquaria will have equal treatment conditions should thus exhibit the same growth patterns. Nevertheless, incorporating this mixed effects model will improve the statistical power compared to a normal fixed-effects ANOVA.
+
+# Mixed Effects Power
+
+Calculating power and effect sizes on mixed effects models is a bit more difficult. The best way to do it is to simulate data multiple times and take the averages. The Superpower package makes this relatively easy. For each of the simulations, I set the number of fragments per treatment per aquarium at 7 fragments and identified the maximum pooled SD to maintian 80% power. This is equivalent to the 80% power gained from having 14 fragments with a 20% increase in MAT with a pooled SD less than or equal to 0.25 $g \text{ } cm^{-2} \text{ } yr^{-1}$.
+
+When there is 20% increase in growth rates, the pooled SD can increase to 0.75. This demonstrates the added power, or the ability to have more variation within treatment/species groups and maintain statistical power, when employing a mixed-effects model.
+
+```{r, eval=F}
+design_result <- ANOVA_design(design = "2b*2b*2w", #2 between treatment, 2 between species, 2 within (2 aquaria per treatment group)
+                              n = 7,
+                              mu = c(10.9, 11,
+                                     0.889, 0.930,
+                                     7.27, 7.11,
+                                     0.620, 0.589),
+                              sd = 3.0,
+                              label_list = c('treatment', 'electric', 'control',
+                                             'species', 'ACER','MCAV',
+                                             'aquarium', '1', '2'),
+                              plot = F)
+
+ANOVA_power(design_result,
+            p_adjust = 'bonferroni',
+            nsims = 100)["main_result"]
+            
+```
+
+
+<!-- # Alternative Experiment -->
+
+<!-- Alternatively, we could focus excluseively on the treatment and ignore the species/morphology comparison. -->
+
+<!-- ```{r} -->
+<!-- power1way <- lapply(seq(0.8,0.05, -0.05), function (beta) { -->
+<!--   lapply(seq(0.05,0.25,0.05), function(sd) { -->
+<!--   lapply(seq(0.05,0.5, 0.05), function(multiplier) { -->
+<!--       ss.1way(k=2, -->
+<!--               alpha=0.05, -->
+<!--               beta = beta, -->
+<!--               delta=multiplier, -->
+<!--               sigma=sd, -->
+<!--               B=100) %>% -->
+<!--         broom::tidy() %>% -->
+<!--       mutate(matMultpiplier = multiplier, -->
+<!--              sd = sd) -->
+<!--   }) %>% -->
+<!--     bind_rows() -->
+<!-- }) %>%  -->
+<!--   bind_rows() -->
+<!-- }) %>% -->
+<!--   bind_rows() %>% -->
+<!--   select(matMultpiplier, power, sd, n) %>% -->
+<!--   arrange(matMultpiplier) %>% -->
+<!--   mutate(across(c(matMultpiplier), ~paste0(.x*100,"%"))) -->
+
+<!-- power1way$matMultpiplier <- factor(power$matMultpiplier, -->
+<!--                                levels = c('5%', '10%', '15%', -->
+<!--                                           '20%', '25%', '30%', -->
+<!--                                           '35%', '40%', '45%', '50%'))  -->
+
+<!-- capFig("Group-size power curves for estimated % increase in growth rates. Horizontal line denotes 80% power.") -->
+<!-- power1way %>% -->
+<!--   ggplot(aes(power, n, color=as.factor(sd))) + -->
+<!--   geom_point() + -->
+<!--   geom_smooth(se=F) + -->
+<!--   geom_vline(xintercept = 0.8) + -->
+<!--   facet_wrap(~matMultpiplier, scales = "free_y") + -->
+<!--   scale_x_continuous(limits = c(0,1), breaks = seq(0,1,.25), labels = scales::label_percent(), -->
+<!--                     name = "Power (%)") + -->
+<!--   scale_y_continuous(breaks = integer_breaks()) + -->
+<!--   theme_bw() + -->
+<!--   labs(color = "Standard Deviation") -->
+<!-- ``` -->
+
+
+# Electrical Considerations
+
+With an n=7 per treatment per aquarium, that gives us n=7 x 2 species + 3 blanks/aquarium = 17 cathodes per aquarium. The blanks are to acount for abiotic precipiation of abiotic electrodeposits, which are hypothesized to be uniform (given current density and cathodes are identical) within a treatment. At a surface area of 21 $cm^2$, that will be a total cathode surface area of 357 $cm^2$ or 0.0357 $m^2$. Since I would like to test current densities between 0.5-5.0 A/m2, I will need to supply each aquarium between 14 - 140 mA, well within the range of our capabilities. For this experiment, I will only employ one current density to test whether MAT increases growth rate. If it indeed does, a second preliminary expeirmnet will investigate the optimal current density.
+
+<div class="sketchfab-embed-wrapper"> <iframe title="MATsetup" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/1a9983e7bd37458b8810e8aee72231d1/embed"> </iframe> <p style="font-size: 13px; font-weight: normal; margin: 5px; color: #4A4A4A;"> <a href="https://sketchfab.com/3d-models/matsetup-1a9983e7bd37458b8810e8aee72231d1?utm_medium=embed&utm_campaign=share-popup&utm_content=1a9983e7bd37458b8810e8aee72231d1" target="_blank" rel="nofollow" style="font-weight: bold; color: #1CAAD9;"> MATsetup </a> by <a href="https://sketchfab.com/pkiel?utm_medium=embed&utm_campaign=share-popup&utm_content=1a9983e7bd37458b8810e8aee72231d1" target="_blank" rel="nofollow" style="font-weight: bold; color: #1CAAD9;"> pkiel </a> on <a href="https://sketchfab.com?utm_medium=embed&utm_campaign=share-popup&utm_content=1a9983e7bd37458b8810e8aee72231d1" target="_blank" rel="nofollow" style="font-weight: bold; color: #1CAAD9;">Sketchfab</a></p></div>
+
+
+
+</div>
