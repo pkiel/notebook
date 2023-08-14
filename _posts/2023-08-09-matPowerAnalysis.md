@@ -48,6 +48,15 @@ always_allow_html: true
 img {
 margin: 0 auto;
 }
+
+table {
+    width: 90%;
+    border: 1px solid #e5e5e5;
+    border-collapse: collapse;
+    overflow-x: scroll;
+    margin: 0 auto;
+    display: inherit;
+}
 </style>
 <!-- The content we want to show after password -->
 
@@ -82,16 +91,16 @@ branching corals.
 
 I want to incorporate the two most commonly used species in Florida
 coral restoration, *Acropora cervicornis* (ACER) and *Pseudodiploria
-strigosa* (PSTR) <u>OR</u> *Montastrea cavernosa* (MCAV)\*. There will
-be two treatment groups (electrified/non-electrified), and an n=2 for
-each treatment. All parameters (presence of platinum anode, steel
-cathode as the coral base structure, wires connecting everything,
-peristaltic pump in the center of the aquarium, etc.) will be equal,
-except that the wires will not be connected to the power supply in the
-non-electrified aquaria. To account for genet-specific growth rates, I
-will collect multiple four ramets from each genet and divide equally
-among the four experimental aquaria. Thus each genet will be represented
-twice within treatment and once within each aquaria.
+strigosa* (PSTR) <u>OR</u> *Montastrea cavernosa* (MCAV). There will be
+two treatment groups (electrified/non-electrified), and an n=2 for each
+treatment. All parameters (presence of platinum anode, steel cathode as
+the coral base structure, wires connecting everything, peristaltic pump
+in the center of the aquarium, etc.) will be equal, except that the
+wires will not be connected to the power supply in the non-electrified
+aquaria. To account for genet-specific growth rates, I will collect four
+ramets from each genet and divide equally among the four experimental
+aquaria. Thus each genet will be represented twice within treatment and
+once within each aquaria.
 
 Table 1. Count of putative genets in the Caribbean and Florida
 restoration networks, aggregrated from Coral Sample Registry database.
@@ -587,9 +596,9 @@ Rico restoration efforts led by Sea Ventures/NOAA (322 records of the
 strigosa* (254). When we focus solely on Florida coral restoration
 efforts, *A. cervicornis* (327) is the most cultivated species as
 expected followed by *M. cavernosa* (228) and *P. strigosa* (225).
-<u>Thus, using *A. cervicornis* as the branching species and *M.
-cavernosa* or *P. strigosa* as the massive species in this preliminary
-experiment would be appropriate.</u>
+<u>Thus, using <em>A. cervicornis</em> as the branching species and
+<em>M. cavernosa</em> or <em>P. strigosa</em> as the massive species in
+this preliminary experiment would be appropriate.</u>
 
 # Estimating MAT Mean Effect
 
@@ -752,10 +761,9 @@ median percentage increase in coral growth of 20 %.
 I collected growth rates from the Perry coral growth database, which
 aggregates calcification data for their ReefBudget surveys. While these
 data are likely not predictive of what we will observe in the laboratory
-with the buoyant weight methodology since these refer to two-dimensional
-reef planar area and not three-dimensional coral colony surface area,
-the relative differences in growth rates among species provides a
-framework for us to build this statistical power model.
+with the buoyant weight methodology, the relative differences in growth
+rates among species provides a framework for us to build this
+statistical power model.
 
 Next, I estimated power-sample size curves with pooled standard
 deviations (SD) varying from 0.05 - 0.25
@@ -936,13 +944,7 @@ Figure 1. Group-size power curves for estimated % increase in growth
 rates. Vertical line denotes 80% power.
 </h5>
 
-<img src="/notebook/images/matPowerAnalysis/calculating-1.png" width="90%" style="display: block; margin: auto;" />\#
-A tibble: 16 x 4 matMultpiplier power sd n <fct> <dbl> <dbl> <dbl> 1 10%
-0.2 0.25 9 2 10% 0.25 0.25 11 3 10% 0.3 0.25 14 4 10% 0.35 0.25 16 5 10%
-0.4 0.25 19 6 10% 0.45 0.25 22 7 10% 0.5 0.25 25 8 10% 0.55 0.25 28 9
-10% 0.6 0.25 32 10 10% 0.65 0.25 35 11 10% 0.7 0.25 40 12 10% 0.75 0.25
-44 13 10% 0.8 0.25 50 14 10% 0.85 0.25 57 15 10% 0.9 0.25 67 16 10% 0.95
-0.25 82
+<img src="/notebook/images/matPowerAnalysis/calculating-1.png" width="90%" style="display: block; margin: auto;" />
 
 From these power-sample size curves, we can see that we need at least 14
 fragments per treatment group to have 80% power and detect a 20%
@@ -962,8 +964,8 @@ If the observed growth rate is a modest 10% and the pooled SD is 0.25
 $g \text{ } cm^{-2} \text{ } yr^{-1}$, then we would only have 30% power
 with an n=14. We would need 50 fragments per group to detect a 10%
 increase with the same pooled SD, which is unfeasible. However, if MAT
-only increases growth rates this much, it would not be able to overcome
-the decreases in growth rates expected by ocean acidification.
+only increases growth rates by 10%, it would not be able to overcome the
+decreases in growth rates expected by ocean acidification.
 
 Since we have two aquariums per treatment, we can divide the required
 sample size evenly and have seven fragments per species per aquarium.
@@ -972,10 +974,11 @@ will be a two way anova as described above. The second model will
 incorporate the aquarium as a random effect, which will be compared
 against the fixed effects model. Ideally, there is no statistical
 advantage gained from the mixed effects model (as judged by AIC) since
-the two aquaria will have equal treatment conditions should thus exhibit
-the same growth patterns. Nevertheless, incorporating this mixed effects
-model will improve the statistical power compared to a normal
-fixed-effects ANOVA.
+the two aquaria will have equal treatment conditions and should thus
+exhibit the same growth patterns. Nevertheless, incorporating this mixed
+effects model will likely improve the statistical power compared to a
+normal fixed-effects ANOVA if the standard deviation is greater than
+what was estimated above.
 
 # Mixed Effects Power
 
