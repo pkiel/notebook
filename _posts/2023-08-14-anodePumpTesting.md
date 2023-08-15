@@ -97,16 +97,12 @@ pkiel </a> on
 ## Electrochemistry Half Reactions
 
 1.  @ the steel cathode, oxygen/water reduction
-
-- $O_{2(g)} + 2H_20_{(aq)} + 4e^- \rightarrow 4OH^-_{(aq)}$ (oxygen
-  reduction)
-- $2H_2O_{(aq)} + 2e^- \rightarrow H_{2(g)} + 2(OH)^- _{(aq)}$ (water
-  reduction)
-- $OH^-_{(aq)} + HCO_3^{2-} \iff CO_3^{2-} + H_2O_{(aq)}$
-
+    $O_{2(g)} + 2H_20_{(aq)} + 4e^- \rightarrow 4OH^-_{(aq)}$ (oxygen
+    reduction)
+    $2H_2O_{(aq)} + 2e^- \rightarrow H_{2(g)} + 2(OH)^- _{(aq)}$ (water
+    reduction) $OH^-_{(aq)} + HCO_3^{2-} \iff CO_3^{2-} + H_2O_{(aq)}$
 2.  @ the platinum anode, oxidation of chloride
-
-- $2Cl^-_{(aq)} \rightarrow Cl_{2(g)} + 2e^-$
+    $2Cl^-_{(aq)} \rightarrow Cl_{2(g)} + 2e^-$
 
 For steel, the potential needs to be \< -0.356V/SSC (potential relative
 to silver-silver chloride electrode) to be below the corrosion domain.

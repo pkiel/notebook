@@ -130,11 +130,11 @@ As a reminder, here is the system:
 ## Electrochemistry Half Reactions
 
 1. @ the steel cathode, oxygen/water reduction
- * $O_{2(g)} + 2H_20_{(aq)} + 4e^- \rightarrow 4OH^-_{(aq)}$ (oxygen reduction)
- * $2H_2O_{(aq)} + 2e^- \rightarrow H_{2(g)} + 2(OH)^- _{(aq)}$ (water reduction)
- * $OH^-_{(aq)} + HCO_3^{2-} \iff CO_3^{2-} + H_2O_{(aq)}$
+ $O_{2(g)} + 2H_20_{(aq)} + 4e^- \rightarrow 4OH^-_{(aq)}$ (oxygen reduction)
+ $2H_2O_{(aq)} + 2e^- \rightarrow H_{2(g)} + 2(OH)^- _{(aq)}$ (water reduction)
+ $OH^-_{(aq)} + HCO_3^{2-} \iff CO_3^{2-} + H_2O_{(aq)}$
 2. @ the platinum anode, oxidation of chloride
- * $2Cl^-_{(aq)} \rightarrow Cl_{2(g)} + 2e^-$
+ $2Cl^-_{(aq)} \rightarrow Cl_{2(g)} + 2e^-$
  
 For steel, the potential needs to be < -0.356V/SSC (potential relative to silver-silver chloride electrode) to be below the corrosion domain. From -0.406 to -1.006V/SSC, the cathode is in the oxygen reduction domain; above 1.006V/SSC, the steel is in the water reduction domain. On a steel cathode, potentials more cathodic than −1.044 V/SCC, the pH value at the steel–seawater interface will exceed 9.0, which may favor the formation of brucite Mg(OH)2, which requires a minimum value of 9.3. 
 
