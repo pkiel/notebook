@@ -163,8 +163,9 @@ Total Alkalinity (TA, sometimes stylized in papers as $A_T$) can be
 defined as the total buffering capacity of the seawater, or the excess
 of proton receptors over proton donors,
 
-$$TA =  [HCO_3^-] +  2[CO^{2-}_3] + [B(OH)^-_4] + [OH^-] + [HPO^{2-}_4] + 2[PO^{3-}_4] +\\
-[SiO(OH)^-_3] + [NH3] + [HS^-] - [HSO_4^-] - [H^+]_F - [HF] -\\ [H_3PO_4] + [\text{minor acids - minor bases}]$$
+$TA = [HCO_3^-] + 2[CO^{2-}_3] + [B(OH)^-_4] + [OH^-] + [HPO^{2-}_4] + 2[PO^{3-}_4] +$
+$[SiO(OH)^-_3] + [NH3] + [HS^-] - [HSO_4^-] - [H^+]_F - [HF] -$
+$[H_3PO_4] + [\text{minor acids - minor bases}]$
 
 TA is influenced predominantly by bicarbonate and carbonate ion
 concentration along with a myriad of other minor constituents (Murillo
