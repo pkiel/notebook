@@ -119,9 +119,9 @@ capFig = function(x){
 
 # Overview
 
-Anaerobic respiration pathways are diverse and predate the evolution of photosynthesis. With the predicted increase in hypoxia events on coral reefs, it is imperative that scientists understand coral metabolism under low-oxygen to better predict coral survival under climate change scenarios. There are four conserved pathways among eukaryotas we will be investigating within our coral hypoxia experiment. The four enzymes which oxidize NADH in anaerobic respiration include lactate (LDH), octopine (ODH), alanopine (ADH), and strombine (SDH) dehydrogenase activities. You can read more about these enzymes and their roles in coral metabolism by reading, [Murphy and Richmond (2016) doi:10.7717/peerj.1956](doi.org/10.7717/peerj.1956) and the references within, or consult your Cellular and Molecular Biology textbook.
+Anaerobic respiration pathways are diverse and predate the evolution of photosynthesis. With the predicted increase in hypoxia events on coral reefs, it is imperative that scientists understand coral metabolism in low-oxygen environments to better predict coral survival under future climate change scenarios. There are four conserved pathways among eukaryotas we will be investigating within our coral hypoxia experiment. The four enzymes which oxidize NADH in anaerobic respiration include lactate (LDH), octopine (ODH), alanopine (ADH), and strombine (SDH) dehydrogenase activities. You can read more about these enzymes and their roles in coral metabolism by reading, [Murphy and Richmond (2016) doi:10.7717/peerj.1956](https://www.doi.org/10.7717/peerj.1956) and the references within, or consult your Cellular and Molecular Biology textbook.
 
-The following sections detail how we quantitatively assess the activities of these four enzymes within corals. Briefly, we sample polyps from a coral, homogenize in a Tris buffer solution, add aliquots to a 96-well plate with reagents, and measure the absorbance over time to calculate enzyme NADH reduction activity. We will also measure total protein concentrations to standardize enzyme activity rates. 
+The following sections detail how we quantitatively assess the activities of these four enzymes within corals. Briefly, we sample polyps from a coral, homogenize in a Tris buffer solution, add aliquot to a 96-well plate with reagents, and measure the absorbance over time to calculate enzyme NADH reduction activity. We will also measure total protein concentrations to standardize enzyme activity rates. 
 
 # Load plate_map
 
@@ -146,13 +146,16 @@ data.frame(`row` = LETTERS[1:8],
   kbl()
 ```
 
-It is important to follow the plate map carefully to keep track of samples and to later analyze the data with a script to automatically process the samples. (You can find a copy of the plate map here.)[https://patrickmkiel.com/notebook/images/hypoxiaEnzymeAssay/specPlateMap.xlsx]
+
+It is important to follow the plate map carefully to keep track of samples and to later analyze the data with a script to automatically process the samples. [You can find a copy of the plate map here.](https://patrickmkiel.com/notebook/images/hypoxiaEnzymeAssay/specPlateMap.xlsx)
 
 For this format, keep in mind the following:
+
  * The date shouldbe in the first coloumn in mm/dd/YYYY format, directly above the plates 
  * In column N, list all plate names that match the map; one plate name per row
  * Leave at least one blank row between distinct plate maps
  * You can have multiple plates for one date and you can have multiple dates per excel file.
+ 
  
 ## Plate Map Processing Code
 
@@ -352,14 +355,16 @@ Where might this be useful? Perhaps you create a complex equation that models ho
 #define the se of the m term from the standard curve
 m_err <- 2.309e-05
 
+capTab("Example of error propagation")
 mcExample %>%
   mutate(protein.normal = ((Abs-0.11)-0.0259)/0.0006,
          protein.mc = mean((((Abs-0.11)+rnorm(1000)*sd)-0.0259)/(0.0006+rnorm(1000)*m_err)),
-         protein.mc_err = sd((((Abs-0.11)+rnorm(1000)*sd)-0.0259)/(0.0006+rnorm(1000)*m_err)))
+         protein.mc_err = sd((((Abs-0.11)+rnorm(1000)*sd)-0.0259)/(0.0006+rnorm(1000)*m_err))) %>%
+  kbl()
            
 
 ```
-
+You can see there is only a slight difference in the accepted value using the standard calculation or the Monte Carlo calculation. This is due to the 1000 random points selected within a random distrubtion of the associated error. Since these points are random, each time you rerun the code (unless you set a seed), you will calculate a slightly different value. These values, however, will be well within the associated error calculated in the last coloumn. 
 
 </div>
 

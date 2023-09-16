@@ -67,20 +67,21 @@ table {
 
 Anaerobic respiration pathways are diverse and predate the evolution of
 photosynthesis. With the predicted increase in hypoxia events on coral
-reefs, it is imperative that scientists understand coral metabolism
-under low-oxygen to better predict coral survival under climate change
-scenarios. There are four conserved pathways among eukaryotas we will be
-investigating within our coral hypoxia experiment. The four enzymes
-which oxidize NADH in anaerobic respiration include lactate (LDH),
-octopine (ODH), alanopine (ADH), and strombine (SDH) dehydrogenase
-activities. You can read more about these enzymes and their roles in
-coral metabolism by reading, [Murphy and Richmond (2016)
-doi:10.7717/peerj.1956](doi.org/10.7717/peerj.1956) and the references
-within, or consult your Cellular and Molecular Biology textbook.
+reefs, it is imperative that scientists understand coral metabolism in
+low-oxygen environments to better predict coral survival under future
+climate change scenarios. There are four conserved pathways among
+eukaryotas we will be investigating within our coral hypoxia experiment.
+The four enzymes which oxidize NADH in anaerobic respiration include
+lactate (LDH), octopine (ODH), alanopine (ADH), and strombine (SDH)
+dehydrogenase activities. You can read more about these enzymes and
+their roles in coral metabolism by reading, [Murphy and Richmond (2016)
+doi:10.7717/peerj.1956](https://www.doi.org/10.7717/peerj.1956) and the
+references within, or consult your Cellular and Molecular Biology
+textbook.
 
 The following sections detail how we quantitatively assess the
 activities of these four enzymes within corals. Briefly, we sample
-polyps from a coral, homogenize in a Tris buffer solution, add aliquots
+polyps from a coral, homogenize in a Tris buffer solution, add aliquot
 to a 96-well plate with reagents, and measure the absorbance over time
 to calculate enzyme NADH reduction activity. We will also measure total
 protein concentrations to standardize enzyme activity rates.
@@ -471,15 +472,18 @@ H
 
 It is important to follow the plate map carefully to keep track of
 samples and to later analyze the data with a script to automatically
-process the samples. (You can find a copy of the plate map
-here.)\[<https://patrickmkiel.com/notebook/images/hypoxiaEnzymeAssay/specPlateMap.xlsx>\]
+process the samples. [You can find a copy of the plate map
+here.](https://patrickmkiel.com/notebook/images/hypoxiaEnzymeAssay/specPlateMap.xlsx)
 
-For this format, keep in mind the following: \* The date shouldbe in the
-first coloumn in mm/dd/YYYY format, directly above the plates \* In
-column N, list all plate names that match the map; one plate name per
-row \* Leave at least one blank row between distinct plate maps \* You
-can have multiple plates for one date and you can have multiple dates
-per excel file.
+For this format, keep in mind the following:
+
+- The date shouldbe in the first coloumn in mm/dd/YYYY format, directly
+  above the plates
+- In column N, list all plate names that match the map; one plate name
+  per row
+- Leave at least one blank row between distinct plate maps
+- You can have multiple plates for one date and you can have multiple
+  dates per excel file.
 
 ## Plate Map Processing Code
 
@@ -904,20 +908,170 @@ and the more uncertainties that exist.
 #define the se of the m term from the standard curve
 m_err <- 2.309e-05
 
+capTab("Example of error propagation")
+```
+
+Table 4. Example of error propagation
+
+``` r
 mcExample %>%
   mutate(protein.normal = ((Abs-0.11)-0.0259)/0.0006,
          protein.mc = mean((((Abs-0.11)+rnorm(1000)*sd)-0.0259)/(0.0006+rnorm(1000)*m_err)),
-         protein.mc_err = sd((((Abs-0.11)+rnorm(1000)*sd)-0.0259)/(0.0006+rnorm(1000)*m_err)))
+         protein.mc_err = sd((((Abs-0.11)+rnorm(1000)*sd)-0.0259)/(0.0006+rnorm(1000)*m_err))) %>%
+  kbl()
 ```
 
-# A tibble: 5 x 7
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+sample
+</th>
+<th style="text-align:left;">
+type
+</th>
+<th style="text-align:right;">
+Abs
+</th>
+<th style="text-align:right;">
+sd
+</th>
+<th style="text-align:right;">
+protein.normal
+</th>
+<th style="text-align:right;">
+protein.mc
+</th>
+<th style="text-align:right;">
+protein.mc_err
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+D1
+</td>
+<td style="text-align:left;">
+PROTEIN
+</td>
+<td style="text-align:right;">
+0.3718667
+</td>
+<td style="text-align:right;">
+0.0055429
+</td>
+<td style="text-align:right;">
+393.2778
+</td>
+<td style="text-align:right;">
+393.7224
+</td>
+<td style="text-align:right;">
+18.31061
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D10
+</td>
+<td style="text-align:left;">
+PROTEIN
+</td>
+<td style="text-align:right;">
+0.5114333
+</td>
+<td style="text-align:right;">
+0.0236673
+</td>
+<td style="text-align:right;">
+625.8889
+</td>
+<td style="text-align:right;">
+627.0086
+</td>
+<td style="text-align:right;">
+48.73677
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D11
+</td>
+<td style="text-align:left;">
+PROTEIN
+</td>
+<td style="text-align:right;">
+0.5755000
+</td>
+<td style="text-align:right;">
+0.0165176
+</td>
+<td style="text-align:right;">
+732.6667
+</td>
+<td style="text-align:right;">
+734.6555
+</td>
+<td style="text-align:right;">
+37.53292
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D12
+</td>
+<td style="text-align:left;">
+PROTEIN
+</td>
+<td style="text-align:right;">
+0.4844667
+</td>
+<td style="text-align:right;">
+0.0077106
+</td>
+<td style="text-align:right;">
+580.9444
+</td>
+<td style="text-align:right;">
+582.4346
+</td>
+<td style="text-align:right;">
+25.96213
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D2
+</td>
+<td style="text-align:left;">
+PROTEIN
+</td>
+<td style="text-align:right;">
+0.4010333
+</td>
+<td style="text-align:right;">
+0.0071009
+</td>
+<td style="text-align:right;">
+441.8889
+</td>
+<td style="text-align:right;">
+443.0279
+</td>
+<td style="text-align:right;">
+21.29554
+</td>
+</tr>
+</tbody>
+</table>
 
-# Groups: sample, type \[5\]
-
-sample type Abs sd protein.normal protein.mc protein.mc_err <chr> <chr>
-<dbl> <dbl> <dbl> <dbl> <dbl> 1 D1 PROTEIN 0.372 0.00554 393. 393. 17.0
-2 D10 PROTEIN 0.511 0.0237 626. 627. 43.4 3 D11 PROTEIN 0.576 0.0165
-733. 735. 39.7 4 D12 PROTEIN 0.484 0.00771 581. 581. 25.0 5 D2 PROTEIN
-0.401 0.00710 442. 444. 20.6
+You can see there is only a slight difference in the accepted value
+using the standard calculation or the Monte Carlo calculation. This is
+due to the 1000 random points selected within a random distrubtion of
+the associated error. Since these points are random, each time you rerun
+the code (unless you set a seed), you will calculate a slightly
+different value. These values, however, will be well within the
+associated error calculated in the last coloumn.
 
 </div>
