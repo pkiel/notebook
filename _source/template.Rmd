@@ -29,6 +29,7 @@ library(kableExtra)
 library(readxl)
 library(ggpubr)
 library(rstatix)
+library(wesanderson)
 
 base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
 base_url <- "/notebook/" # subdirectory of patrickmkiel.com
@@ -44,6 +45,11 @@ knitr::opts_chunk$set(fig.path = fig_path,
                     dpi = 300,
                     message=FALSE, warning=FALSE,
                     cache = FALSE, results = "asis")
+
+
+#set default color paletes
+options(ggplot2.discrete.fill=wes_palette("Darjeeling1"))
+options(ggplot2.discrete.colour=wes_palette("Darjeeling1"))
 ```
 
 ```{js}
