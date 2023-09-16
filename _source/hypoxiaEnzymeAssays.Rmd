@@ -119,11 +119,11 @@ capFig = function(x){
 
 # Overview
 
-Anaerobic respiration pathways are diverse and predate the evolution of photosynthesis. With the predicted increase in hypoxia events on coral reefs, it is imperative that scientists understand coral metabolism in low-oxygen environments to better predict coral survival under future climate change scenarios. There are four conserved pathways among eukaryotas we will be investigating within our coral hypoxia experiment. The four enzymes which oxidize NADH in anaerobic respiration include lactate (LDH), octopine (ODH), alanopine (ADH), and strombine (SDH) dehydrogenase activities. You can read more about these enzymes and their roles in coral metabolism by reading, [Murphy and Richmond (2016) doi:10.7717/peerj.1956](https://www.doi.org/10.7717/peerj.1956) and the references within, or consult your Cellular and Molecular Biology textbook.
+Anaerobic respiration pathways are diverse and predate the evolution of photosynthesis. With the predicted increase in hypoxia events on coral reefs, it is imperative that scientists understand coral metabolism in low-oxygen environments to better predict coral health and survival under future climate change scenarios. There are four conserved pathways among eukaryotas we will be investigating within our coral hypoxia experiment, including lactate (LDH), octopine (ODH), alanopine (ADH), and strombine (SDH) dehydrogenase activities, all of which oxidize NADH during anaerobic respiration. You can read more about these enzymes and their roles in coral metabolism by reading, [Murphy and Richmond (2016) doi:10.7717/peerj.1956](https://www.doi.org/10.7717/peerj.1956) and the references within, or consult your Cellular and Molecular Biology textbook.
 
-The following sections detail how we quantitatively assess the activities of these four enzymes within corals. Briefly, we sample polyps from a coral, homogenize in a Tris buffer solution, add aliquot to a 96-well plate with reagents, and measure the absorbance over time to calculate enzyme NADH reduction activity. We will also measure total protein concentrations to standardize enzyme activity rates. 
+The following sections detail how we quantitatively assess the activities of these four enzymes within corals. Briefly, we sample polyps from a coral, homogenize in a Tris buffer solution, aliquot to a 96-well plate with reagents, and measure the absorbance over time to calculate enzyme NADH oxidation activity. We will also measure total protein concentrations to standardize enzyme activity rates. 
 
-# Load plate_map
+# Load the Plate Map
 
 A 96-well plate helps us efficiently analyze multiple samples and replicates of each sample. Because there are a lot of samples, however, it is easy to mixup which well corresponds to which coral. To solve this problem, we will use a plate map. 
 
@@ -142,17 +142,18 @@ data.frame(`row` = LETTERS[1:8],
            `9` = c("Sample3", rep("...", 7)),
            `10` = c("Sample4", rep("...", 7)),
            `11` = c("Sample4", rep("...", 7)),
-           `12` = c("Sample4", rep("...", 7))) %>%
+           `12` = c("Sample4", rep("...", 7)), check.names = F) %>%
   kbl()
 ```
+
 
 
 It is important to follow the plate map carefully to keep track of samples and to later analyze the data with a script to automatically process the samples. [You can find a copy of the plate map here.](https://patrickmkiel.com/notebook/images/hypoxiaEnzymeAssay/specPlateMap.xlsx)
 
 For this format, keep in mind the following:
 
- * The date shouldbe in the first coloumn in mm/dd/YYYY format, directly above the plates 
- * In column N, list all plate names that match the map; one plate name per row
+ * The date should be in the first column in mm/dd/YYYY format, directly above the plates 
+ * In column N, list all plate names that correspond with the map; one plate name per row
  * Leave at least one blank row between distinct plate maps
  * You can have multiple plates for one date and you can have multiple dates per excel file.
  
@@ -302,29 +303,39 @@ dat <- spec_dat %>%
             by = c("plate_map", "plate_name", "date")) %>%
   group_by(sample, type, time) %>%
   summarise(sd = sd(Abs, na.rm=T),
-            range = abs(max(Abs)-min(Abs)),
             Abs = mean(Abs, na.rm=T))
 ```
 
 Now we need to convert from our absorbance to our total protein or [NADH] concentration. To do that, we will need to use our standard curves.
 
 ```{r standardCurves}
-curve <- structure(list(concentration = c(1500L, 1000L, 750L, 500L, 250L, 
+curveProtein <- structure(list(concentration = c(1500L, 1000L, 750L, 500L, 250L, 
 125L, 25L, 0L, 2000L, 1500L, 1000L, 750L, 500L, 250L, 125L, 25L, 
 0L), Abs = c(0.869, 0.545, 0.5545, 0.385, 0.2135, 0.101, 0.015, 
 0, 1.333, 1.029, 0.728, 0.557, 0.4, 0.204, 0.1, 0.011, 0)), class = "data.frame", row.names = c(NA, 
 -17L))
+
+curveNADH <- structure(list(concentration = c(0, 0.25, 0.25, 0.25, 0.25, 0.3, 0.35, 
+                                              0.4, 0.45, 1, 1, 1.25, 1.25, 0.75, 0.75,
+                                              0.75, 0.5, 0.5, 0.5,0.5),
+                            Abs = c(0.0009, 0.1065, 0.1169, 0.0648, 0.0779, 0.1195, 
+                                    0.1430, 0.1195, 0.1756, 0.3984, 0.2954, 0.5104,
+                                    0.3919, 0.2733, 0.2251, 0.2329, 0.1326, 0.1534, 
+                                    0.1651, 0.1743)),
+                       class = "data.frame",
+                       row.names = c(NA, -20L))
+
 
 mcExample <- dat %>%
   filter(type=="PROTEIN") %>%
   select(sample, type, Abs, sd) %>%
   head(n=5)
 
-# mod <- lm(Abs ~ concentration, data = dat)
-# summary(mod)
+ mod <- lm(Abs ~ concentration, data = curveNADH)
+ summary(mod)
 
 capFig("Example standard curve for total protein concentration")
-curve %>%
+curveProtein %>%
   ggplot(aes(concentration, Abs)) +
   geom_point() +
   geom_smooth(method="lm", se=F) +
@@ -333,6 +344,17 @@ curve %>%
        title = "[Protein] = (Abs - 0.0259) / 0.00064") +
   annotate("text", x=250, y=1,
            label="y = 0.0064x + 0.0259\nR2 = 0.98")
+
+capFig("Example standard curve for NADH concentration")
+curveNADH %>%
+  ggplot(aes(concentration, Abs)) +
+  geom_point() +
+  geom_smooth(method="lm", se=F) +
+  theme_bw() +
+  labs(x = "[NADH] umol/mL",
+       title = "[NADH] = (Abs - 0.0026) / 0.3272") +
+  annotate("text", x=0.2, y=0.4,
+           label="y = 0.3272x + 0.0026\nR2 = 0.95")
   
 ```
 
@@ -366,7 +388,7 @@ capTab("Example of error propagation")
 ```
 
 
-You can see there is only a slight difference in the accepted value using the standard calculation or the Monte Carlo calculation. This is due to the 1000 random points selected within a random distrubtion of the associated error. Since these points are random, each time you rerun the code (unless you set a seed), you will calculate a slightly different value. These values, however, will be well within the associated error calculated in the last coloumn. 
+You can see there is only a slight difference in the accepted value using the standard calculation or the Monte Carlo calculation. This is due to the 1000 random points selected within a random distrubtion of the associated error. Since these points are random, each time you rerun the code (unless you set a seed), you will calculate a slightly different value. These values, however, will be well within the associated error calculated in the last column. 
 
 </div>
 

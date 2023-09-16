@@ -68,12 +68,12 @@ table {
 Anaerobic respiration pathways are diverse and predate the evolution of
 photosynthesis. With the predicted increase in hypoxia events on coral
 reefs, it is imperative that scientists understand coral metabolism in
-low-oxygen environments to better predict coral survival under future
-climate change scenarios. There are four conserved pathways among
-eukaryotas we will be investigating within our coral hypoxia experiment.
-The four enzymes which oxidize NADH in anaerobic respiration include
-lactate (LDH), octopine (ODH), alanopine (ADH), and strombine (SDH)
-dehydrogenase activities. You can read more about these enzymes and
+low-oxygen environments to better predict coral health and survival
+under future climate change scenarios. There are four conserved pathways
+among eukaryotas we will be investigating within our coral hypoxia
+experiment, including lactate (LDH), octopine (ODH), alanopine (ADH),
+and strombine (SDH) dehydrogenase activities, all of which oxidize NADH
+during anaerobic respiration. You can read more about these enzymes and
 their roles in coral metabolism by reading, [Murphy and Richmond (2016)
 doi:10.7717/peerj.1956](https://www.doi.org/10.7717/peerj.1956) and the
 references within, or consult your Cellular and Molecular Biology
@@ -81,12 +81,12 @@ textbook.
 
 The following sections detail how we quantitatively assess the
 activities of these four enzymes within corals. Briefly, we sample
-polyps from a coral, homogenize in a Tris buffer solution, add aliquot
-to a 96-well plate with reagents, and measure the absorbance over time
-to calculate enzyme NADH reduction activity. We will also measure total
+polyps from a coral, homogenize in a Tris buffer solution, aliquot to a
+96-well plate with reagents, and measure the absorbance over time to
+calculate enzyme NADH oxidation activity. We will also measure total
 protein concentrations to standardize enzyme activity rates.
 
-# Load plate_map
+# Load the Plate Map
 
 A 96-well plate helps us efficiently analyze multiple samples and
 replicates of each sample. Because there are a lot of samples, however,
@@ -101,40 +101,40 @@ Table 1. Example of a 96-well plate map
 row
 </th>
 <th style="text-align:left;">
-X1
+1
 </th>
 <th style="text-align:left;">
-X2
+2
 </th>
 <th style="text-align:left;">
-X3
+3
 </th>
 <th style="text-align:left;">
-X4
+4
 </th>
 <th style="text-align:left;">
-X5
+5
 </th>
 <th style="text-align:left;">
-X6
+6
 </th>
 <th style="text-align:left;">
-X7
+7
 </th>
 <th style="text-align:left;">
-X8
+8
 </th>
 <th style="text-align:left;">
-X9
+9
 </th>
 <th style="text-align:left;">
-X10
+10
 </th>
 <th style="text-align:left;">
-X11
+11
 </th>
 <th style="text-align:left;">
-X12
+12
 </th>
 </tr>
 </thead>
@@ -477,10 +477,10 @@ here.](https://patrickmkiel.com/notebook/images/hypoxiaEnzymeAssay/specPlateMap.
 
 For this format, keep in mind the following:
 
-- The date shouldbe in the first coloumn in mm/dd/YYYY format, directly
+- The date should be in the first column in mm/dd/YYYY format, directly
   above the plates
-- In column N, list all plate names that match the map; one plate name
-  per row
+- In column N, list all plate names that correspond with the map; one
+  plate name per row
 - Leave at least one blank row between distinct plate maps
 - You can have multiple plates for one date and you can have multiple
   dates per excel file.
@@ -843,7 +843,6 @@ dat <- spec_dat %>%
             by = c("plate_map", "plate_name", "date")) %>%
   group_by(sample, type, time) %>%
   summarise(sd = sd(Abs, na.rm=T),
-            range = abs(max(Abs)-min(Abs)),
             Abs = mean(Abs, na.rm=T))
 ```
 
@@ -851,11 +850,29 @@ Now we need to convert from our absorbance to our total protein or
 \[NADH\] concentration. To do that, we will need to use our standard
 curves.
 
+Call: lm(formula = Abs \~ concentration, data = curveNADH)
+
+Residuals: Min 1Q Median 3Q Max -0.051174 -0.021601 -0.002326 0.021174
+0.076567
+
+Coefficients: Estimate Std. Error t value Pr(\>\|t\|)  
+(Intercept) -0.002463 0.014594 -0.169 0.868  
+concentration 0.349037 0.022208 15.717 5.89e-12 \*\*\* — Signif. codes:
+0 ‘***’ 0.001 ’**’ 0.01 ’*’ 0.05 ‘.’ 0.1 ’ ’ 1
+
+Residual standard error: 0.03375 on 18 degrees of freedom Multiple
+R-squared: 0.9321, Adjusted R-squared: 0.9283 F-statistic: 247 on 1 and
+18 DF, p-value: 5.887e-12
+
 <h5>
 Figure 1. Example standard curve for total protein concentration
 </h5>
-
 <img src="/notebook/images/hypoxiaEnzymeAssay/standardCurves-1.png" width="90%" style="display: block; margin: auto;" />
+<h5>
+Figure 2. Example standard curve for NADH concentration
+</h5>
+
+<img src="/notebook/images/hypoxiaEnzymeAssay/standardCurves-2.png" width="90%" style="display: block; margin: auto;" />
 
 ## Processing Code
 
@@ -962,10 +979,10 @@ PROTEIN
 393.2778
 </td>
 <td style="text-align:right;">
-394.3286
+394.1635
 </td>
 <td style="text-align:right;">
-17.48872
+17.39769
 </td>
 </tr>
 <tr>
@@ -985,10 +1002,10 @@ PROTEIN
 625.8889
 </td>
 <td style="text-align:right;">
-627.0772
+625.6822
 </td>
 <td style="text-align:right;">
-46.22985
+47.10522
 </td>
 </tr>
 <tr>
@@ -1008,10 +1025,10 @@ PROTEIN
 732.6667
 </td>
 <td style="text-align:right;">
-733.9122
+732.6652
 </td>
 <td style="text-align:right;">
-39.19644
+38.32466
 </td>
 </tr>
 <tr>
@@ -1031,10 +1048,10 @@ PROTEIN
 580.9444
 </td>
 <td style="text-align:right;">
-582.2824
+581.9595
 </td>
 <td style="text-align:right;">
-25.69766
+26.43587
 </td>
 </tr>
 <tr>
@@ -1054,10 +1071,10 @@ PROTEIN
 441.8889
 </td>
 <td style="text-align:right;">
-442.7021
+442.2734
 </td>
 <td style="text-align:right;">
-21.04786
+20.79526
 </td>
 </tr>
 </tbody>
@@ -1069,6 +1086,6 @@ due to the 1000 random points selected within a random distrubtion of
 the associated error. Since these points are random, each time you rerun
 the code (unless you set a seed), you will calculate a slightly
 different value. These values, however, will be well within the
-associated error calculated in the last coloumn.
+associated error calculated in the last column.
 
 </div>
