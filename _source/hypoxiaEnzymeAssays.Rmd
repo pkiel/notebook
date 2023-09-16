@@ -331,8 +331,8 @@ mcExample <- dat %>%
   select(sample, type, Abs, sd) %>%
   head(n=5)
 
- mod <- lm(Abs ~ concentration, data = curveNADH)
- summary(mod)
+ # mod <- lm(Abs ~ concentration, data = curveNADH)
+ # summary(mod)
 
 capFig("Example standard curve for total protein concentration")
 curveProtein %>%

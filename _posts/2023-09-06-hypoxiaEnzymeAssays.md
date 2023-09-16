@@ -850,20 +850,6 @@ Now we need to convert from our absorbance to our total protein or
 \[NADH\] concentration. To do that, we will need to use our standard
 curves.
 
-Call: lm(formula = Abs \~ concentration, data = curveNADH)
-
-Residuals: Min 1Q Median 3Q Max -0.051174 -0.021601 -0.002326 0.021174
-0.076567
-
-Coefficients: Estimate Std. Error t value Pr(\>\|t\|)  
-(Intercept) -0.002463 0.014594 -0.169 0.868  
-concentration 0.349037 0.022208 15.717 5.89e-12 \*\*\* — Signif. codes:
-0 ‘***’ 0.001 ’**’ 0.01 ’*’ 0.05 ‘.’ 0.1 ’ ’ 1
-
-Residual standard error: 0.03375 on 18 degrees of freedom Multiple
-R-squared: 0.9321, Adjusted R-squared: 0.9283 F-statistic: 247 on 1 and
-18 DF, p-value: 5.887e-12
-
 <h5>
 Figure 1. Example standard curve for total protein concentration
 </h5>
@@ -979,10 +965,10 @@ PROTEIN
 393.2778
 </td>
 <td style="text-align:right;">
-394.1635
+394.8169
 </td>
 <td style="text-align:right;">
-17.39769
+17.84829
 </td>
 </tr>
 <tr>
@@ -1002,10 +988,10 @@ PROTEIN
 625.8889
 </td>
 <td style="text-align:right;">
-625.6822
+625.8309
 </td>
 <td style="text-align:right;">
-47.10522
+45.75794
 </td>
 </tr>
 <tr>
@@ -1025,10 +1011,10 @@ PROTEIN
 732.6667
 </td>
 <td style="text-align:right;">
-732.6652
+734.9911
 </td>
 <td style="text-align:right;">
-38.32466
+40.58257
 </td>
 </tr>
 <tr>
@@ -1048,10 +1034,10 @@ PROTEIN
 580.9444
 </td>
 <td style="text-align:right;">
-581.9595
+581.5575
 </td>
 <td style="text-align:right;">
-26.43587
+25.81513
 </td>
 </tr>
 <tr>
@@ -1071,10 +1057,10 @@ PROTEIN
 441.8889
 </td>
 <td style="text-align:right;">
-442.2734
+443.1641
 </td>
 <td style="text-align:right;">
-20.79526
+20.78246
 </td>
 </tr>
 </tbody>
