@@ -81,22 +81,21 @@ photosynthesis and respiration of all community constituents. DO is
 traditionally expressed in units of O2 mg/L, % air saturation, or
 $\mu$mol O2/L. When characterizing reef environments, these three units
 are interchangeable. % Air saturation is dependent upon temperature,
-salinity, and pressure, while the other units are pressure-free
-quantities. By convention, coral incubations generally use $\mu$mol
-O2/L.
+salinity, and depth, while the other units are pressure-free quantities.
+By convention, coral incubations generally use $\mu$mol O2/L.
 
 Hypoxia, or insufficient availability of DO, is defined as DO \< 2mg/L
-(24% air saturation/ 61 $\mu$mol O2/L). Low oxygen, but not hypoxia, is
-defined as DO \< 5 mg/L (60.52% air saturation/ 153 $\mu$mol O2/L).
+(24% Air saturation/ 61 $\mu$mol O2/L). Low oxygen, but not hypoxia, is
+defined as DO \< 5 mg/L (60.52% Air saturation/ 153 $\mu$mol O2/L).
 Hypoxia or low oxygen can be induced by warming, restricted water flow,
 increased biological oxygen demand, nutrient and organic matter loading,
 or influx of oxygen poor water.
 
 Normoxia, or the oxygen conditions normally experienced in healthy reef
 environments, has a mean daily DO of 7.3 mg/L (88% Air saturation/ 173
-$\mu$mol O2/L), mean daily range of 2.6 mg/L (42% air saturation/ 81
-$\mu$mol O2/L ), a mean daily minimum of 4.4 mg/L (69% air saturation/
-136 $\mu$mol O2/L), and a mean daily maximum of 6.9 mg/L (111% air
+$\mu$mol O2/L), mean daily range of 2.6 mg/L (42% Air saturation/ 81
+$\mu$mol O2/L ), a mean daily minimum of 4.4 mg/L (69% Air saturation/
+136 $\mu$mol O2/L), and a mean daily maximum of 6.9 mg/L (111% Air
 saturation/ 217 $\mu$mol O2/L). These mean normoxia values come from
 autonomous sensor data aggregated by [Pezner AK *et al.* (2023) Nat Clim
 Chang. 13:403-409](https://doi.org/10.1038/s41558-023-01619-2), and
@@ -110,27 +109,31 @@ Dissolved oxygen concentrations can be measured amperometricly on
 discrete water samples with the Winkler Titration or with oxygen optodes
 which leverage photo quenching of oxygen sensitive compounds. Generally,
 amperometric measurements are considered the most accurate, while
-optodes permit the execution of long term monitoring with in-situ
-autonomous sensors or continuous monitoring of incubation chambers. We
-will use both methods in this course. For details on the Winkler
-Titration, please refer to [Langdon (2010) “Determination of Dissolved
-Oxygen in Seaweater By Winkler Titration using Amperometric
+optodes permit long term monitoring with in-situ autonomous sensors or
+continuous monitoring of incubation chambers. We will use both methods
+in this course. For details on the Winkler Titration, please refer to
+[Langdon (2010) “Determination of Dissolved Oxygen in Seaweater By
+Winkler Titration using Amperometric
 Technique.”](https://doi.org/10.25607/OBP-1350)
+
+Since DO is a dynamic measurement which changes throughout the day, it
+is imperative that discrete water samples are collected at approximately
+the same time to minimize variability in the collected water samples.
 
 ## Carbonate Chemistry
 
 Ultimately, a “healthy” coral reef is defined by its ability to grow
 faster than dissolution and erosion processes since all ecological
-functions and ecosystem services are dependent upon the physical
-structure reefs build over long timescales. Growth is predominantly the
-result of continuous deposition of aragonite by hermatypic or reef
-building corals. Corals, and “healthy” reefs, therefore, need water
-chemistry that is favorable for calcification.
+functions and ecosystem services are dependent upon the persistence of
+the physical reef structure. Growth is predominantly the result of
+continuous deposition of aragonite by hermatypic or reef building
+corals. Corals, and “healthy” reefs, therefore, need water chemistry
+that is favorable for calcification.
 
-Coral calcification happens according to,
-$Ca^{2+} + CO_3^{2-} \rightarrow CaCO_3$, where calcium and carbonate
-ions are combined within the coral tissues to build the aragonite coral
-skeleton. One can quantify the thermodynamics of calcium carbonate by
+Coral calcification proceeds according to,
+$Ca^{2+} + CO_3^{2-} \iff CaCO_3$, where calcium and carbonate ions are
+combined within the coral tissues to build the aragonite coral skeleton.
+One can quantify the thermodynamics of calcium carbonate formation by
 looking at the aragonite or calcite saturation state ($\Omega$), which
 measures supersaturation of the respective mineral in a body of water.
 You can measure saturation state as
@@ -143,11 +146,12 @@ persists.
 
 The dominant driver of $\Omega$ is the net change in $[CO_3^{2-}]$.
 Under ocean acidification scenarios, carbonate ions react with carbon
-dioxide to form bicarbonate. Thus, bicarbonate increases and carbonate
-ions decrease, reducing the carbonate saturation state. Conversely,
-under alkalinity enhancement, the equilibrium switches and the equation
-reverses, where bicarbonate breaks down to increase carbonate
-concentration, thereby increasing the aragonite saturation state.
+dioxide to form bicarbonate. Thus, $[HCO_3^-]$ increases and
+$[CO_3^{2-}]$ decreases, reducing the calcium carbonate saturation
+state. Conversely, under alkalinity enhancement, the equilibrium
+switches and the equation reverses, where bicarbonate breaks down to
+increase $[CO_3^{2-}]$, thereby increasing the calcium carbonate
+saturation state.
 
 Dissolved inorganic carbon (DIC) is the total pool of inorganic carbon
 species in seawater, which includes carbonate, bicarbonate, and carbon
@@ -163,43 +167,344 @@ under extreme OA to historical pH values
 <img src="/notebook/images/hypoxiaEnzymeAssay/bjerru-plot-1.png" width="90%" style="display: block; margin: auto;" />
 
 Total Alkalinity (TA, sometimes stylized in papers as $A_T$) can be
-defined as the total buffering capacity of the seawater, or the excess
-of proton receptors over proton donors,
+defined as the total buffering capacity of seawater, or the excess of
+proton receptors over proton donors,
 
 <div align="center">
 
 $TA = [HCO_3^-] + 2[CO^{2-}_3] + [B(OH)^-_4] + [OH^-] + [HPO^{2-}_4] +$
-$2[PO^{3-}_4] + [SiO(OH)^-_3] + [NH3] + [HS^-] - [HSO_4^-] - [H^+]_F -$
+$2[PO^{3-}_4] + [SiO(OH)^-_3] + [NH3] + [HS^-] - [HSO_4^-] - [H^+]_T -$
 $[HF] - [H_3PO_4] + [\text{minor acids - minor bases}]$
 
 </div>
 
 TA is influenced predominantly by bicarbonate and carbonate ion
-concentration along with a myriad of other minor constituents (Murillo
-LJA *et al.* 2014).
+concentration along with a myriad of other minor constituents (Dickson
+AG 1981).
 
 The three main processes on coral reefs, calcification, photosynthesis,
 and respiration, are collectively referred to as the reef metabolism.
 Calcification releases two protons for every mole of calcium carbonate
-precipitated, and therefore will alter total alkalinity. Photosynthesis
-and respiration alter pH, due to changes in CO2, but do not change TA.
-Therefore, you can describe metabolic processes
-(calcification/photosynthesis), by knowing both DIC and TA. This is
-known as measuring the metabolic pulse of coral reefs and must be done
-on discrete water samples ([Cyronak T *et al.*
+precipitated, and therefore will alter total alkalinity in a 2:1 ratio
+of $\Delta$TA : calcification. Photosynthesis and respiration alter pH,
+due to changes in CO2, but do not change TA. Therefore, you can describe
+metabolic processes (calcification/photosynthesis), by knowing both DIC
+and TA. This is known as measuring the metabolic pulse of coral reefs
+and must be done on discrete water samples ([Cyronak T *et al.*
 2018](https://doi.org/10.1371/journal.pone.0190872)). Ongoing research
 seeks to characterize these metabolic processes from autonomous sensors,
 which measure DO and pH alone ([Cryer SE *et al.*
 2023.](https://doi.org/10.1029/2022GB007577)).
 
+Since carbonate chemistry is dynamic similar to DO, it is imperative
+that discrete water samples are collected at approximately the same time
+to minimize variability in the collected water samples.
+
 # Analytical Water Chemistry
+
+We will go over each instrument and its SOP in detail. The following
+section details how to work with the measured data.
 
 ## Carbonate Chemsitry
 
-As long as you know two parameters of the carbonate chemistry suite, you
-can calculate all other parameters. Generally you measure DIC and TA or
-TA and pH, as well as pressure related parameters including temperature,
-salinity, and depth. In our class, we will measure TA and pH to
-calculate all other parameters.
+Hopefully from the section above, you begin to see that there is slight
+overlap among each of these measurements. In fact there are four total
+parameters, all of which are thermodynamically constrained by each
+other. Therefore, as long as you measure two parameters, you can
+calculate the complete carbonate chemistry suite. Generally you measure
+DIC and TA or pH and TA, as well as pressure related parameters
+including temperature, salinity, and depth. In our class, we will
+measure TA and pH to calculate all other parameters.
+
+### Seacarb
+
+You can get into the weeds with the chemistry if you’d like. But as long
+as you understand everything thus far, you’re all set. We will use the
+seacarb package developed by biogeochemist Jean-Pierre Gattuso. This has
+largely replaced CO2SYS, which has been at the forefront of carbonate
+chemistry calculations for over 25 years. You may find reference to
+CO2SYS in the literature, just understand it does the same thing as
+seacarb.
+
+Within the seacarb package, we will mostly use the carb function with
+flag=8 (where we supply pH and TA, respectively) and additionally supply
+the salinity and temperature we recorded when the seawater sample was
+collected. The defaults for other arguments follow the Guide to best
+practices for ocean CO2 measurements, so we do not need to mess with
+them. We measure TA in $\mu$mol/kg, but seacarb wants TA in mol/kg, so
+make sure to divide var2 by 1,000,000.
+
+``` r
+install.packages("seacarb")
+
+carb(flag = 8, #which two variables are you supplying? we will use 8 (pH,TA)
+     #variable values in the respective order, units must be mol/kg except for pH
+     var1 = pH, var2 = TA.umol_kg/1000000, 
+     # salinity and temperature of the in situ conditions
+     S = sal, T = temp)
+```
+
+Other useful functions include pHconv to convert from total, seawater,
+and free scale and pHinsi to temperature correct pH if it was
+spectrophotometrically measured at a different temperature than when it
+was collected. As always, run ?pHconv or any other function in R to see
+the documentation, which will help you better understand the function.
+
+## Dissolved Oxygen
+
+We will use dissolved oxygen data both to calculate the average
+conditions the corals were exposed to and to manipulate incubation data
+to calculate productivity rates. These are fairly easy calculations we
+can revist once we collect the data we will analyze.
+
+## respR
+
+The respR package has many helpful functions to automatically analyze
+respirometry data. Its most helpful function is convert_DO() to convert
+between different units of DO including O2 mg/L, % air saturation, or
+$\mu$mol O2/L.
+
+I used the above equation to build the following table,
+
+Table 1. DO unit equivalencies at 25, 30, and 35 C and S=35ppt
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="empty-cells: hide;" colspan="3">
+</th>
+<th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3">
+
+<div style="border-bottom: 1px solid #111111; margin-bottom: -1px; ">
+
+% Air saturation
+
+</div>
+
+</th>
+</tr>
+<tr>
+<th style="text-align:right;">
+S
+</th>
+<th style="text-align:right;">
+mg/L
+</th>
+<th style="text-align:right;">
+umol/L
+</th>
+<th style="text-align:right;">
+25
+</th>
+<th style="text-align:right;">
+30
+</th>
+<th style="text-align:right;">
+35
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+0.25
+</td>
+<td style="text-align:right;">
+7.812793
+</td>
+<td style="text-align:right;">
+3.703099
+</td>
+<td style="text-align:right;">
+4.019935
+</td>
+<td style="text-align:right;">
+4.340608
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+1.25
+</td>
+<td style="text-align:right;">
+39.063965
+</td>
+<td style="text-align:right;">
+18.515496
+</td>
+<td style="text-align:right;">
+20.099673
+</td>
+<td style="text-align:right;">
+21.703042
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+4.50
+</td>
+<td style="text-align:right;">
+140.630274
+</td>
+<td style="text-align:right;">
+66.655786
+</td>
+<td style="text-align:right;">
+72.358822
+</td>
+<td style="text-align:right;">
+78.130950
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+6.25
+</td>
+<td style="text-align:right;">
+195.319825
+</td>
+<td style="text-align:right;">
+92.577480
+</td>
+<td style="text-align:right;">
+100.498364
+</td>
+<td style="text-align:right;">
+108.515209
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+7.75
+</td>
+<td style="text-align:right;">
+242.196582
+</td>
+<td style="text-align:right;">
+114.796076
+</td>
+<td style="text-align:right;">
+124.617971
+</td>
+<td style="text-align:right;">
+134.558859
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+8.50
+</td>
+<td style="text-align:right;">
+265.634961
+</td>
+<td style="text-align:right;">
+125.905373
+</td>
+<td style="text-align:right;">
+136.677775
+</td>
+<td style="text-align:right;">
+147.580684
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+8.75
+</td>
+<td style="text-align:right;">
+273.447754
+</td>
+<td style="text-align:right;">
+129.608473
+</td>
+<td style="text-align:right;">
+140.697710
+</td>
+<td style="text-align:right;">
+151.921292
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+9.00
+</td>
+<td style="text-align:right;">
+281.260547
+</td>
+<td style="text-align:right;">
+133.311572
+</td>
+<td style="text-align:right;">
+144.717644
+</td>
+<td style="text-align:right;">
+156.261900
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+9.50
+</td>
+<td style="text-align:right;">
+296.886133
+</td>
+<td style="text-align:right;">
+140.717770
+</td>
+<td style="text-align:right;">
+152.757513
+</td>
+<td style="text-align:right;">
+164.943117
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+9.75
+</td>
+<td style="text-align:right;">
+304.698926
+</td>
+<td style="text-align:right;">
+144.420869
+</td>
+<td style="text-align:right;">
+156.777448
+</td>
+<td style="text-align:right;">
+169.283726
+</td>
+</tr>
+</tbody>
+</table>
 
 </div>
