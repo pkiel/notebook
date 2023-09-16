@@ -78,31 +78,33 @@ characterize climate change.
 Dissolved oxygen (DO) is the amount of oxygen in seawater directly
 available to living organisms and is normally altered by the balance of
 photosynthesis and respiration of all community constituents. DO is
-traditionally expressed in units of O2 mg/L, % air saturation, or umol
-O2/L. When characterizing reef environments, these three units are
-interchangeable. % Air saturation is dependent upon temperature,
+traditionally expressed in units of O2 mg/L, % air saturation, or
+$\mu$mol O2/L. When characterizing reef environments, these three units
+are interchangeable. % Air saturation is dependent upon temperature,
 salinity, and pressure, while the other units are pressure-free
-quantities. By convention, coral incubations generally use umol O2/L.
+quantities. By convention, coral incubations generally use $\mu$mol
+O2/L.
 
 Hypoxia, or insufficient availability of DO, is defined as DO \< 2mg/L
-(24% air saturation/ 61 umol O2/L). Low oxygen, but not hypoxia, is
-defined as DO \< 5 mg/L (60.52% air saturation/ 153 umol O2/L). Hypoxia
-or low oxygen can be induced by warming, restricted water flow,
+(24% air saturation/ 61 $\mu$mol O2/L). Low oxygen, but not hypoxia, is
+defined as DO \< 5 mg/L (60.52% air saturation/ 153 $\mu$mol O2/L).
+Hypoxia or low oxygen can be induced by warming, restricted water flow,
 increased biological oxygen demand, nutrient and organic matter loading,
 or influx of oxygen poor water.
 
 Normoxia, or the oxygen conditions normally experienced in healthy reef
 environments, has a mean daily DO of 7.3 mg/L (88% Air saturation/ 173
-umol O2/L), mean daily range of 2.6 mg/L (42% air saturation/ 81 umol
-O2/L ), a mean daily minimum of 4.4 mg/L (69% air saturation/ 136 umol
-O2/L), and a mean daily maximum of 6.9 mg/L (111% air saturation/ 217
-umol O2/L). These mean normoxia values come from autonomous sensor data
-aggregated by [Pezner AK *et al.* (2023) Nat Clim Chang.
-13:403-409](https://doi.org/10.1038/s41558-023-01619-2), and provide a
-general overview of present-day oxygen conditions. Reef DO will vary as
-a function of benthic community composition, where higher scleractinian
-coral cover will have higher daily maximums compared to an algal
-dominated reef due to the high rates of endosymbiont photosynthesis.
+$\mu$mol O2/L), mean daily range of 2.6 mg/L (42% air saturation/ 81
+$\mu$mol O2/L ), a mean daily minimum of 4.4 mg/L (69% air saturation/
+136 $\mu$mol O2/L), and a mean daily maximum of 6.9 mg/L (111% air
+saturation/ 217 $\mu$mol O2/L). These mean normoxia values come from
+autonomous sensor data aggregated by [Pezner AK *et al.* (2023) Nat Clim
+Chang. 13:403-409](https://doi.org/10.1038/s41558-023-01619-2), and
+provide a general overview of present-day oxygen conditions. Reef DO
+will vary as a function of benthic community composition, where higher
+scleractinian coral cover will have higher daily maximums compared to an
+algal dominated reef due to the high rates of endosymbiont
+photosynthesis.
 
 Dissolved oxygen concentrations can be measured amperometricly on
 discrete water samples with the Winkler Titration or with oxygen optodes
@@ -154,7 +156,8 @@ uptake of carbon dioxide. The fraction of DIC species is pH dependent
 and can be readily visualized as follows,
 
 <h5>
-Figure 1. DIC speciation plot
+Figure 1. DIC speciation plot, shaded region corresponds to reef pH
+under extreme OA to historical pH values
 </h5>
 
 <img src="/notebook/images/hypoxiaEnzymeAssay/bjerru-plot-1.png" width="90%" style="display: block; margin: auto;" />
@@ -163,9 +166,13 @@ Total Alkalinity (TA, sometimes stylized in papers as $A_T$) can be
 defined as the total buffering capacity of the seawater, or the excess
 of proton receptors over proton donors,
 
-$TA = [HCO_3^-] + 2[CO^{2-}_3] + [B(OH)^-_4] + [OH^-] + [HPO^{2-}_4] + 2[PO^{3-}_4] +$
-$[SiO(OH)^-_3] + [NH3] + [HS^-] - [HSO_4^-] - [H^+]_F - [HF] -$
-$[H_3PO_4] + [\text{minor acids - minor bases}]$
+<div align="center">
+
+$TA = [HCO_3^-] + 2[CO^{2-}_3] + [B(OH)^-_4] + [OH^-] + [HPO^{2-}_4] +$
+$2[PO^{3-}_4] + [SiO(OH)^-_3] + [NH3] + [HS^-] - [HSO_4^-] - [H^+]_F -$
+$[HF] - [H_3PO_4] + [\text{minor acids - minor bases}]$
+
+</div>
 
 TA is influenced predominantly by bicarbonate and carbonate ion
 concentration along with a myriad of other minor constituents (Murillo

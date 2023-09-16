@@ -126,11 +126,11 @@ Carbonate chemistry and dissolved oxygen are important parameters that capture t
 
 ## Dissolved Oxygen
 
-Dissolved oxygen (DO) is the amount of oxygen in seawater directly available to living organisms and is normally altered by the balance of photosynthesis and respiration of all community constituents. DO is traditionally expressed in units of O2 mg/L, % air saturation, or umol O2/L. When characterizing reef environments, these three units are interchangeable. % Air saturation is dependent upon temperature, salinity, and pressure, while the other units are pressure-free quantities. By convention, coral incubations generally use umol O2/L.
+Dissolved oxygen (DO) is the amount of oxygen in seawater directly available to living organisms and is normally altered by the balance of photosynthesis and respiration of all community constituents. DO is traditionally expressed in units of O2 mg/L, % air saturation, or $\mu$mol O2/L. When characterizing reef environments, these three units are interchangeable. % Air saturation is dependent upon temperature, salinity, and pressure, while the other units are pressure-free quantities. By convention, coral incubations generally use $\mu$mol O2/L.
 
-Hypoxia, or insufficient availability of DO, is defined as DO < 2mg/L (24% air saturation/ 61 umol O2/L). Low oxygen, but not hypoxia, is defined as DO < 5 mg/L (60.52% air saturation/ 153 umol O2/L). Hypoxia or low oxygen can be induced by warming, restricted water flow, increased biological oxygen demand, nutrient and organic matter loading, or influx of oxygen poor water. 
+Hypoxia, or insufficient availability of DO, is defined as DO < 2mg/L (24% air saturation/ 61 $\mu$mol O2/L). Low oxygen, but not hypoxia, is defined as DO < 5 mg/L (60.52% air saturation/ 153 $\mu$mol O2/L). Hypoxia or low oxygen can be induced by warming, restricted water flow, increased biological oxygen demand, nutrient and organic matter loading, or influx of oxygen poor water. 
 
-Normoxia, or the oxygen conditions normally experienced in healthy reef environments, has a mean daily DO of 7.3 mg/L (88% Air saturation/ 173 umol O2/L), mean daily range of 2.6 mg/L (42% air saturation/ 81 umol O2/L ), a mean daily minimum of 4.4 mg/L (69% air saturation/ 136 umol O2/L), and a mean daily maximum of 6.9 mg/L (111% air saturation/ 217 umol O2/L). These mean normoxia values come from autonomous sensor data aggregated by [Pezner AK *et al.* (2023) Nat Clim Chang. 13:403-409](https://doi.org/10.1038/s41558-023-01619-2), and provide a general overview of present-day oxygen conditions. Reef DO will vary as a function of benthic community composition, where higher scleractinian coral cover will have higher daily maximums compared to an algal dominated reef due to the high rates of endosymbiont photosynthesis.
+Normoxia, or the oxygen conditions normally experienced in healthy reef environments, has a mean daily DO of 7.3 mg/L (88% Air saturation/ 173 $\mu$mol O2/L), mean daily range of 2.6 mg/L (42% air saturation/ 81 $\mu$mol O2/L ), a mean daily minimum of 4.4 mg/L (69% air saturation/ 136 $\mu$mol O2/L), and a mean daily maximum of 6.9 mg/L (111% air saturation/ 217 $\mu$mol O2/L). These mean normoxia values come from autonomous sensor data aggregated by [Pezner AK *et al.* (2023) Nat Clim Chang. 13:403-409](https://doi.org/10.1038/s41558-023-01619-2), and provide a general overview of present-day oxygen conditions. Reef DO will vary as a function of benthic community composition, where higher scleractinian coral cover will have higher daily maximums compared to an algal dominated reef due to the high rates of endosymbiont photosynthesis.
 
 Dissolved oxygen concentrations can be measured amperometricly on discrete water samples with the Winkler Titration or with oxygen optodes which leverage photo quenching of oxygen sensitive compounds. Generally, amperometric measurements are considered the most accurate, while optodes permit the execution of long term monitoring with in-situ autonomous sensors or continuous monitoring of incubation chambers. We will use both methods in this course. For details on the Winkler Titration, please refer to [Langdon (2010) "Determination of Dissolved Oxygen in Seaweater By Winkler Titration using Amperometric Technique."](https://doi.org/10.25607/OBP-1350)
 
@@ -145,7 +145,7 @@ The dominant driver of $\Omega$ is the net change in $[CO_3^{2-}]$. Under ocean 
 Dissolved inorganic carbon (DIC) is the total pool of inorganic carbon species in seawater, which includes carbonate, bicarbonate, and carbon dioxide. Under ocean acidification, DIC increases due to the oceanic uptake of carbon dioxide. The fraction of DIC species is pH dependent and can be readily visualized as follows,
 
 ```{r, bjerru-plot}
-capFig("DIC speciation plot")
+capFig("DIC speciation plot, shaded region corresponds to reef pH under extreme OA to historical pH values")
 bjerrum(K1(),K2(),lwd=2) 
 abline(v=-log10(K1()),col="grey")
 mtext(side=3,at=-log10(K1()),"pK1")
@@ -153,13 +153,16 @@ abline(v=-log10(K2()),col="grey")
 mtext(side=3,at=-log10(K2()),"pK2")
 legend("left",lty=1:3,lwd=2,legend=c(expression(CO[2]),expression(HCO[3]^"-"),
 	expression(CO[3]^"2-")))
+rect(7.4, -0.2, 8.4, 1.2, density = 20, col = "blue",
+     border = "transparent") # transparent
 ```
 
 Total Alkalinity (TA, sometimes stylized in papers as $A_T$) can be defined as the total buffering capacity of the seawater, or the excess of proton receptors over proton donors,
-
-$TA =  [HCO_3^-] +  2[CO^{2-}_3] + [B(OH)^-_4] + [OH^-] + [HPO^{2-}_4] + 2[PO^{3-}_4] +$
-$[SiO(OH)^-_3] + [NH3] + [HS^-] - [HSO_4^-] - [H^+]_F - [HF] -$
-$[H_3PO_4] + [\text{minor acids - minor bases}]$
+<div align="center">
+$TA =  [HCO_3^-] +  2[CO^{2-}_3] + [B(OH)^-_4] + [OH^-] + [HPO^{2-}_4] +$
+$2[PO^{3-}_4] + [SiO(OH)^-_3] + [NH3] + [HS^-] - [HSO_4^-] - [H^+]_F -$
+$[HF] - [H_3PO_4] + [\text{minor acids - minor bases}]$
+</div>
 
 TA is influenced predominantly by bicarbonate and carbonate ion concentration along with a myriad of other minor constituents (Murillo LJA *et al.* 2014).
 
