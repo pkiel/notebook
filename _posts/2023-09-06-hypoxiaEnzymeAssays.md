@@ -897,9 +897,12 @@ deviation of these 1,000 numbers as the error propagated standard error.
 It sounds confusing in words, but take a look at the code below and
 think about what each of the terms are doing.
 
-Where might this be useful? Perhaps you create a complex equation that
-models how sea level rise will change in the future. There are
-uncertainties in the present sea level you measure, plus the thermal
+Where might this be useful? Well here, you translated the errors
+associated with protein absorbances of an aliquot of coral tissue and
+expanded them to estimate the uncertainities around how much protein is
+in the coral you sampled. In the future, perhaps you create a complex
+equation that models how sea level rise will change in the future. There
+are uncertainties in the present sea level you measure, plus the thermal
 expansion term, the projected heating rate, the effect of gravity, and
 so on… The deeper you get into science, the more measurements you take
 and the more uncertainties that exist.
@@ -908,19 +911,13 @@ and the more uncertainties that exist.
 #define the se of the m term from the standard curve
 m_err <- 2.309e-05
 
-capTab("Example of error propagation")
+mcExample <- mcExample %>%
+  mutate(protein.normal = ((Abs-0.11)-0.0259)/0.0006,
+         protein.mc = mean((((Abs-0.11)+rnorm(1000)*sd)-0.0259)/(0.0006+rnorm(1000)*m_err)),
+         protein.mc_err = sd((((Abs-0.11)+rnorm(1000)*sd)-0.0259)/(0.0006+rnorm(1000)*m_err)))
 ```
 
 Table 4. Example of error propagation
-
-``` r
-mcExample %>%
-  mutate(protein.normal = ((Abs-0.11)-0.0259)/0.0006,
-         protein.mc = mean((((Abs-0.11)+rnorm(1000)*sd)-0.0259)/(0.0006+rnorm(1000)*m_err)),
-         protein.mc_err = sd((((Abs-0.11)+rnorm(1000)*sd)-0.0259)/(0.0006+rnorm(1000)*m_err))) %>%
-  kbl()
-```
-
 <table>
 <thead>
 <tr>
@@ -965,10 +962,10 @@ PROTEIN
 393.2778
 </td>
 <td style="text-align:right;">
-393.7224
+394.3286
 </td>
 <td style="text-align:right;">
-18.31061
+17.48872
 </td>
 </tr>
 <tr>
@@ -988,10 +985,10 @@ PROTEIN
 625.8889
 </td>
 <td style="text-align:right;">
-627.0086
+627.0772
 </td>
 <td style="text-align:right;">
-48.73677
+46.22985
 </td>
 </tr>
 <tr>
@@ -1011,10 +1008,10 @@ PROTEIN
 732.6667
 </td>
 <td style="text-align:right;">
-734.6555
+733.9122
 </td>
 <td style="text-align:right;">
-37.53292
+39.19644
 </td>
 </tr>
 <tr>
@@ -1034,10 +1031,10 @@ PROTEIN
 580.9444
 </td>
 <td style="text-align:right;">
-582.4346
+582.2824
 </td>
 <td style="text-align:right;">
-25.96213
+25.69766
 </td>
 </tr>
 <tr>
@@ -1057,10 +1054,10 @@ PROTEIN
 441.8889
 </td>
 <td style="text-align:right;">
-443.0279
+442.7021
 </td>
 <td style="text-align:right;">
-21.29554
+21.04786
 </td>
 </tr>
 </tbody>

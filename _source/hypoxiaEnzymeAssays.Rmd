@@ -349,21 +349,23 @@ You can read more online about Monte Carlo Error Propagation, but the basic set 
 
 First, multiply the standard deviation you calculated by 1,000 randomly distributed normal numbers using the rnorm function. Then add these standard deviations to the value you calculated. Do this for each term in the value you are calculating. Finally, take the mean of these 1,000 values and use as your accepted value, and then take the standard deviation of these 1,000 numbers as the error propagated standard error. It sounds confusing in words, but take a look at the code below and think about what each of the terms are doing. 
 
-Where might this be useful? Perhaps you create a complex equation that models how sea level rise will change in the future. There are uncertainties in the present sea level you measure, plus the thermal expansion term, the projected heating rate, the effect of gravity, and so on... The deeper you get into science, the more measurements you take and the more uncertainties that exist.
+Where might this be useful? Well here, you translated the errors associated with protein absorbances of an aliquot of coral tissue and expanded them to estimate the uncertainities around how much protein is in the coral you sampled. In the future, perhaps you create a complex equation that models how sea level rise will change in the future. There are uncertainties in the present sea level you measure, plus the thermal expansion term, the projected heating rate, the effect of gravity, and so on... The deeper you get into science, the more measurements you take and the more uncertainties that exist.
 
 ```{r, eval=T, echo=T, include=T}
 #define the se of the m term from the standard curve
 m_err <- 2.309e-05
 
-capTab("Example of error propagation")
-mcExample %>%
+mcExample <- mcExample %>%
   mutate(protein.normal = ((Abs-0.11)-0.0259)/0.0006,
          protein.mc = mean((((Abs-0.11)+rnorm(1000)*sd)-0.0259)/(0.0006+rnorm(1000)*m_err)),
-         protein.mc_err = sd((((Abs-0.11)+rnorm(1000)*sd)-0.0259)/(0.0006+rnorm(1000)*m_err))) %>%
-  kbl()
-           
-
+         protein.mc_err = sd((((Abs-0.11)+rnorm(1000)*sd)-0.0259)/(0.0006+rnorm(1000)*m_err)))
 ```
+```{r}
+capTab("Example of error propagation")
+ mcExample %>% kbl()
+```
+
+
 You can see there is only a slight difference in the accepted value using the standard calculation or the Monte Carlo calculation. This is due to the 1000 random points selected within a random distrubtion of the associated error. Since these points are random, each time you rerun the code (unless you set a seed), you will calculate a slightly different value. These values, however, will be well within the associated error calculated in the last coloumn. 
 
 </div>
