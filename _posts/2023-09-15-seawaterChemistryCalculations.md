@@ -4,7 +4,7 @@ title:  "Calculating Seawater Chemistry Parameters"
 author: "Patrick M Kiel"
 date: "2023-09-15"
 categories: [methods, sws]
-description: "Carbonate chemistry and dissolved oxygen are important parameters on the coral reef, influenced by biotic and abiotic factors alike. We will learn how to measure and calculate a suite of parameters that impact coral growth, health, and are impacted by climate change."
+description: "Carbonate chemistry and dissolved oxygen are important parameters that capture the main processes occuring on coral reefs, including net productivity and net calcification. We will learn how to measure and calculate a suite of parameters that impact coral growth and health and characterize climate change."
 output:
   md_document:
     variant: gfm
@@ -65,10 +65,11 @@ table {
 
 # Overview
 
-Carbonate chemistry and dissolved oxygen are important water chemistry
-parameters on the coral reef, influenced by biotic and abiotic factors
-alike. We will learn how to measure and calculate a suite of parameters
-that impact coral growth, health, and are impacted by climate change.
+Carbonate chemistry and dissolved oxygen are important parameters that
+capture the main processes occuring on coral reefs, including net
+productivity and net calcification. We will learn how to measure and
+calculate a suite of parameters that impact coral growth and health and
+characterize climate change.
 
 # General Background
 
@@ -97,7 +98,7 @@ O2/L ), a mean daily minimum of 4.4 mg/L (69% air saturation/ 136 umol
 O2/L), and a mean daily maximum of 6.9 mg/L (111% air saturation/ 217
 umol O2/L). These mean normoxia values come from autonomous sensor data
 aggregated by [Pezner AK *et al.* (2023) Nat Clim Chang.
-13:403-409.](https://doi.org/10.1038/s41558-023-01619-2), and provide a
+13:403-409](https://doi.org/10.1038/s41558-023-01619-2), and provide a
 general overview of present-day oxygen conditions. Reef DO will vary as
 a function of benthic community composition, where higher scleractinian
 coral cover will have higher daily maximums compared to an algal
@@ -138,7 +139,7 @@ at a low rate with mineralogical conformations; when $\Omega > 4$,
 calcification is thermodynamically favorable and reef growth generally
 persists.
 
-The dominant driver of ($\Omega$) is the net change in $[CO_3^{2-}]$.
+The dominant driver of $\Omega$ is the net change in $[CO_3^{2-}]$.
 Under ocean acidification scenarios, carbonate ions react with carbon
 dioxide to form bicarbonate. Thus, bicarbonate increases and carbonate
 ions decrease, reducing the carbonate saturation state. Conversely,
@@ -162,7 +163,8 @@ Total Alkalinity (TA, sometimes stylized in papers as $A_T$) can be
 defined as the total buffering capacity of the seawater, or the excess
 of proton receptors over proton donors,
 
-$TA = [HCO_3^-] + 2[CO^{2-}_3] + [B(OH)^-_4] + [OH^-] + [HPO^{2-}_4] + 2[PO^{3-}_4] + [SiO(OH)^-_3] + [NH3] + [HS^-] - [HSO_4^-] - [H^+]_F - [HF] - [H_3PO_4] + [\text{minor acids - minor bases}]$
+$$TA =  [HCO_3^-] +  2[CO^{2-}_3] + [B(OH)^-_4] + [OH^-] + [HPO^{2-}_4] + 2[PO^{3-}_4] +\\
+[SiO(OH)^-_3] + [NH3] + [HS^-] - [HSO_4^-] - [H^+]_F - [HF] -\\ [H_3PO_4] + [\text{minor acids - minor bases}]$$
 
 TA is influenced predominantly by bicarbonate and carbonate ion
 concentration along with a myriad of other minor constituents (Murillo
@@ -176,11 +178,11 @@ and respiration alter pH, due to changes in CO2, but do not change TA.
 Therefore, you can describe metabolic processes
 (calcification/photosynthesis), by knowing both DIC and TA. This is
 known as measuring the metabolic pulse of coral reefs and must be done
-on discrete water samples [Cyronak T *et al.*
-2018](https://doi.org/10.1371/journal.pone.0190872). Ongoing research
+on discrete water samples ([Cyronak T *et al.*
+2018](https://doi.org/10.1371/journal.pone.0190872)). Ongoing research
 seeks to characterize these metabolic processes from autonomous sensors,
-which measure DO and pH alone[Cryer SE *et al.*
-2023.](https://doi.org/10.1029/2022GB007577).
+which measure DO and pH alone ([Cryer SE *et al.*
+2023.](https://doi.org/10.1029/2022GB007577)).
 
 # Analytical Water Chemistry
 
