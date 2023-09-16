@@ -1,0 +1,195 @@
+---
+layout: post
+title:  "Calculating Seawater Chemistry Parameters"
+author: "Patrick M Kiel"
+date: "2023-09-15"
+categories: [methods, sws]
+description: "Carbonate chemistry and dissolved oxygen are important parameters on the coral reef, influenced by biotic and abiotic factors alike. We will learn how to measure and calculate a suite of parameters that impact coral growth, health, and are impacted by climate change."
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, 
+  encoding = encoding, 
+  output_file = paste0("2023-09-15", "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
+  output_dir = "../_posts") })
+always_allow_html: true
+---
+
+<script type="text/javascript">
+
+window.onload = function() {
+    //query string in the password
+    const urlParams = new URLSearchParams(window.location.search);
+    const pass = urlParams.get('pass')
+    document.getElementById("password").value = pass;
+};
+
+function verify() {
+  <!-- set the password here -->
+  if (document.getElementById('password').value === 'password') {
+    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
+    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
+  } else {
+    alert('Invalid Password! You cannot view this content.');
+    password.setSelectionRange(0, password.value.length);
+  }
+  return false;
+}
+</script>
+<style type="text/css">
+/*Change content Display */
+
+img {
+margin: 0 auto;
+}
+
+table {
+    width: 90%;
+    border: 0px solid #fff;
+    border-collapse: collapse;
+    overflow-x: auto;
+    margin: 0 auto;
+    display: block;
+}
+</style>
+<!-- The content we want to show after password -->
+
+<div markdown="1">
+
+<!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
+
+# Overview
+
+Carbonate chemistry and dissolved oxygen are important water chemistry
+parameters on the coral reef, influenced by biotic and abiotic factors
+alike. We will learn how to measure and calculate a suite of parameters
+that impact coral growth, health, and are impacted by climate change.
+
+# General Background
+
+## Dissolved Oxygen
+
+Dissolved oxygen (DO) is the amount of oxygen in seawater directly
+available to living organisms and is normally altered by the balance of
+photosynthesis and respiration of all community constituents. DO is
+traditionally expressed in units of O2 mg/L, % air saturation, or umol
+O2/L. When characterizing reef environments, these three units are
+interchangeable. % Air saturation is dependent upon temperature,
+salinity, and pressure, while the other units are pressure-free
+quantities. By convention, coral incubations generally use umol O2/L.
+
+Hypoxia, or insufficient availability of DO, is defined as DO \< 2mg/L
+(24% air saturation/ 61 umol O2/L). Low oxygen, but not hypoxia, is
+defined as DO \< 5 mg/L (60.52% air saturation/ 153 umol O2/L). Hypoxia
+or low oxygen can be induced by warming, restricted water flow,
+increased biological oxygen demand, nutrient and organic matter loading,
+or influx of oxygen poor water.
+
+Normoxia, or the oxygen conditions normally experienced in healthy reef
+environments, has a mean daily DO of 7.3 mg/L (88% Air saturation/ 173
+umol O2/L), mean daily range of 2.6 mg/L (42% air saturation/ 81 umol
+O2/L ), a mean daily minimum of 4.4 mg/L (69% air saturation/ 136 umol
+O2/L), and a mean daily maximum of 6.9 mg/L (111% air saturation/ 217
+umol O2/L). These mean normoxia values come from autonomous sensor data
+aggregated by [Pezner AK *et al.* (2023) Nat Clim Chang.
+13:403-409.](https://doi.org/10.1038/s41558-023-01619-2), and provide a
+general overview of present-day oxygen conditions. Reef DO will vary as
+a function of benthic community composition, where higher scleractinian
+coral cover will have higher daily maximums compared to an algal
+dominated reef due to the high rates of endosymbiont photosynthesis.
+
+Dissolved oxygen concentrations can be measured amperometricly on
+discrete water samples with the Winkler Titration or with oxygen optodes
+which leverage photo quenching of oxygen sensitive compounds. Generally,
+amperometric measurements are considered the most accurate, while
+optodes permit the execution of long term monitoring with in-situ
+autonomous sensors or continuous monitoring of incubation chambers. We
+will use both methods in this course. For details on the Winkler
+Titration, please refer to [Langdon (2010) “Determination of Dissolved
+Oxygen in Seaweater By Winkler Titration using Amperometric
+Technique.”](https://doi.org/10.25607/OBP-1350)
+
+## Carbonate Chemistry
+
+Ultimately, a “healthy” coral reef is defined by its ability to grow
+faster than dissolution and erosion processes since all ecological
+functions and ecosystem services are dependent upon the physical
+structure reefs build over long timescales. Growth is predominantly the
+result of continuous deposition of aragonite by hermatypic or reef
+building corals. Corals, and “healthy” reefs, therefore, need water
+chemistry that is favorable for calcification.
+
+Coral calcification happens according to,
+$Ca^{2+} + CO_3^{2-} \rightarrow CaCO_3$, where calcium and carbonate
+ions are combined within the coral tissues to build the aragonite coral
+skeleton. One can quantify the thermodynamics of calcium carbonate by
+looking at the aragonite or calcite saturation state ($\Omega$), which
+measures supersaturation of the respective mineral in a body of water.
+You can measure saturation state as
+$\Omega = \frac{[Ca^{2+}][CO_3^{2-}]}{K_{sp}}$, where $K_{sp}$ is the
+solubility of aragonite or calcite. When $\Omega < 1$, dissolution is
+thermodynamically favorable; when $1 < \Omega < 4$, calcifying proceeds
+at a low rate with mineralogical conformations; when $\Omega > 4$,
+calcification is thermodynamically favorable and reef growth generally
+persists.
+
+The dominant driver of ($\Omega$) is the net change in $[CO_3^{2-}]$.
+Under ocean acidification scenarios, carbonate ions react with carbon
+dioxide to form bicarbonate. Thus, bicarbonate increases and carbonate
+ions decrease, reducing the carbonate saturation state. Conversely,
+under alkalinity enhancement, the equilibrium switches and the equation
+reverses, where bicarbonate breaks down to increase carbonate
+concentration, thereby increasing the aragonite saturation state.
+
+Dissolved inorganic carbon (DIC) is the total pool of inorganic carbon
+species in seawater, which includes carbonate, bicarbonate, and carbon
+dioxide. Under ocean acidification, DIC increases due to the oceanic
+uptake of carbon dioxide. The fraction of DIC species is pH dependent
+and can be readily visualized as follows,
+
+<h5>
+Figure 1. DIC speciation plot
+</h5>
+
+<img src="/notebook/images/hypoxiaEnzymeAssay/bjerru-plot-1.png" width="90%" style="display: block; margin: auto;" />
+
+Total Alkalinity (TA, sometimes stylized in papers as $A_T$) can be
+defined as the total buffering capacity of the seawater, or the excess
+of proton receptors over proton donors,
+
+$TA = [HCO_3^-] + 2[CO^{2-}_3] + [B(OH)^-_4] + [OH^-] + [HPO^{2-}_4] + 2[PO^{3-}_4] + [SiO(OH)^-_3] + [NH3] + [HS^-] - [HSO_4^-] - [H^+]_F - [HF] - [H_3PO_4] + [\text{minor acids - minor bases}]$
+
+TA is influenced predominantly by bicarbonate and carbonate ion
+concentration along with a myriad of other minor constituents (Murillo
+LJA *et al.* 2014).
+
+The three main processes on coral reefs, calcification, photosynthesis,
+and respiration, are collectively referred to as the reef metabolism.
+Calcification releases two protons for every mole of calcium carbonate
+precipitated, and therefore will alter total alkalinity. Photosynthesis
+and respiration alter pH, due to changes in CO2, but do not change TA.
+Therefore, you can describe metabolic processes
+(calcification/photosynthesis), by knowing both DIC and TA. This is
+known as measuring the metabolic pulse of coral reefs and must be done
+on discrete water samples [Cyronak T *et al.*
+2018](https://doi.org/10.1371/journal.pone.0190872). Ongoing research
+seeks to characterize these metabolic processes from autonomous sensors,
+which measure DO and pH alone[Cryer SE *et al.*
+2023.](https://doi.org/10.1029/2022GB007577).
+
+# Analytical Water Chemistry
+
+## Carbonate Chemsitry
+
+As long as you know two parameters of the carbonate chemistry suite, you
+can calculate all other parameters. Generally you measure DIC and TA or
+TA and pH, as well as pressure related parameters including temperature,
+salinity, and depth. In our class, we will measure TA and pH to
+calculate all other parameters.
+
+</div>
