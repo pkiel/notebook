@@ -183,7 +183,7 @@ The three main processes on coral reefs, calcification, photosynthesis,
 and respiration, are collectively referred to as the reef metabolism.
 Calcification releases two protons for every mole of calcium carbonate
 precipitated, and therefore will alter total alkalinity in a 2:1 ratio
-of $\Delta$TA : calcification. Photosynthesis and respiration alter pH,
+of $\Delta$TA : calcification. Photosynthesis and respiration alter DIC,
 due to changes in CO2, but do not change TA. Therefore, you can describe
 metabolic processes (calcification/photosynthesis), by knowing both DIC
 and TA. This is known as measuring the metabolic pulse of coral reefs
@@ -191,7 +191,12 @@ and must be done on discrete water samples ([Cyronak T *et al.*
 2018](https://doi.org/10.1371/journal.pone.0190872)). Ongoing research
 seeks to characterize these metabolic processes from autonomous sensors,
 which measure DO and pH alone ([Cryer SE *et al.*
-2023.](https://doi.org/10.1029/2022GB007577)).
+2023.](https://doi.org/10.1029/2022GB007577)). While, DO and pH are
+related to DIC and TA, the relationships aren’t perfectly 1:1, and
+therefore, assumptions and limitations must be clearly defined.
+Nevertheless, this science presents a means to scale coral reef
+biogeochemistry research across space and time to better understand
+temporal dynamics and reef degradation under climate change.
 
 Since carbonate chemistry is dynamic similar to DO, it is imperative
 that discrete water samples are collected at approximately the same time
@@ -305,99 +310,19 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-0.50
+0.75
 </td>
 <td style="text-align:right;">
-15.62559
+23.43838
 </td>
 <td style="text-align:right;">
-7.406198
+11.10930
 </td>
 <td style="text-align:right;">
-8.039869
+12.05980
 </td>
 <td style="text-align:right;">
-8.681217
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-1.00
-</td>
-<td style="text-align:right;">
-31.25117
-</td>
-<td style="text-align:right;">
-14.812397
-</td>
-<td style="text-align:right;">
-16.079738
-</td>
-<td style="text-align:right;">
-17.362433
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-1.25
-</td>
-<td style="text-align:right;">
-39.06396
-</td>
-<td style="text-align:right;">
-18.515496
-</td>
-<td style="text-align:right;">
-20.099673
-</td>
-<td style="text-align:right;">
-21.703042
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-1.50
-</td>
-<td style="text-align:right;">
-46.87676
-</td>
-<td style="text-align:right;">
-22.218595
-</td>
-<td style="text-align:right;">
-24.119607
-</td>
-<td style="text-align:right;">
-26.043650
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-1.75
-</td>
-<td style="text-align:right;">
-54.68955
-</td>
-<td style="text-align:right;">
-25.921695
-</td>
-<td style="text-align:right;">
-28.139542
-</td>
-<td style="text-align:right;">
-30.384258
+13.02182
 </td>
 </tr>
 <tr>
@@ -411,13 +336,53 @@ umol/L
 70.31514
 </td>
 <td style="text-align:right;">
-33.327893
+33.32789
 </td>
 <td style="text-align:right;">
-36.179411
+36.17941
 </td>
 <td style="text-align:right;">
-39.065475
+39.06548
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+3.25
+</td>
+<td style="text-align:right;">
+101.56631
+</td>
+<td style="text-align:right;">
+48.14029
+</td>
+<td style="text-align:right;">
+52.25915
+</td>
+<td style="text-align:right;">
+56.42791
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+3.75
+</td>
+<td style="text-align:right;">
+117.19189
+</td>
+<td style="text-align:right;">
+55.54649
+</td>
+<td style="text-align:right;">
+60.29902
+</td>
+<td style="text-align:right;">
+65.10913
 </td>
 </tr>
 <tr>
@@ -431,13 +396,13 @@ umol/L
 132.81748
 </td>
 <td style="text-align:right;">
-62.952687
+62.95269
 </td>
 <td style="text-align:right;">
-68.338887
+68.33889
 </td>
 <td style="text-align:right;">
-73.790342
+73.79034
 </td>
 </tr>
 <tr>
@@ -445,19 +410,39 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-7.00
+5.00
 </td>
 <td style="text-align:right;">
-218.75820
+156.25586
 </td>
 <td style="text-align:right;">
-103.686778
+74.06198
 </td>
 <td style="text-align:right;">
-112.558168
+80.39869
 </td>
 <td style="text-align:right;">
-121.537034
+86.81217
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+8.50
+</td>
+<td style="text-align:right;">
+265.63496
+</td>
+<td style="text-align:right;">
+125.90537
+</td>
+<td style="text-align:right;">
+136.67777
+</td>
+<td style="text-align:right;">
+147.58068
 </td>
 </tr>
 <tr>
@@ -471,13 +456,13 @@ umol/L
 273.44775
 </td>
 <td style="text-align:right;">
-129.608473
+129.60847
 </td>
 <td style="text-align:right;">
-140.697710
+140.69771
 </td>
 <td style="text-align:right;">
-151.921292
+151.92129
 </td>
 </tr>
 <tr>
@@ -491,13 +476,33 @@ umol/L
 296.88613
 </td>
 <td style="text-align:right;">
-140.717770
+140.71777
 </td>
 <td style="text-align:right;">
-152.757513
+152.75751
 </td>
 <td style="text-align:right;">
-164.943117
+164.94312
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+10.00
+</td>
+<td style="text-align:right;">
+312.51172
+</td>
+<td style="text-align:right;">
+148.12397
+</td>
+<td style="text-align:right;">
+160.79738
+</td>
+<td style="text-align:right;">
+173.62433
 </td>
 </tr>
 </tbody>
@@ -525,13 +530,13 @@ The most efficient way to analyze all this data at once is to add
 case_when statements to the respirometry data and define the measurement
 type (“NP” or “R”) based on the metadata, which indicates when each
 incubation started and ended. You will want to use the between function
-for this. Then, nest the data to create individual dataframes for each
+for this. Then, nest the data to create individual data frames for each
 incubation type for each coral, which we define by the unique coral ID.
 See code example below:
 
 ``` r
 respirometry_data %>%
-  # combie Date and Time into one column 
+  # combine Date and Time into one column 
   mutate(datetime = mdy_hms(paste(Date,Time))) %>%
   # encode manually
   # build a bunch of conditional statements to pinpoint a incubation
@@ -539,7 +544,7 @@ respirometry_data %>%
   mutate(type = case_when(chamber == 1 & between(datetime,
                                          ymd_hms("2023-09-15 14:56:00 UTC"),
                                          ymd_hms("2023-09-15 15:08:00 UTC")) ~ "NP",
-                          # chamber 1, respiration startp/stop
+                          # chamber 1, respiration start/stop
                           chamber == 1 & between(datetime,
                                          ymd_hms("2023-09-15 15:14:00 UTC"),
                                          ymd_hms("2023-09-15 15:25:00 UTC")) ~ "R",
