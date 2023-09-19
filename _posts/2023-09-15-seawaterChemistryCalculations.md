@@ -20,16 +20,14 @@ knit: (function(inputFile, encoding) {
 always_allow_html: true
 ---
 
-<script type="text/javascript">
-
-window.onload = function() {
+<script>
+&#10;window.onload = function() {
     //query string in the password
     const urlParams = new URLSearchParams(window.location.search);
     const pass = urlParams.get('pass')
     document.getElementById("password").value = pass;
 };
-
-function verify() {
+&#10;function verify() {
   <!-- set the password here -->
   if (document.getElementById('password').value === 'password') {
     document.getElementById('HIDDENDIV').classList.remove("hidden"); 
@@ -43,12 +41,10 @@ function verify() {
 </script>
 <style type="text/css">
 /*Change content Display */
-
-img {
+&#10;img {
 margin: 0 auto;
 }
-
-table {
+&#10;table {
     width: 90%;
     border: 0px solid #fff;
     border-collapse: collapse;
@@ -78,32 +74,33 @@ characterize climate change.
 Dissolved oxygen (DO) is the amount of oxygen in seawater directly
 available to living organisms and is normally altered by the balance of
 photosynthesis and respiration of all community constituents. DO is
-traditionally expressed in units of O2 mg/L, % air saturation, or
-$\mu$mol O2/L. When characterizing reef environments, these three units
-are interchangeable. % Air saturation is dependent upon temperature,
-salinity, and depth, while the other units are pressure-free quantities.
-By convention, coral incubations generally use $\mu$mol O2/L.
+traditionally expressed in units of O2 mg/L, % air saturation, kPa, or
+$\mu$mol O2/L. When characterizing reef environments, these four units
+are interchangeable. kPa and % Air saturation are dependent upon
+temperature, salinity, and depth, while the other units are
+pressure-free quantities. By convention, coral incubations generally use
+$\mu$mol O2/L.
 
 Hypoxia, or insufficient availability of DO, is defined as DO \< 2mg/L
-(24% Air saturation/ 61 $\mu$mol O2/L). Low oxygen, but not hypoxia, is
-defined as DO \< 5 mg/L (60.52% Air saturation/ 153 $\mu$mol O2/L).
-Hypoxia or low oxygen can be induced by warming, restricted water flow,
-increased biological oxygen demand, nutrient and organic matter loading,
-or influx of oxygen poor water.
+(29% Air saturation/ 6 kPa / 63 $\mu$mol O2/L). Low oxygen, but not
+hypoxia, is defined as DO \< 5 mg/L (73% Air saturation/ 15 kPa / 156
+$\mu$mol O2/L). Hypoxia or low oxygen can be induced by warming,
+restricted water flow, increased biological oxygen demand, nutrient and
+organic matter loading, or influx of oxygen poor water.
 
-Normoxia, or the oxygen conditions normally experienced in healthy reef
-environments, has a mean daily DO of 7.3 mg/L (88% Air saturation/ 173
-$\mu$mol O2/L), mean daily range of 2.6 mg/L (42% Air saturation/ 81
-$\mu$mol O2/L ), a mean daily minimum of 4.4 mg/L (69% Air saturation/
-136 $\mu$mol O2/L), and a mean daily maximum of 6.9 mg/L (111% Air
-saturation/ 217 $\mu$mol O2/L). These mean normoxia values come from
-autonomous sensor data aggregated by [Pezner AK *et al.* (2023) Nat Clim
-Chang. 13:403-409](https://doi.org/10.1038/s41558-023-01619-2), and
-provide a general overview of present-day oxygen conditions. Reef DO
-will vary as a function of benthic community composition, where higher
-scleractinian coral cover will have higher daily maximums compared to an
-algal dominated reef due to the high rates of endosymbiont
-photosynthesis.
+Normoxic reefs, or the oxygen conditions normally experienced in healthy
+reef environments, have a mean daily DO of 5.7 mg/L (88% Air saturation/
+18.3 kPa / 173 $\mu$mol O2/L), mean daily range of 2.6 mg/L (42% Air
+saturation/ 8.6 kPa / 81 $\mu$mol O2/L ), a mean daily minimum of 4.4
+mg/L (69% Air saturation/ 14.5 kPa / 137 $\mu$mol O2/L), and a mean
+daily maximum of 7.1 mg/L (111% Air saturation/ 22.9 kPa / 217 $\mu$mol
+O2/L). These mean normoxia values come from autonomous sensor data
+aggregated by [Pezner AK *et al.* (2023) Nat Clim Chang.
+13:403-409](https://doi.org/10.1038/s41558-023-01619-2), and provide a
+general overview of present-day oxygen conditions. Reef DO will vary as
+a function of benthic community composition, where higher scleractinian
+coral cover will have higher daily maximums compared to an algal
+dominated reef due to the high rates of endosymbiont photosynthesis.
 
 Dissolved oxygen concentrations can be measured amperometricly on
 discrete water samples with the Winkler Titration or with oxygen optodes
@@ -254,8 +251,7 @@ the documentation, which will help you better understand the function.
 
 We will use dissolved oxygen data both to calculate the average
 conditions the corals were exposed to and to manipulate incubation data
-to calculate productivity rates. These are fairly easy calculations we
-can revist once we collect the data we will analyze.
+to calculate productivity rates.
 
 ## respR
 
@@ -329,19 +325,79 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-1.25
+1.00
 </td>
 <td style="text-align:right;">
-39.063965
+31.251172
 </td>
 <td style="text-align:right;">
-18.515496
+14.812397
 </td>
 <td style="text-align:right;">
-20.099673
+16.079738
 </td>
 <td style="text-align:right;">
-21.703042
+17.362433
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+2.00
+</td>
+<td style="text-align:right;">
+62.502344
+</td>
+<td style="text-align:right;">
+29.624794
+</td>
+<td style="text-align:right;">
+32.159476
+</td>
+<td style="text-align:right;">
+34.724867
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+2.50
+</td>
+<td style="text-align:right;">
+78.127930
+</td>
+<td style="text-align:right;">
+37.030992
+</td>
+<td style="text-align:right;">
+40.199346
+</td>
+<td style="text-align:right;">
+43.406083
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+3.25
+</td>
+<td style="text-align:right;">
+101.566309
+</td>
+<td style="text-align:right;">
+48.140290
+</td>
+<td style="text-align:right;">
+52.259149
+</td>
+<td style="text-align:right;">
+56.427909
 </td>
 </tr>
 <tr>
@@ -369,39 +425,19 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-6.25
+5.00
 </td>
 <td style="text-align:right;">
-195.319825
+156.255860
 </td>
 <td style="text-align:right;">
-92.577480
+74.061984
 </td>
 <td style="text-align:right;">
-100.498364
+80.398691
 </td>
 <td style="text-align:right;">
-108.515209
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-7.75
-</td>
-<td style="text-align:right;">
-242.196582
-</td>
-<td style="text-align:right;">
-114.796076
-</td>
-<td style="text-align:right;">
-124.617971
-</td>
-<td style="text-align:right;">
-134.558859
+86.812167
 </td>
 </tr>
 <tr>
@@ -409,39 +445,19 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-8.50
+6.75
 </td>
 <td style="text-align:right;">
-265.634961
+210.945411
 </td>
 <td style="text-align:right;">
-125.905373
+99.983679
 </td>
 <td style="text-align:right;">
-136.677775
+108.538233
 </td>
 <td style="text-align:right;">
-147.580684
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-8.75
-</td>
-<td style="text-align:right;">
-273.447754
-</td>
-<td style="text-align:right;">
-129.608473
-</td>
-<td style="text-align:right;">
-140.697710
-</td>
-<td style="text-align:right;">
-151.921292
+117.196425
 </td>
 </tr>
 <tr>
@@ -449,39 +465,19 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-9.00
+7.50
 </td>
 <td style="text-align:right;">
-281.260547
+234.383789
 </td>
 <td style="text-align:right;">
-133.311572
+111.092977
 </td>
 <td style="text-align:right;">
-144.717644
+120.598037
 </td>
 <td style="text-align:right;">
-156.261900
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-9.50
-</td>
-<td style="text-align:right;">
-296.886133
-</td>
-<td style="text-align:right;">
-140.717770
-</td>
-<td style="text-align:right;">
-152.757513
-</td>
-<td style="text-align:right;">
-164.943117
+130.218250
 </td>
 </tr>
 <tr>
@@ -489,22 +485,73 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-9.75
+9.25
 </td>
 <td style="text-align:right;">
-304.698926
+289.073340
 </td>
 <td style="text-align:right;">
-144.420869
+137.014671
 </td>
 <td style="text-align:right;">
-156.777448
+148.737579
 </td>
 <td style="text-align:right;">
-169.283726
+160.602509
 </td>
 </tr>
 </tbody>
 </table>
+
+## Analyzing Respirometry Data
+
+<h5>
+Figure 2. Example Respirometry Data Analysis
+</h5>
+
+<img src="/notebook/images/hypoxiaEnzymeAssay/respirometry-example-1.png" width="90%" style="display: block; margin: auto;" />
+
+The goal is to analyze the respirometry data identical to the figure
+above. You first need to identify the region where we measured net
+photosynthesis and then the second region where we measured respiration.
+Over each discrete region, calculate a linear regression and extract the
+slope. This slope will be in units of $\mu$mol $O_2$ / L / minute.
+Multiply this rate by 60 since we want respiration and net
+photosynthesis values in rates per hour. Finally, add the absolute value
+of respiration to net photosynthesis to determine gross photosynthesis
+rates.
+
+The most efficient way to analyze all this data at once is to add
+case_when statements to the respirometry data and define the measurement
+type (“NP” or “R”) based on the metadata, which indicates when each
+incubation started and ended. You will want to use the between function
+for this. Then, nest the data to create individual dataframes for each
+incubation type for each coral, which we define by the unique coral ID.
+See code example below:
+
+``` r
+respirometry_data %>%
+  # left join the metadata table including start/stop times, coralID
+  # build a bunch of conditional statements to pinpoint a specific coral and its times
+  mutate(type = case_when(coralID == 123 & between(Time, NP_start, NP_end) ~ "NP",
+                          coralID == 123 & between(Time, R_start,R_end) ~ "R",
+                          # do this for all chamber and start/stop times
+                          TRUE ~ NA)) %>%
+  # nest individual incubations
+  group_by(coralID, type) %>%
+  nest() %>%
+  # create a linear model for each incubation, extract the slope
+  mutate(fit   = map(train, ~lm(O2 ~ time, data = .)),
+         slope = map(fit, function(df) (tidy(df) %>% pull(estimate))[2])) %>%
+  # unnest the slope
+  unnest(slope) %>%
+  # move the NP,R incubations into their own column for each coralID
+  pivot_wider(names_from = "type",
+              values_from = "slope") %>%
+  # keep only coralID, R/NP slope (add other cols you want to keep if desired)
+  select(coralID, R, NP) %>%
+  # calculate P from NP, R
+  mutate(P = NP + abs(R))
+```
 
 </div>
