@@ -74,7 +74,7 @@ characterize climate change.
 Dissolved oxygen (DO) is the amount of oxygen in seawater directly
 available to living organisms and is normally altered by the balance of
 photosynthesis and respiration of all community constituents. DO is
-traditionally expressed in units of O2 mg/L, % air saturation, kPa, or
+traditionally expressed in units of O2 mg/L, % Air saturation, kPa, or
 $\mu$mol O2/L. When characterizing reef environments, these four units
 are interchangeable. kPa and % Air saturation are dependent upon
 temperature, salinity, and depth, while the other units are
@@ -305,39 +305,19 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-0.25
+2.75
 </td>
 <td style="text-align:right;">
-7.812793
+85.94072
 </td>
 <td style="text-align:right;">
-3.703099
+40.73409
 </td>
 <td style="text-align:right;">
-4.019935
+44.21928
 </td>
 <td style="text-align:right;">
-4.340608
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-1.00
-</td>
-<td style="text-align:right;">
-31.251172
-</td>
-<td style="text-align:right;">
-14.812397
-</td>
-<td style="text-align:right;">
-16.079738
-</td>
-<td style="text-align:right;">
-17.362433
+47.74669
 </td>
 </tr>
 <tr>
@@ -345,59 +325,19 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-2.00
+4.25
 </td>
 <td style="text-align:right;">
-62.502344
+132.81748
 </td>
 <td style="text-align:right;">
-29.624794
+62.95269
 </td>
 <td style="text-align:right;">
-32.159476
+68.33889
 </td>
 <td style="text-align:right;">
-34.724867
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-2.50
-</td>
-<td style="text-align:right;">
-78.127930
-</td>
-<td style="text-align:right;">
-37.030992
-</td>
-<td style="text-align:right;">
-40.199346
-</td>
-<td style="text-align:right;">
-43.406083
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-3.25
-</td>
-<td style="text-align:right;">
-101.566309
-</td>
-<td style="text-align:right;">
-48.140290
-</td>
-<td style="text-align:right;">
-52.259149
-</td>
-<td style="text-align:right;">
-56.427909
+73.79034
 </td>
 </tr>
 <tr>
@@ -408,16 +348,16 @@ umol/L
 4.50
 </td>
 <td style="text-align:right;">
-140.630274
+140.63027
 </td>
 <td style="text-align:right;">
-66.655786
+66.65579
 </td>
 <td style="text-align:right;">
-72.358822
+72.35882
 </td>
 <td style="text-align:right;">
-78.130950
+78.13095
 </td>
 </tr>
 <tr>
@@ -428,16 +368,56 @@ umol/L
 5.00
 </td>
 <td style="text-align:right;">
-156.255860
+156.25586
 </td>
 <td style="text-align:right;">
-74.061984
+74.06198
 </td>
 <td style="text-align:right;">
-80.398691
+80.39869
 </td>
 <td style="text-align:right;">
-86.812167
+86.81217
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+5.50
+</td>
+<td style="text-align:right;">
+171.88145
+</td>
+<td style="text-align:right;">
+81.46818
+</td>
+<td style="text-align:right;">
+88.43856
+</td>
+<td style="text-align:right;">
+95.49338
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+6.50
+</td>
+<td style="text-align:right;">
+203.13262
+</td>
+<td style="text-align:right;">
+96.28058
+</td>
+<td style="text-align:right;">
+104.51830
+</td>
+<td style="text-align:right;">
+112.85582
 </td>
 </tr>
 <tr>
@@ -448,16 +428,56 @@ umol/L
 6.75
 </td>
 <td style="text-align:right;">
-210.945411
+210.94541
 </td>
 <td style="text-align:right;">
-99.983679
+99.98368
 </td>
 <td style="text-align:right;">
-108.538233
+108.53823
 </td>
 <td style="text-align:right;">
-117.196425
+117.19643
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+7.00
+</td>
+<td style="text-align:right;">
+218.75820
+</td>
+<td style="text-align:right;">
+103.68678
+</td>
+<td style="text-align:right;">
+112.55817
+</td>
+<td style="text-align:right;">
+121.53703
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+7.25
+</td>
+<td style="text-align:right;">
+226.57100
+</td>
+<td style="text-align:right;">
+107.38988
+</td>
+<td style="text-align:right;">
+116.57810
+</td>
+<td style="text-align:right;">
+125.87764
 </td>
 </tr>
 <tr>
@@ -468,42 +488,22 @@ umol/L
 7.50
 </td>
 <td style="text-align:right;">
-234.383789
+234.38379
 </td>
 <td style="text-align:right;">
-111.092977
+111.09298
 </td>
 <td style="text-align:right;">
-120.598037
+120.59804
 </td>
 <td style="text-align:right;">
-130.218250
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-9.25
-</td>
-<td style="text-align:right;">
-289.073340
-</td>
-<td style="text-align:right;">
-137.014671
-</td>
-<td style="text-align:right;">
-148.737579
-</td>
-<td style="text-align:right;">
-160.602509
+130.21825
 </td>
 </tr>
 </tbody>
 </table>
 
-## Analyzing Respirometry Data
+# Analyzing Respirometry Data
 
 <h5>
 Figure 2. Example Respirometry Data Analysis
@@ -531,8 +531,9 @@ See code example below:
 
 ``` r
 respirometry_data %>%
+  # you'll likely need to clean up times, explore lubridate::
   # left join the metadata table including start/stop times, coralID
-  # build a bunch of conditional statements to pinpoint a specific coral and its times
+  # build a bunch of conditional statements to pinpoint a incubation
   mutate(type = case_when(coralID == 123 & between(Time, NP_start, NP_end) ~ "NP",
                           coralID == 123 & between(Time, R_start,R_end) ~ "R",
                           # do this for all chamber and start/stop times
@@ -541,7 +542,7 @@ respirometry_data %>%
   group_by(coralID, type) %>%
   nest() %>%
   # create a linear model for each incubation, extract the slope
-  mutate(fit   = map(train, ~lm(O2 ~ time, data = .)),
+  mutate(fit   = map(data, ~lm(O2 ~ time, data = .)),
          slope = map(fit, function(df) (tidy(df) %>% pull(estimate))[2])) %>%
   # unnest the slope
   unnest(slope) %>%

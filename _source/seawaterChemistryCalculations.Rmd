@@ -127,7 +127,7 @@ Carbonate chemistry and dissolved oxygen are important parameters that capture t
 
 ## Dissolved Oxygen
 
-Dissolved oxygen (DO) is the amount of oxygen in seawater directly available to living organisms and is normally altered by the balance of photosynthesis and respiration of all community constituents. DO is traditionally expressed in units of O2 mg/L, % air saturation, kPa, or $\mu$mol O2/L. When characterizing reef environments, these four units are interchangeable. kPa and % Air saturation are dependent upon temperature, salinity, and depth, while the other units are pressure-free quantities. By convention, coral incubations generally use $\mu$mol O2/L.
+Dissolved oxygen (DO) is the amount of oxygen in seawater directly available to living organisms and is normally altered by the balance of photosynthesis and respiration of all community constituents. DO is traditionally expressed in units of O2 mg/L, % Air saturation, kPa, or $\mu$mol O2/L. When characterizing reef environments, these four units are interchangeable. kPa and % Air saturation are dependent upon temperature, salinity, and depth, while the other units are pressure-free quantities. By convention, coral incubations generally use $\mu$mol O2/L.
 
 Hypoxia, or insufficient availability of DO, is defined as DO < 2mg/L (29% Air saturation/ 6 kPa / 63 $\mu$mol O2/L). Low oxygen, but not hypoxia, is defined as DO < 5 mg/L (73% Air saturation/ 15 kPa / 156 $\mu$mol O2/L). Hypoxia or low oxygen can be induced by warming, restricted water flow, increased biological oxygen demand, nutrient and organic matter loading, or influx of oxygen poor water. 
 
@@ -252,7 +252,7 @@ dat %>%
 
 ```
 
-## Analyzing Respirometry Data
+# Analyzing Respirometry Data
 
 ```{r respirometry-example}
 resp_dat <- read_csv("~/Grad School/TA/SWS-F23/data/respirometry/18Sept23_chamber1_O2.csv", skip = 1) %>%
@@ -326,8 +326,9 @@ The most efficient way to analyze all this data at once is to add case_when stat
 
 ```{r, echo=T, eval=F}
 respirometry_data %>%
+  # you'll likely need to clean up times, explore lubridate::
   # left join the metadata table including start/stop times, coralID
-  # build a bunch of conditional statements to pinpoint a specific coral and its times
+  # build a bunch of conditional statements to pinpoint a incubation
   mutate(type = case_when(coralID == 123 & between(Time, NP_start, NP_end) ~ "NP",
                           coralID == 123 & between(Time, R_start,R_end) ~ "R",
                           # do this for all chamber and start/stop times
@@ -336,7 +337,7 @@ respirometry_data %>%
   group_by(coralID, type) %>%
   nest() %>%
   # create a linear model for each incubation, extract the slope
-  mutate(fit   = map(train, ~lm(O2 ~ time, data = .)),
+  mutate(fit   = map(data, ~lm(O2 ~ time, data = .)),
          slope = map(fit, function(df) (tidy(df) %>% pull(estimate))[2])) %>%
   # unnest the slope
   unnest(slope) %>%
