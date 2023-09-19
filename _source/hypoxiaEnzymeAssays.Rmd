@@ -119,7 +119,7 @@ capFig = function(x){
 
 # Overview
 
-Anaerobic respiration pathways are diverse and predate the evolution of photosynthesis. With the predicted increase in hypoxia events on coral reefs, it is imperative that scientists understand coral metabolism in low-oxygen environments to better predict coral health and survival under future climate change scenarios. There are four conserved pathways among eukaryotas we will be investigating within our coral hypoxia experiment, including lactate (LDH), octopine (ODH), alanopine (ADH), and strombine (SDH) dehydrogenase activities, all of which oxidize NADH during anaerobic respiration. You can read more about these enzymes and their roles in coral metabolism by reading, [Murphy and Richmond (2016) doi:10.7717/peerj.1956](https://www.doi.org/10.7717/peerj.1956) and the references within, or consult your Cellular and Molecular Biology textbook.
+Anaerobic respiration pathways are diverse and predate the evolution of photosynthesis. With the predicted increase in hypoxia events on coral reefs, it is imperative that scientists understand coral metabolism in low-oxygen environments to better predict coral health and survival under future climate change scenarios. There are four conserved pathways among eukaryotes we will be investigating within our coral hypoxia experiment, including lactate (LDH), octopine (ODH), alanopine (ADH), and strombine (SDH) dehydrogenase activities, all of which oxidize NADH during anaerobic respiration. You can read more about these enzymes and their roles in coral metabolism by reading, [Murphy and Richmond (2016) doi:10.7717/peerj.1956](https://www.doi.org/10.7717/peerj.1956) and the references within, or consult your Cellular and Molecular Biology textbook.
 
 The following sections detail how we quantitatively assess the activities of these four enzymes within corals. Briefly, we sample polyps from a coral, homogenize in a Tris buffer solution, aliquot to a 96-well plate with reagents, and measure the absorbance over time to calculate enzyme NADH oxidation activity. We will also measure total protein concentrations to standardize enzyme activity rates. 
 
@@ -162,17 +162,19 @@ For this format, keep in mind the following:
 
 ```{r eval=T, echo=T, include=T}
 # make sure the plate maps are in a folder all by themselves
-map_files <- list.files("~/Grad School/TA/SWS-F23/data/templates/plateMaps/", full.names = T)
+map_files <- list.files("~/Grad School/TA/SWS-F23/data/templates/plateMaps/",
+                        full.names = T)
 
 # function to process 1 or more plate map files
 plate_map <- lapply(map_files, function(x) {
   read_excel(x,
-                  col_names = c("row", 1:12, "plate_name")) %>%
+             col_names = c("row", 1:12, "plate_name")) %>%
 # add the date as a column to each plate
   mutate(date = as.Date(as.numeric(row),
                         origin="1899-12-30"),
          .before = "row") %>%
-    fill(date, .direction = "down")}) %>% bind_rows()
+    fill(date, .direction = "down")}) %>%
+  bind_rows()
 
 # grab the plate names
 plate_names <- plate_map %>%
@@ -234,7 +236,8 @@ Common naming schemes include, "LDH 1 T18" for LDH plate 1 measured at the 18th 
 
 ```{r load-spec, eval=T, echo=T, include=T}
 # make sure the spec files are in a folder all by themselves
-spec_files <- list.files("~/Grad School/TA/SWS-F23/data/templates/spec/", full.names = T)
+spec_files <- list.files("~/Grad School/TA/SWS-F23/data/templates/spec/",
+                         full.names = T)
 
 spec_dat <- lapply(spec_files, function(x) {
   read.csv(file(x,
@@ -251,9 +254,11 @@ spec_dat <- lapply(spec_files, function(x) {
   mutate(plate_name = case_when(is.na(as.numeric(plate_name)) ~ plate_name,
                                 TRUE ~ NA),
          # pull out the time point in its own col
-         time = toupper(str_extract(plate_name, "(?<=[[:digit:]] ).*$")),
+         time = toupper(str_extract(plate_name,
+                                    "(?<=[[:digit:]] ).*$")),
          # remove time point from plate name
-         plate_name = str_trim(str_extract(plate_name, "^.* [[:digit:]]*(?=.*)"))) %>%
+         plate_name = str_trim(str_extract(plate_name,
+                                           "^.* [[:digit:]]*(?=.*)"))) %>%
   fill(c(plate_name,time)) %>%
   #remove empty plate rows
   filter(if_any(as.character(1:12), ~ !is.na(.))) %>%
@@ -365,13 +370,13 @@ See if you can finish the code. You need to calculate total protein and NADH enz
 
 ## Getting Fancy with Error Propagation
 
-There is uncertainty in everything we measure. Often, we want to calculate this uncertainty and report with our final results. This can get complicated since we have multiple sources of uncertainties and need to figure out the best way to aggregate all sources of error including, the slope of the standard curve and the standard error of the three measurements we took. There may be other independent sources of error, but we'll just focus on these two for now as an example. A commonly used technique to solve this problem is called Monte Carlo Error Propagation. Although it has a fancy sounding name, it's actually quite simple and can be accomplished in only a few lines of code.
+There is uncertainty in everything we measure. Often, we want to calculate this uncertainty and report with our final results. This can get complicated since we have multiple sources of uncertainties and need to figure out the best way to aggregate all sources of error including, the slope of the standard curve and the standard error of the three measurements we took. There may be other independent sources of error, but we'll just focus on these two for now as an example. 
 
-You can read more online about Monte Carlo Error Propagation, but the basic set of assumptions is that the standard deviation we calculated for our data closely approximates the population standard deviation of the measurement, which would be calculated by taking an infinite number of measurements of the sample. The population standard deviation, therefore, can be estimated by taking randomly selected points, within a normal or Gaussian distribution, and propagating our errors accordingly.
+A commonly used technique to solve this problem is called Monte Carlo Error Propagation. Although it has a fancy sounding name, it's actually quite simple and can be accomplished in only a few lines of code. You can read more online about Monte Carlo Error Propagation, but the basic set of assumptions is that the standard deviation we calculated for our data closely approximates the population standard deviation of the measurement, which would be calculated by taking an infinite number of measurements of the sample. The population standard deviation, therefore, can be estimated by taking randomly selected points, within a normal or Gaussian distribution, and propagating our errors accordingly.
 
 First, multiply the standard deviation you calculated by 1,000 randomly distributed normal numbers using the rnorm function. Then add these standard deviations to the value you calculated. Do this for each term in the value you are calculating. Finally, take the mean of these 1,000 values and use as your accepted value, and then take the standard deviation of these 1,000 numbers as the error propagated standard error. It sounds confusing in words, but take a look at the code below and think about what each of the terms are doing. 
 
-Where might this be useful? Well here, you translated the errors associated with protein absorbances of an aliquot of coral tissue and expanded them to estimate the uncertainities around how much protein is in the coral you sampled. In the future, perhaps you create a complex equation that models how sea level rise will change in the future. There are uncertainties in the present sea level you measure, plus the thermal expansion term, the projected heating rate, the effect of gravity, and so on... The deeper you get into science, the more measurements you take and the more uncertainties that exist.
+Where might this be useful? Well here, you combined the errors from replicate protein aliquots and the errors associated with the standard curve to estimate the total uncertainties of the protein  content in the coral you sampled. In the future, perhaps you create a complex equation that models how sea level rise will change in the future. There are uncertainties in the present sea level you measure, plus the thermal expansion term, the projected heating rate, the effect of gravity, and so forth... The deeper you get into science, the more measurements you take and the more uncertainties that exist with each measurement. Monte Carlo Error Propagation is an easy way to quantify the uncertainty with your final estimate.
 
 ```{r, eval=T, echo=T, include=T}
 #define the se of the m term from the standard curve
@@ -388,7 +393,7 @@ capTab("Example of error propagation")
 ```
 
 
-You can see there is only a slight difference in the accepted value using the standard calculation or the Monte Carlo calculation. This is due to the 1000 random points selected within a random distrubtion of the associated error. Since these points are random, each time you rerun the code (unless you set a seed), you will calculate a slightly different value. These values, however, will be well within the associated error calculated in the last column. 
+You can see there is only a slight difference in the accepted value using the standard calculation or the Monte Carlo calculation. This is due to the 1000 random points selected within a random distribution of the associated error. Since these points are random, each time you rerun the code (unless you set a seed), you will calculate a slightly different value. These values, however, will be well within the associated error calculated in the last column. 
 
 </div>
 

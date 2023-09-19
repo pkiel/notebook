@@ -20,16 +20,14 @@ knit: (function(inputFile, encoding) {
 always_allow_html: true
 ---
 
-<script type="text/javascript">
-
-window.onload = function() {
+<script>
+&#10;window.onload = function() {
     //query string in the password
     const urlParams = new URLSearchParams(window.location.search);
     const pass = urlParams.get('pass')
     document.getElementById("password").value = pass;
 };
-
-function verify() {
+&#10;function verify() {
   <!-- set the password here -->
   if (document.getElementById('password').value === 'password') {
     document.getElementById('HIDDENDIV').classList.remove("hidden"); 
@@ -43,12 +41,10 @@ function verify() {
 </script>
 <style type="text/css">
 /*Change content Display */
-
-img {
+&#10;img {
 margin: 0 auto;
 }
-
-table {
+&#10;table {
     width: 90%;
     border: 0px solid #fff;
     border-collapse: collapse;
@@ -70,7 +66,7 @@ photosynthesis. With the predicted increase in hypoxia events on coral
 reefs, it is imperative that scientists understand coral metabolism in
 low-oxygen environments to better predict coral health and survival
 under future climate change scenarios. There are four conserved pathways
-among eukaryotas we will be investigating within our coral hypoxia
+among eukaryotes we will be investigating within our coral hypoxia
 experiment, including lactate (LDH), octopine (ODH), alanopine (ADH),
 and strombine (SDH) dehydrogenase activities, all of which oxidize NADH
 during anaerobic respiration. You can read more about these enzymes and
@@ -489,17 +485,19 @@ For this format, keep in mind the following:
 
 ``` r
 # make sure the plate maps are in a folder all by themselves
-map_files <- list.files("~/Grad School/TA/SWS-F23/data/templates/plateMaps/", full.names = T)
+map_files <- list.files("~/Grad School/TA/SWS-F23/data/templates/plateMaps/",
+                        full.names = T)
 
 # function to process 1 or more plate map files
 plate_map <- lapply(map_files, function(x) {
   read_excel(x,
-                  col_names = c("row", 1:12, "plate_name")) %>%
+             col_names = c("row", 1:12, "plate_name")) %>%
 # add the date as a column to each plate
   mutate(date = as.Date(as.numeric(row),
                         origin="1899-12-30"),
          .before = "row") %>%
-    fill(date, .direction = "down")}) %>% bind_rows()
+    fill(date, .direction = "down")}) %>%
+  bind_rows()
 
 # grab the plate names
 plate_names <- plate_map %>%
@@ -668,7 +666,8 @@ for the initial reading of TAC plate 1.
 
 ``` r
 # make sure the spec files are in a folder all by themselves
-spec_files <- list.files("~/Grad School/TA/SWS-F23/data/templates/spec/", full.names = T)
+spec_files <- list.files("~/Grad School/TA/SWS-F23/data/templates/spec/",
+                         full.names = T)
 
 spec_dat <- lapply(spec_files, function(x) {
   read.csv(file(x,
@@ -685,9 +684,11 @@ spec_dat <- lapply(spec_files, function(x) {
   mutate(plate_name = case_when(is.na(as.numeric(plate_name)) ~ plate_name,
                                 TRUE ~ NA),
          # pull out the time point in its own col
-         time = toupper(str_extract(plate_name, "(?<=[[:digit:]] ).*$")),
+         time = toupper(str_extract(plate_name,
+                                    "(?<=[[:digit:]] ).*$")),
          # remove time point from plate name
-         plate_name = str_trim(str_extract(plate_name, "^.* [[:digit:]]*(?=.*)"))) %>%
+         plate_name = str_trim(str_extract(plate_name,
+                                           "^.* [[:digit:]]*(?=.*)"))) %>%
   fill(c(plate_name,time)) %>%
   #remove empty plate rows
   filter(if_any(as.character(1:12), ~ !is.na(.))) %>%
@@ -878,16 +879,16 @@ get complicated since we have multiple sources of uncertainties and need
 to figure out the best way to aggregate all sources of error including,
 the slope of the standard curve and the standard error of the three
 measurements we took. There may be other independent sources of error,
-but we’ll just focus on these two for now as an example. A commonly used
-technique to solve this problem is called Monte Carlo Error Propagation.
-Although it has a fancy sounding name, it’s actually quite simple and
-can be accomplished in only a few lines of code.
+but we’ll just focus on these two for now as an example.
 
-You can read more online about Monte Carlo Error Propagation, but the
-basic set of assumptions is that the standard deviation we calculated
-for our data closely approximates the population standard deviation of
-the measurement, which would be calculated by taking an infinite number
-of measurements of the sample. The population standard deviation,
+A commonly used technique to solve this problem is called Monte Carlo
+Error Propagation. Although it has a fancy sounding name, it’s actually
+quite simple and can be accomplished in only a few lines of code. You
+can read more online about Monte Carlo Error Propagation, but the basic
+set of assumptions is that the standard deviation we calculated for our
+data closely approximates the population standard deviation of the
+measurement, which would be calculated by taking an infinite number of
+measurements of the sample. The population standard deviation,
 therefore, can be estimated by taking randomly selected points, within a
 normal or Gaussian distribution, and propagating our errors accordingly.
 
@@ -900,15 +901,17 @@ deviation of these 1,000 numbers as the error propagated standard error.
 It sounds confusing in words, but take a look at the code below and
 think about what each of the terms are doing.
 
-Where might this be useful? Well here, you translated the errors
-associated with protein absorbances of an aliquot of coral tissue and
-expanded them to estimate the uncertainities around how much protein is
-in the coral you sampled. In the future, perhaps you create a complex
-equation that models how sea level rise will change in the future. There
-are uncertainties in the present sea level you measure, plus the thermal
+Where might this be useful? Well here, you combined the errors from
+replicate protein aliquots and the errors associated with the standard
+curve to estimate the total uncertainties of the protein content in the
+coral you sampled. In the future, perhaps you create a complex equation
+that models how sea level rise will change in the future. There are
+uncertainties in the present sea level you measure, plus the thermal
 expansion term, the projected heating rate, the effect of gravity, and
-so on… The deeper you get into science, the more measurements you take
-and the more uncertainties that exist.
+so forth… The deeper you get into science, the more measurements you
+take and the more uncertainties that exist with each measurement. Monte
+Carlo Error Propagation is an easy way to quantify the uncertainty with
+your final estimate.
 
 ``` r
 #define the se of the m term from the standard curve
@@ -965,10 +968,10 @@ PROTEIN
 393.2778
 </td>
 <td style="text-align:right;">
-394.8169
+394.0480
 </td>
 <td style="text-align:right;">
-17.84829
+17.13507
 </td>
 </tr>
 <tr>
@@ -988,10 +991,10 @@ PROTEIN
 625.8889
 </td>
 <td style="text-align:right;">
-625.8309
+627.0584
 </td>
 <td style="text-align:right;">
-45.75794
+45.90802
 </td>
 </tr>
 <tr>
@@ -1011,10 +1014,10 @@ PROTEIN
 732.6667
 </td>
 <td style="text-align:right;">
-734.9911
+734.9354
 </td>
 <td style="text-align:right;">
-40.58257
+40.31092
 </td>
 </tr>
 <tr>
@@ -1034,10 +1037,10 @@ PROTEIN
 580.9444
 </td>
 <td style="text-align:right;">
-581.5575
+584.1126
 </td>
 <td style="text-align:right;">
-25.81513
+26.88848
 </td>
 </tr>
 <tr>
@@ -1057,10 +1060,10 @@ PROTEIN
 441.8889
 </td>
 <td style="text-align:right;">
-443.1641
+442.0999
 </td>
 <td style="text-align:right;">
-20.78246
+20.32946
 </td>
 </tr>
 </tbody>
@@ -1068,7 +1071,7 @@ PROTEIN
 
 You can see there is only a slight difference in the accepted value
 using the standard calculation or the Monte Carlo calculation. This is
-due to the 1000 random points selected within a random distrubtion of
+due to the 1000 random points selected within a random distribution of
 the associated error. Since these points are random, each time you rerun
 the code (unless you set a seed), you will calculate a slightly
 different value. These values, however, will be well within the
