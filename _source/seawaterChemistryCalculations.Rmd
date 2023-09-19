@@ -261,7 +261,13 @@ resp_dat <- read_csv("~/Grad School/TA/SWS-F23/data/respirometry/18Sept23_chambe
   select(-c(Date,Time)) %>%
   filter(between(dt,
                  ymd_hms("2023-09-15 14:25:00 UTC"),
-                 ymd_hms("2023-09-15 15:10:00 UTC")))
+                 ymd_hms("2023-09-15 15:10:00 UTC"))) %>%
+  # need to linearly correct oxygen
+  mutate(baseLine = subset(.,row_number()<=5) %>% pull(O2) %>% mean(),
+         O2 = O2*(1+(202.6-baseLine)/baseLine)) %>%
+    select(-baseLine)
+  
+
 
 #calculate rates of umol/min, multiple by 60 to convert to hour
 NP <- (resp_dat %>%
@@ -296,7 +302,7 @@ resp_dat %>%
                                      ymd_hms("2023-09-15 14:44:00 UTC")))),
               se = F, color="#0B775E") +
   annotate(ymd_hms("2023-09-15 14:32:30 UTC"),
-         geom = "text", y=145,
+         geom = "text", y=225,
          label=expr(paste("NP = ",
                                !!round(NP,1),~
                                "O"[2]~mu*"mol/L/hr"))) +
@@ -310,13 +316,13 @@ resp_dat %>%
                                    ymd_hms("2023-09-15 15:08:00 UTC")))),
             se = F, color="#F2300F") +
   annotate(ymd_hms("2023-09-15 15:02:10 UTC"),
-       geom = "text", y=132,
+       geom = "text", y=210,
        label=expr(paste("R = ",
                                !!round(R,1),~
                                "O"[2]~mu*"mol/L/hr"))) +
   labs(x = "Time",
        y = expression("O"[2]~"("*mu*"mol/L)"),
-       title = expression("P = NP + R = 52.6 + 36.6 = 89.2 O"[2]~mu*"mol/L/hr")) +
+       title = expression("P = NP + R = 81.3 + 56.7 = 138.0 O"[2]~mu*"mol/L/hr")) +
   theme_bw()
 ```
 
@@ -346,11 +352,17 @@ respirometry_data %>%
                                         ymd_hms("2023-09-15 15:25:00 UTC")) ~ 123,
                           # do this for all chamber and start/stop times
                           TRUE ~ NA)) %>%
+  group_by(chamber) %>%
+   # need to linearly correct oxygen since calibration was wonky
+ mutate(baseLine = subset(.,row_number()<=5) %>% pull(O2) %>% mean(),
+        O2 = O2*(1+(202.6-baseLine)/baseLine)) %>%
+  ungroup() %>%
   # remove data when not inside a incubation
   drop_na(type,coralID) %>%
   group_by(coralID, type) %>%
   # create minute column
-  mutate(min = as.numeric(datetime - first(datetime))/60) %>%
+  mutate(min = as.numeric(datetime - first(datetime))/60)
+    select(-baseLine)) %>%
   # nest individual incubations within coralID/type definitions
   nest() %>%
   # create a linear model for each incubation, extract the slope

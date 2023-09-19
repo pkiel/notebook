@@ -310,19 +310,19 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-0.75
+1.50
 </td>
 <td style="text-align:right;">
-23.43838
+46.87676
 </td>
 <td style="text-align:right;">
-11.10930
+22.21860
 </td>
 <td style="text-align:right;">
-12.05980
+24.11961
 </td>
 <td style="text-align:right;">
-13.02182
+26.04365
 </td>
 </tr>
 <tr>
@@ -350,39 +350,19 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-3.25
+3.50
 </td>
 <td style="text-align:right;">
-101.56631
+109.37910
 </td>
 <td style="text-align:right;">
-48.14029
+51.84339
 </td>
 <td style="text-align:right;">
-52.25915
+56.27908
 </td>
 <td style="text-align:right;">
-56.42791
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-3.75
-</td>
-<td style="text-align:right;">
-117.19189
-</td>
-<td style="text-align:right;">
-55.54649
-</td>
-<td style="text-align:right;">
-60.29902
-</td>
-<td style="text-align:right;">
-65.10913
+60.76852
 </td>
 </tr>
 <tr>
@@ -390,39 +370,19 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-4.25
+4.50
 </td>
 <td style="text-align:right;">
-132.81748
+140.63027
 </td>
 <td style="text-align:right;">
-62.95269
+66.65579
 </td>
 <td style="text-align:right;">
-68.33889
+72.35882
 </td>
 <td style="text-align:right;">
-73.79034
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-5.00
-</td>
-<td style="text-align:right;">
-156.25586
-</td>
-<td style="text-align:right;">
-74.06198
-</td>
-<td style="text-align:right;">
-80.39869
-</td>
-<td style="text-align:right;">
-86.81217
+78.13095
 </td>
 </tr>
 <tr>
@@ -430,19 +390,99 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-8.50
+4.75
 </td>
 <td style="text-align:right;">
-265.63496
+148.44307
 </td>
 <td style="text-align:right;">
-125.90537
+70.35889
 </td>
 <td style="text-align:right;">
-136.67777
+76.37876
 </td>
 <td style="text-align:right;">
-147.58068
+82.47156
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+5.75
+</td>
+<td style="text-align:right;">
+179.69424
+</td>
+<td style="text-align:right;">
+85.17128
+</td>
+<td style="text-align:right;">
+92.45849
+</td>
+<td style="text-align:right;">
+99.83399
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+6.00
+</td>
+<td style="text-align:right;">
+187.50703
+</td>
+<td style="text-align:right;">
+88.87438
+</td>
+<td style="text-align:right;">
+96.47843
+</td>
+<td style="text-align:right;">
+104.17460
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+6.75
+</td>
+<td style="text-align:right;">
+210.94541
+</td>
+<td style="text-align:right;">
+99.98368
+</td>
+<td style="text-align:right;">
+108.53823
+</td>
+<td style="text-align:right;">
+117.19643
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+8.00
+</td>
+<td style="text-align:right;">
+250.00938
+</td>
+<td style="text-align:right;">
+118.49917
+</td>
+<td style="text-align:right;">
+128.63791
+</td>
+<td style="text-align:right;">
+138.89947
 </td>
 </tr>
 <tr>
@@ -463,46 +503,6 @@ umol/L
 </td>
 <td style="text-align:right;">
 151.92129
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-9.50
-</td>
-<td style="text-align:right;">
-296.88613
-</td>
-<td style="text-align:right;">
-140.71777
-</td>
-<td style="text-align:right;">
-152.75751
-</td>
-<td style="text-align:right;">
-164.94312
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-10.00
-</td>
-<td style="text-align:right;">
-312.51172
-</td>
-<td style="text-align:right;">
-148.12397
-</td>
-<td style="text-align:right;">
-160.79738
-</td>
-<td style="text-align:right;">
-173.62433
 </td>
 </tr>
 </tbody>
@@ -556,11 +556,17 @@ respirometry_data %>%
                                         ymd_hms("2023-09-15 15:25:00 UTC")) ~ 123,
                           # do this for all chamber and start/stop times
                           TRUE ~ NA)) %>%
+  group_by(chamber) %>%
+   # need to linearly correct oxygen since calibration was wonky
+ mutate(baseLine = subset(.,row_number()<=5) %>% pull(O2) %>% mean(),
+        O2 = O2*(1+(202.6-baseLine)/baseLine)) %>%
+  ungroup() %>%
   # remove data when not inside a incubation
   drop_na(type,coralID) %>%
   group_by(coralID, type) %>%
   # create minute column
-  mutate(min = as.numeric(datetime - first(datetime))/60) %>%
+  mutate(min = as.numeric(datetime - first(datetime))/60)
+    select(-baseLine)) %>%
   # nest individual incubations within coralID/type definitions
   nest() %>%
   # create a linear model for each incubation, extract the slope
