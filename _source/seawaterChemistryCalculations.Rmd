@@ -326,19 +326,36 @@ The most efficient way to analyze all this data at once is to add case_when stat
 
 ```{r, echo=T, eval=F}
 respirometry_data %>%
-  # you'll likely need to clean up times, explore lubridate::
-  # left join the metadata table including start/stop times, coralID
+  # combie Date and Time into one column 
+  mutate(datetime = mdy_hms(paste(Date,Time))) %>%
+  # encode manually
   # build a bunch of conditional statements to pinpoint a incubation
-  mutate(type = case_when(coralID == 123 & between(Time, NP_start, NP_end) ~ "NP",
-                          coralID == 123 & between(Time, R_start,R_end) ~ "R",
+                          # chamber 1, net photosynthesis start/stop
+  mutate(type = case_when(chamber == 1 & between(datetime,
+                                         ymd_hms("2023-09-15 14:56:00 UTC"),
+                                         ymd_hms("2023-09-15 15:08:00 UTC")) ~ "NP",
+                          # chamber 1, respiration startp/stop
+                          chamber == 1 & between(datetime,
+                                         ymd_hms("2023-09-15 15:14:00 UTC"),
+                                         ymd_hms("2023-09-15 15:25:00 UTC")) ~ "R",
+                          # do this for all chamber and start/stop times
+                          TRUE ~ NA),
+                            # chamber 1, NP start through R end
+         coralID = case_when(chamber == 1 & between(datetime,
+                                        ymd_hms("2023-09-15 14:56:00 UTC"),
+                                        ymd_hms("2023-09-15 15:25:00 UTC")) ~ 123,
                           # do this for all chamber and start/stop times
                           TRUE ~ NA)) %>%
-  # nest individual incubations
+  # remove data when not inside a incubation
+  drop_na(type,coralID) %>%
   group_by(coralID, type) %>%
+  # create minute column
+  mutate(min = as.numeric(datetime - first(datetime))/60) %>%
+  # nest individual incubations within coralID/type definitions
   nest() %>%
   # create a linear model for each incubation, extract the slope
-  mutate(fit   = map(data, ~lm(O2 ~ time, data = .)),
-         slope = map(fit, function(df) (tidy(df) %>% pull(estimate))[2])) %>%
+  mutate(fit   = map(data, ~lm(O2 ~ datetime, data = .)),
+         slope = map(fit, function(df) (tidy(df) %>% pull(estimate))[2]*60)) %>%
   # unnest the slope
   unnest(slope) %>%
   # move the NP,R incubations into their own column for each coralID
@@ -349,6 +366,8 @@ respirometry_data %>%
   # calculate P from NP, R
   mutate(P = NP + abs(R))
 ```
+
+You can likely achieve the same results without all the case_when statements by left_join the metadata table based on chamber number and times and then use the fill verb to copy the metadata to multiple corresponding rows. But that code would take a bit more time to figure out. If you'd like to learn how we'd go about this method, we can work on it together. 
 
 </div>
 

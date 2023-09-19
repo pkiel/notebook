@@ -305,19 +305,119 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-2.75
+0.50
 </td>
 <td style="text-align:right;">
-85.94072
+15.62559
 </td>
 <td style="text-align:right;">
-40.73409
+7.406198
 </td>
 <td style="text-align:right;">
-44.21928
+8.039869
 </td>
 <td style="text-align:right;">
-47.74669
+8.681217
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+31.25117
+</td>
+<td style="text-align:right;">
+14.812397
+</td>
+<td style="text-align:right;">
+16.079738
+</td>
+<td style="text-align:right;">
+17.362433
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+1.25
+</td>
+<td style="text-align:right;">
+39.06396
+</td>
+<td style="text-align:right;">
+18.515496
+</td>
+<td style="text-align:right;">
+20.099673
+</td>
+<td style="text-align:right;">
+21.703042
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+1.50
+</td>
+<td style="text-align:right;">
+46.87676
+</td>
+<td style="text-align:right;">
+22.218595
+</td>
+<td style="text-align:right;">
+24.119607
+</td>
+<td style="text-align:right;">
+26.043650
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+1.75
+</td>
+<td style="text-align:right;">
+54.68955
+</td>
+<td style="text-align:right;">
+25.921695
+</td>
+<td style="text-align:right;">
+28.139542
+</td>
+<td style="text-align:right;">
+30.384258
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+2.25
+</td>
+<td style="text-align:right;">
+70.31514
+</td>
+<td style="text-align:right;">
+33.327893
+</td>
+<td style="text-align:right;">
+36.179411
+</td>
+<td style="text-align:right;">
+39.065475
 </td>
 </tr>
 <tr>
@@ -331,113 +431,13 @@ umol/L
 132.81748
 </td>
 <td style="text-align:right;">
-62.95269
+62.952687
 </td>
 <td style="text-align:right;">
-68.33889
+68.338887
 </td>
 <td style="text-align:right;">
-73.79034
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-4.50
-</td>
-<td style="text-align:right;">
-140.63027
-</td>
-<td style="text-align:right;">
-66.65579
-</td>
-<td style="text-align:right;">
-72.35882
-</td>
-<td style="text-align:right;">
-78.13095
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-5.00
-</td>
-<td style="text-align:right;">
-156.25586
-</td>
-<td style="text-align:right;">
-74.06198
-</td>
-<td style="text-align:right;">
-80.39869
-</td>
-<td style="text-align:right;">
-86.81217
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-5.50
-</td>
-<td style="text-align:right;">
-171.88145
-</td>
-<td style="text-align:right;">
-81.46818
-</td>
-<td style="text-align:right;">
-88.43856
-</td>
-<td style="text-align:right;">
-95.49338
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-6.50
-</td>
-<td style="text-align:right;">
-203.13262
-</td>
-<td style="text-align:right;">
-96.28058
-</td>
-<td style="text-align:right;">
-104.51830
-</td>
-<td style="text-align:right;">
-112.85582
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-6.75
-</td>
-<td style="text-align:right;">
-210.94541
-</td>
-<td style="text-align:right;">
-99.98368
-</td>
-<td style="text-align:right;">
-108.53823
-</td>
-<td style="text-align:right;">
-117.19643
+73.790342
 </td>
 </tr>
 <tr>
@@ -451,33 +451,13 @@ umol/L
 218.75820
 </td>
 <td style="text-align:right;">
-103.68678
+103.686778
 </td>
 <td style="text-align:right;">
-112.55817
+112.558168
 </td>
 <td style="text-align:right;">
-121.53703
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:right;">
-7.25
-</td>
-<td style="text-align:right;">
-226.57100
-</td>
-<td style="text-align:right;">
-107.38988
-</td>
-<td style="text-align:right;">
-116.57810
-</td>
-<td style="text-align:right;">
-125.87764
+121.537034
 </td>
 </tr>
 <tr>
@@ -485,19 +465,39 @@ umol/L
 35
 </td>
 <td style="text-align:right;">
-7.50
+8.75
 </td>
 <td style="text-align:right;">
-234.38379
+273.44775
 </td>
 <td style="text-align:right;">
-111.09298
+129.608473
 </td>
 <td style="text-align:right;">
-120.59804
+140.697710
 </td>
 <td style="text-align:right;">
-130.21825
+151.921292
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+9.50
+</td>
+<td style="text-align:right;">
+296.88613
+</td>
+<td style="text-align:right;">
+140.717770
+</td>
+<td style="text-align:right;">
+152.757513
+</td>
+<td style="text-align:right;">
+164.943117
 </td>
 </tr>
 </tbody>
@@ -531,19 +531,36 @@ See code example below:
 
 ``` r
 respirometry_data %>%
-  # you'll likely need to clean up times, explore lubridate::
-  # left join the metadata table including start/stop times, coralID
+  # combie Date and Time into one column 
+  mutate(datetime = mdy_hms(paste(Date,Time))) %>%
+  # encode manually
   # build a bunch of conditional statements to pinpoint a incubation
-  mutate(type = case_when(coralID == 123 & between(Time, NP_start, NP_end) ~ "NP",
-                          coralID == 123 & between(Time, R_start,R_end) ~ "R",
+                          # chamber 1, net photosynthesis start/stop
+  mutate(type = case_when(chamber == 1 & between(datetime,
+                                         ymd_hms("2023-09-15 14:56:00 UTC"),
+                                         ymd_hms("2023-09-15 15:08:00 UTC")) ~ "NP",
+                          # chamber 1, respiration startp/stop
+                          chamber == 1 & between(datetime,
+                                         ymd_hms("2023-09-15 15:14:00 UTC"),
+                                         ymd_hms("2023-09-15 15:25:00 UTC")) ~ "R",
+                          # do this for all chamber and start/stop times
+                          TRUE ~ NA),
+                            # chamber 1, NP start through R end
+         coralID = case_when(chamber == 1 & between(datetime,
+                                        ymd_hms("2023-09-15 14:56:00 UTC"),
+                                        ymd_hms("2023-09-15 15:25:00 UTC")) ~ 123,
                           # do this for all chamber and start/stop times
                           TRUE ~ NA)) %>%
-  # nest individual incubations
+  # remove data when not inside a incubation
+  drop_na(type,coralID) %>%
   group_by(coralID, type) %>%
+  # create minute column
+  mutate(min = as.numeric(datetime - first(datetime))/60) %>%
+  # nest individual incubations within coralID/type definitions
   nest() %>%
   # create a linear model for each incubation, extract the slope
-  mutate(fit   = map(data, ~lm(O2 ~ time, data = .)),
-         slope = map(fit, function(df) (tidy(df) %>% pull(estimate))[2])) %>%
+  mutate(fit   = map(data, ~lm(O2 ~ datetime, data = .)),
+         slope = map(fit, function(df) (tidy(df) %>% pull(estimate))[2]*60)) %>%
   # unnest the slope
   unnest(slope) %>%
   # move the NP,R incubations into their own column for each coralID
@@ -554,5 +571,12 @@ respirometry_data %>%
   # calculate P from NP, R
   mutate(P = NP + abs(R))
 ```
+
+You can likely achieve the same results without all the case_when
+statements by left_join the metadata table based on chamber number and
+times and then use the fill verb to copy the metadata to multiple
+corresponding rows. But that code would take a bit more time to figure
+out. If you’d like to learn how we’d go about this method, we can work
+on it together.
 
 </div>
