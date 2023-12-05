@@ -2,7 +2,7 @@
 layout: post
 title:  "Preliminary Raman Analysis"
 author: "Patrick M Kiel"
-date: '2023-08-09'
+date: '2023-12-05'
 categories: [research]
 description: "Reviewing the analysis of Raman spectra"
 output:
@@ -12,7 +12,7 @@ output:
 knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile, 
   encoding = encoding, 
-  output_file = paste0('2023-08-09', "-",
+  output_file = paste0('2023-12-05', "-",
                         gsub(pattern = "\\.Rmd$",
                               "", basename(inputFile))
                         ,".md"), 
