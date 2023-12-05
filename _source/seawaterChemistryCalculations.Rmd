@@ -354,15 +354,15 @@ respirometry_data %>%
                           TRUE ~ NA)) %>%
   group_by(chamber) %>%
    # need to linearly correct oxygen since calibration was wonky
- mutate(baseLine = subset(.,row_number()<=5) %>% pull(O2) %>% mean(),
+  mutate(baseLine = subset(.,row_number()<=5) %>% pull(O2) %>% mean(),
         O2 = O2*(1+(202.6-baseLine)/baseLine)) %>%
   ungroup() %>%
+  select(-baseLine) %>%
   # remove data when not inside a incubation
   drop_na(type,coralID) %>%
   group_by(coralID, type) %>%
   # create minute column
-  mutate(min = as.numeric(datetime - first(datetime))/60)
-    select(-baseLine)) %>%
+  mutate(min = as.numeric(datetime - first(datetime))/60) %>%
   # nest individual incubations within coralID/type definitions
   nest() %>%
   # create a linear model for each incubation, extract the slope

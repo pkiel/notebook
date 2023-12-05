@@ -32,6 +32,7 @@ library(rstatix)
 library(seacarb)
 library(OpenSpecy)
 library(cowplot)
+library(wesanderson)
 
 base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
 base_url <- "/notebook/" # subdirectory of patrickmkiel.com
@@ -46,6 +47,10 @@ knitr::opts_chunk$set(fig.path = fig_path,
                     fig.align = 'center', out.width = '90%',
                     message=FALSE, warning=FALSE,
                     cache = FALSE, results = "asis")
+
+#set default color paletes
+options(ggplot2.discrete.fill=wes_palette("Darjeeling1"))
+options(ggplot2.discrete.colour=wes_palette("Darjeeling1"))
 ```
 
 ```{js}
@@ -78,6 +83,15 @@ function verify() {
 img {
     max-width: 90%;
     margin: 0 auto;
+}
+
+table {
+    width: 90%;
+    border: 0px solid #fff;
+    border-collapse: collapse;
+    overflow-x: auto;
+    margin: 0 auto;
+    display: block;
 }
 ```
 
@@ -119,24 +133,34 @@ If there are consistent impurities of the aragonite, we may be able to notice a 
 Currently, I have analyzed the standard peak position, peak intensity, and FWHM peak for the v1-v4 peaks outlined above. I am currently investigating other regions of interest related to intracrystaline organics and ratios we can construct to understand if there are any genotype-specific differences in the aragonite we can identify. 
 
 ```{r example-FTIR}
-  dat = read.csv('~/Grad School/ULink 2022/AllysonGenotypedCorals/ftir/group2/138.csv',
+  dat <- read.csv('~/Grad School/ULink 2022/FTIR/102022/27.csv',
                  header = FALSE, stringsAsFactors = FALSE,
-                 skip = 2)
-  colnames(dat) = c("wavenumber", "intensity")
+                 skip = 2) %>%
+  filter(V1 <2000)
+  colnames(dat) <- c("wavenumber", "intensity")
+
+  dat <- as_OpenSpecy(x = dat$wavenumber,
+                 spectra = data.frame(dat$intensity))
+  
   #adjust from transmittance to absorbance
   dat = adj_intens(dat,
                     type = "transmittance")
+  
+  # use a 5th order polynomial to subtract background
+  dat <- subtr_baseline(dat, degree = 8, make_rel = F)
+  
   #smooth w/ 3rd order polynomial by the Savitzky-Golay filter
-  dat = smooth_intens(dat, p=3, n=65)
-  #baseline correction 
-  dat = subtr_bg(dat)
+  test<-smooth_intens(dat, polynomial=5, window =65, make_rel = F)
   
   capFig("Example FTIR Spectrum")
   
-  dat %>%
-    ggplot(aes(wavenumber,intensity)) +
+    test <- data.frame(dat$wavenumber,dat$spectra$dat.intensity)
+  
+  test %>%
+    filter(dat.wavenumber<1750) %>%
+    ggplot(aes(dat.wavenumber,dat.spectra.dat.intensity)) +
     geom_line() +
-    theme_bw() +
+    theme_bw()
     annotate("text",
              x=c(1460,1083,855,710), 
              y=c(0.95,0.2,1.05,0.4),

@@ -1,0 +1,718 @@
+---
+layout: post
+title:  "Preliminary Raman Analysis"
+author: "Patrick M Kiel"
+date: '2023-08-09'
+categories: [research]
+description: "Reviewing the analysis of Raman spectra"
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, 
+  encoding = encoding, 
+  output_file = paste0('2023-08-09', "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
+  output_dir = "../_posts") })
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#load packages
+library(tidyverse)
+library(kableExtra)
+library(readxl)
+library(ggpubr)
+library(rstatix)
+library(wesanderson)
+
+base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
+fig_path <- "images/RamanPrelim/" #add a new folder if you want to group output into a single foder
+
+# Set base directories
+knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
+
+# Set figure directories
+knitr::opts_chunk$set(fig.path = fig_path,
+                    cache.path = '../cache/',
+                    fig.align = 'center', out.width = '90%',
+                    dpi = 300,
+                    message=FALSE, warning=FALSE,
+                    cache = FALSE, results = "asis")
+
+
+#set default color paletes
+options(ggplot2.discrete.fill=wes_palette("Darjeeling1"))
+options(ggplot2.discrete.colour=wes_palette("Darjeeling1"))
+```
+
+```{js}
+
+window.onload = function() {
+    //query string in the password
+    const urlParams = new URLSearchParams(window.location.search);
+    const pass = urlParams.get('pass')
+    document.getElementById("password").value = pass;
+};
+
+function verify() {
+  <!-- set the password here -->
+  if (document.getElementById('password').value === 'soup') {
+    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
+    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
+  } else {
+    alert('Invalid Password! You cannot view this content.');
+    password.setSelectionRange(0, password.value.length);
+  }
+  return false;
+}
+```
+
+```{css}
+/*Change content Display */
+.hidden {
+  display: none;
+}
+
+img {
+margin: 0 auto;
+}
+
+table {
+    width: 90%;
+    border: 0px solid #fff;
+    border-collapse: collapse;
+    overflow-x: auto;
+    margin: 0 auto;
+    display: block;
+}
+```
+
+```{r FigCaptions, echo=FALSE}
+
+#Figure and Table Caption Numbering
+capTabNo = 1; capFigNo = 1;
+
+#Function to add the Table Number
+capTab = function(x){
+    x = paste0("<h5>Table ",capTabNo,". ",x,"</h5>")
+    capTabNo <<- capTabNo + 1
+    cat(x)
+}
+
+#Function to add the Figure Number
+capFig = function(x){
+    x = paste0("<h5>Figure ",capFigNo,". ",x,"</h5>")
+    capFigNo <<- capFigNo + 1
+    cat(x)
+}
+```
+
+<!-- The password box -->
+<div id="credentials">
+  <input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
+  <br/>
+  <input id="button" type="button" value="Show Content" onclick="verify()" />
+</div>
+
+<!-- The content we want to show after password -->
+<div id="HIDDENDIV" class="hidden" markdown="1">
+
+<!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
+
+# Overview
+
+Raman is a spectroscopic technique which measures inelastic light scattering due to vibrational energy within and between molecules. In practice, Raman can provide important information regarding the identification and chemical composition of minerals. It's also proposed that Raman can derive the fluid characteristics from which a mineral was formed (DeCarlo *et al* 2017). As in all spectroscopy techniques, we are characterizing distinct peaks. For calcium carbonates, we are most interested in the *v1* peak at ~1085 $cm^{-1}$ (some literature on CCA look at high-magnesium calcite *v1* peak at 1089 $cm^{-1}$), which corresponds to the symmetric stretching of the carbonate C-O bond. The width of this v1 peak denotes higher disorder, which may correlate with supersaturated solutions and faster reaction kinetics (i.e. crystal formation).
+
+Raman has successfully been used to describe biogenic calcium carbonates and mineralogical conformations under various perturbations. Kamenos *et al.* (2013) observed decreases in v1 peak width as ambient seawater pCO2 increased and further noticed marked decreases in peak width when the pCO2 was rapidly increased compared to a gradual increase in pCO2. Follow up work by this research team further supported this linear relationship between pCO2 concentration and v1 peak width in CCA cultured under multiple pCO2 scenarios, and they have since proposed Raman as a tool for paleoclimate reconstructions (Pauly *et al.* 2014).
+
+Corals calcify from an internal fluid, which is composed of external seawater which has been altered to promote calcification. The differential modifications of this calcifying fluid by different coral species may explain the species-specific sensitivity to ocean acidification and has been an active area of research for over a decade. Recently, Tom DeCarlo has published numerous papers using Raman to characterize corals' calcifying fluid aragonite saturation state. Given the background above, DeCarlo *et al.* (2017) built a regression of *v1* FWHM of abiogenic aragonites precipitated at known aragonite saturation states in the lab. They have applied this logarithmic regression to calculate the calcifying fluid aragonite saturation state of corals from experiments culturing corals under temperature and CO2 stress and from field experiments, cores, and a widely accepted paleoclimate coral CRM (JCp-1). To highlight a few notable findings from their Raman work: 
+
+1. They were able to identify diurnal, night-day patterns of increasing *v1* FWHM ($\Omega_{cf}$) corresponding to light-enhanced calcification, highlighting the high spatial resolution available with Raman (DeCarlo *et al.* 2019); 
+2. They combined Raman spectroscopy data with boron isotopes and elemental geochemistry to constrain calcium concentrations of the calcifying fluid. In *Pocillopora damicornis* cultured under high pCO2, they observed a nearly 25% increase in [$Ca_2$]cf and constant calcification rates. They propose increasing calcium concentrations of the calcifying fluid as an alternative mechanism to maintain aragonite saturation states despite decreasing carbonate concentrations (Decarlo et al., 2018);
+3. They used Raman on live corals held in seawater filled containers, showcasing the ability to study corals *in vivo* (DeCarlo *et al.* 2019).
+
+Recently, work by Kellock *et al.* (2022) have highlighted the role of organic content in modifying the FWHM of coral's v1 peak, muddying the interpretation of FWHM as a proxy for coral calcification response to OA. Aspartic acid is the largest concentration of amino acids in coral skeletons, and the authors noticed that when concentrations ≥ 1mM were included in lab-created aragonite, there was a significant increase in the v1 FWHM. 
+
+All in all, Raman has a number of advantages compared to other biogeochemial tools commonly used to study coral calcification mechanisms including high spatial resolution, minimal sample preparation, non-destructive sampling, and ability to use Raman on live coral.
+
+Nevertheless, there are some shortcomings of Raman. Raman is sensitive to fluoresence from organics (mitigated here by cleaning samples in buffered $H_2O_2$), Raman machines will each produce slightly different spectra, and quantitative analysis of Raman is influenced by spectral resolution, which itself is influenced by many factors intrinsic to different spectrometers and user-chosen parameters. We can overcome some of these shortcomings by using a daily peak position calibration and a peak width calibration of CRMs. Daily peak calibration is standard practice and was performed for all shown spectra. We will attempt to use JcP-1 as the aragonite peak-width calibration, since DeCarlo *et al.* published 440 spectra, which we can accept as the "standard/true" values.
+
+## Bibliography of Raman used for biogenic calcium carbonates
+
+1. Kamenos NA, Burdett HL, Aloisio E, Findlay HS, Martin S, Longbone C, Dunn J, Widdicombe S, Calosi P. 2013. Coralline algal structure is more sensitive to rate, rather than the magnitude, of ocean acidification. Global Change Biology. 19(12):3621–3628. https://doi.org/10.1111/gcb.12351
+2. Kamenos NA, Perna G, Gambi MC, Micheli F, Kroeker KJ. 2016. Coralline algae in a naturally acidified ecosystem persist by maintaining control of skeletal mineralogy and size. Proceedings of the Royal Society B: Biological Sciences. 283(1840):20161159. https://doi.org/10.1098/rspb.2016.1159
+3. Hennige SJ, Wicks LC, Kamenos NA, Perna G, Findlay HS, Roberts JM. 2015. Hidden impacts of ocean acidification to live and dead coral framework. Proceedings of the Royal Society B: Biological Sciences. 282(1813):20150990. https://doi.org/10.1098/rspb.2015.0990
+4. Pauly M, Kamenos NA, Donohue P, LeDrew E. 2015. Coralline algal Mg-O bond strength as a marine pCO2 proxy. Geology. 43(3):267–270. https://doi.org/10.1130/G36386.1
+5. DeCarlo TM, Ross CL, McCulloch M. 2019. Diurnal cycles of coral calcifying fluid aragonite saturation state. Marine Biology. 166(3):1–6. https://doi.org/10.1007/s00227-019-3468-6
+6. Decarlo TM, Comeau S, Cornwall CE, McCulloch MT. 2018. Coral resistance to ocean acidification linked to increased calcium at the site of calcification. Proceedings of the Royal Society B: Biological Sciences. 285(1878). https://doi.org/10.1098/rspb.2018.0564
+7. DeCarlo TM, Comeau S, Cornwall CE, Gajdzik L, Guagliardo P, Sadekov A, Thillainath EC, Trotter J, McCulloch M. 2019. Investigating marine bio‐calcification mechanisms in a changing ocean with in vivo and high‐resolution ex vivo Raman spectroscopy. Global Change Biology. 25(5):1877–1888. https://doi.org/10.1111/gcb.14579
+8. Kellock C, Castillo Alvarez MC, Finch A, Penkman K, Kröger R, Clog M, Allison N. 2022. Optimising a method for aragonite precipitation in simulated biogenic calcification media. PLoS One. 17(12):e0278627. https://doi.org/10.1371/journal.pone.0278627
+
+
+# Peak Identification
+
+To ensure the collected Raman spectra were characteristic of aragonite, an extended peak of the entire region (0-4000 $cm^{-1}$) was collected once per sample on a haphazardly chosen grain. The following peak characteristics were identified:
+
+1. v1 peak @ ~1085 (calcium carbonate)
+2. v4 peak @ ~700-708 (aragonite), @ ~712 (calcite)
+3. double v4 peak (aragonite)
+4. v2 peak @ ~280 (calcite), 210 (aragonite)
+
+# Data Analysis
+
+Raman peaks of solid samples can be closely approximated with a Gaussian curve, from which the peak area, full-width at half maximum (FWHM), and peak position can be easily extracted. DeCarlo *et al.* 2017 released R code which calculates a Gaussian curve and the three peak parameters for the v1 peak. Spectroscopy is commonly analyzed with proprietary software, such as Origin Pro, and I used this software and its standard operating protocols to compare to the DeCarlo method. Finally, I analyzed the data in a third, open-source way by modifying the DeCarlo routine and implementing similar data processing steps from the OpenSpecy package to closely approximate the Origin Pro Routine.
+
+In summary, I analyzed the data in three ways,
+
+1. Modified DeCarlo Routine - SNV normalization (identical to Z-scores), create Gaussian curve
+2. Kiel Routine - subtract baseline with a 5th order polynomial, SNV normalization, create Gaussian curve
+3. Origin Pro Routine - subtract baseline with asymmetric least squares smoothing baseline, SNV normalization, create Gaussian curve
+
+The only modification of the original DeCarlo Routine was the incorporation of an SNV normalization step to remove peak intensity artifacts and make spectra more comparable across Raman spectrometers. The Kiel Routine is identical to the Modified DeCarlo Routine, except it incorporates a baseline subtraction step. 
+
+There is a small difference in the Gaussian fit between the Origin Pro and the two open source scripting routines. Origin Pro uses this form of the Gaussian curve,
+$$y = y_0 + ke ^\frac{-(x-p)^2}{2s^2}$$
+while the two open source scripting routines incorporate an m term, which corresponds to the slope of the background intensity
+$$
+y = y_0 + mx + ke ^\frac{-(x-p)^2}{2s^2}
+$$
+
+where y is the intensity, $y_0$ is the background intensity, x is the Raman shift, m is the background slope, k is the peak height, p is the peak position (in Raman shift numbers), and s is the standard deviation. The FWHM of the Gaussian curve is calculated by, $FWHM =  2s\sqrt{2ln(2)}$ and the area of the Gaussian curve is calculated by, $A =1.064467\times FWHM \times \text{peak height}$. In R, a non-linear least squares approach is used to fit the Gaussian model to the measured intensity data.
+
+When the baseline has been subtracted or in an otherwise cleaned spectra, m is approximately 0 and the two Gaussian forms are identical.
+
+I did not smooth the data in any of these analysis routines as is customary for visualization purposes, since smoothing is not recommended for quantitative analysis unless absolutely necessary (due to random peaks, low SNR). 
+
+## JCp-1 Results
+```{r aggregate JCP results and methods, warning=F, message=F, include=F}
+setwd("~/Grad School/ULink 2022/")
+source('~/Grad School/ULink 2022/Raman/jcpCalculations.R')
+
+# get the origin data to add to this table,
+
+## origin pro routine
+decarlob17_origin <- read_csv('./Raman/JCp-1Spectra/DeCarloB17/originJCP_DeCarlo_results.csv') %>%
+  filter(`peak index` == "v1") %>%
+  mutate(dataset = "DeCarloB17")
+
+kiel_origin <- read_tsv('./Raman/dat/JcP1_11102023/origin_results.txt') %>%
+  filter(`peak index` == "v1") %>%
+  mutate(dataset = "Kiel")
+
+origin_outputs <- list(decarlob17_origin, kiel_origin)
+jcp_summary <- lapply(origin_outputs, function(spectra){
+  names(spectra) = c('peakIndex', 'peakType', 'peakArea', 'peakPos',
+                     'peakInt', 'fwhm', "dataset")
+  spectra = spectra %>%
+    filter(peakPos > 1085 & fwhm > 2.5 & fwhm < 4.5) %>%
+    drop_na()
+  
+  # calculate normal means
+  spectra %>%
+    group_by(dataset) %>%
+    summarise(across(c('fwhm', 'peakPos', 'peakInt', 'peakArea'),
+                     ~mean(.x),
+                     .names = "{.col}_mean"),
+              across(c('fwhm', 'peakPos', 'peakInt', 'peakArea'),
+                     ~sd(.x),
+                     .names = "{.col}_sd"),
+              spectra = n(),
+              method = "OriginProRoutine")
+}) %>% bind_rows() %>%
+  relocate(method, .after = "dataset") %>%
+  bind_rows(jcp_summary)
+
+rm(decarlob17_origin, kiel_origin, origin_outputs)
+```
+
+```{r jcpAnalysis}
+capFig("Comparison of analysis routine for four peak parameters")
+jcp_summary %>%
+  pivot_longer(cols = c(fwhm_mean:peakArea_sd),
+               names_to = c("metric", ".value"),
+               names_sep="_") %>%
+  ggplot(aes(method,mean, color=dataset)) +
+  geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), position = position_dodge(),
+                width=0.4, alpha=0.7, linewidth=1.1, show.legend = T) +
+  facet_wrap(~metric, scales = "free_y") +
+  theme_bw() +
+  labs(x = "Method",
+       y = expression(paste(italic(v1), " mean \u00B1 SD"))) +
+  theme(legend.position = "top")
+
+capTab("Determinants for each method including coefficient of variation (%CV = precision), and relative standard error (%rse = precision, % accuracy, and systematic error correction")
+jcp_summary %>%
+  pivot_longer(cols = c(fwhm_mean:peakArea_sd),
+               names_to = c("metric", ".value"),
+               names_sep="_") %>%
+  mutate(cv = sd/mean*100,
+         rse = sd/sqrt(spectra)/mean*100) %>%
+  group_by(metric, method) %>%
+  summarise(cv = mean(cv),
+            rse = mean(rse),
+            JcP1_accuracy = (1-abs((mean[which(dataset=="DeCarloB17")]-mean[which(dataset=="Kiel")])/mean[which(dataset=="DeCarloB17")]))*100,
+            JcP1_sysCorrection = mean[which(dataset=="Kiel")] - mean[which(dataset=="DeCarloB17")]) %>%
+  mutate(across(cv:JcP1_sysCorrection, ~ round(.x,3)))
+
+
+
+```
+The FWHM of the DeCarlo *et al.* (2017) spectra is consistently less than the FWHM we measured for the JcP-1 CRM, with a difference ranging between 0.364-0.625, which grants an accuracy of 89.6-82.7%. However, the precision of each analysis routine produces a comparable CV between 2.64-2.68%. There is a general increase in measured FWHM when using the Kiel routine and Origin Pro routine compared to the DeCarlo Routine regardless of dataset, while the difference between the Kiel Routine and the Origin Pro Routine are comparably small.
+
+For peak area, the Kiel routine and Origin Pro routine produce comparable results with higher precision, 5.86% and 5.41%, but sacrifice accuracy, 63.87% and 57.22%, respectively compared to the DeCarlo routine, which has a precision of 15.41% and an accuracy of 69.48%.
+
+For peak intensity, the DeCarlo routine had the greatest variability, with a precision of 15.1%. The accuracy's were approximately comparable for all three methods, ranging from 78.2-82.1%. There was further variability in the DeCarlo dataset compared to the spectra we collected. The DeCarlo dataset also had on average less peak intensity than our measured peak intensity. A likely source for these dataset differences is the laser excitation energy. I measured data with the laser set to 100% intensity to maximize the signal to noise ratio, while the DeCarlo dataset was measured with a 1% intensity laser.
+
+For peak position, all three methods had excellent accuracy and precision, with a positional difference of approximately 1.4 - 1.62 $cm^{-1}$ with a precision of approximately 0.01%. 
+
+There are two main points which need to be kept in mind when thinking of these accuracy and precision numbers. First, I only measured 10 spectra of JCP-1, while the DeCarlo dataset is comprised of 440 spectra (2-3 spectra are rejected due to poor spectral quality). Relative standard error (RSE) should be a better comparison of precision when the N varies significantly, but the conclusions remain the same when using RSE or CV in the table above. I plan to measure at least 10 spectra (will shoot for 25 going forward) during each Raman session to correct that day's data. I will revisit this accuracy analysis and pool all measured spectra to compare against the DeCarlo dataset. Second, JCP-1 has been phased out of the biogeochemical community since there was large variability and it was deemed not sufficient for climate quality reconstructions of pH from coral. Thus, the biogeochemistry community has shifted to synthetic simulated coral standards, which has led to increased accuracy and inter-lab comparisons. This seems obvious since JCP-1 is a single large *Porites* colony that was collected from the wild and subsequently ground in a ball-mill to a homogenized powder. Thus a given aragonite grain from this homogenized sample may be compositionally distinct from another grain due to overall decreases in aragonite saturation state (OA effect), seasonal and daily changes in aragonite saturation state, sampling location within colony, etc. 
+
+Therefore, I am not choosing a routine method solely based on accuracy as the grains measured by DeCarlo may very well have different peak properties than the grains I am measuring. With an average cv across measurements of 3.49% and an average accuracy of 82.6%, I will proceed to use the Kiel Routine for all subsequent analyses. For comparison, the DeCarlo routine had an average cv of 8.3% and an average accuracy of 85.3%. Thus, I will subtract 0.494 from all FWHM measurements to enable the use of DeCarlo's abiotic samples and aragonite saturation state curve.
+
+## Reanalysis of DeCarlo's Abiotic Spectra
+
+DeCarlo created abiogenic aragonite samples in the lab. These were then measured on a Raman spectrometer at Woods Hole for initial analysis, re-analyzed at the University of Westrn Australia (UWA), and then re-analyzed again at Hawaii Pacific Univeristy. I am going to ignore the Woods Hole measurements as these have not been extensively used for DeCarlo's Raman work. The measurements and generated calibration curve at UWA have been extensively used. Further, the JcP measurements from above were all measured on the UWA setup. I am purposefully including the new Hawaii Pacific University measurements as it is nearly the exact same Renishaw Raman setup that is available at FIU in Dr. Prasad's lab and was used forDeCarlo's most recent publication.
+
+The goal with this analysis is to recreate two calibration curves from these two datasets of DeCarlo's abiotic aragonite using the Kiel Routine outlined above. I will then compare to the two published calibration curves.D17 denotes the published JCP1 and abiogenic spectra from DeCarlo *et al.* (2017) and MD23 denotes the abiogenic spectra from Mantanona & DeCarlo (2023).
+
+```{r load abiotic spectra, include=FALSE}
+setwd("~/Grad School/ULink 2022/")
+
+# Run the Kiel Routine on the Raw Abiogenic Spectra from Mantanona & DeCarlo (2023) ----
+
+# capture sample names
+sampleNames <- list.files('./Raman/abioticSpectra/MantanonaDeCarlo23/abiogenic spectra/', pattern = ".csv$", recursive = T)
+
+# read each replicate spectrum and place into sample sublist
+MD23abiogenic_spectrum <- lapply(sampleNames, function(loc) {
+    sample = str_sub(basename(loc), end = -5)
+    session = dirname(loc)
+    
+    spectra = read_csv(paste0('./Raman/abioticSpectra/MantanonaDeCarlo23/abiogenic spectra/',
+                              loc),
+                skip = 3,
+                col_names = 'wavenumber') %>%
+            rename_with(~as.character(as.numeric(str_extract(.x,"\\d+"))-1),
+                       .cols = !wavenumber) %>%
+            pivot_longer(!wavenumber,
+                         names_to = "replicate",
+                         values_to = "intensity") %>%
+            arrange(replicate, wavenumber) %>%
+            mutate(sample = sample,
+                   session = session,
+                   replicate = as.numeric(replicate)) %>%
+      group_by(session, sample, replicate) %>%
+      group_split()
+    
+    lapply(spectra, function(spectrum){
+      #convert to an OpenSpecy object
+      spectrum_clean = as_OpenSpecy(x = spectrum$wavenumber,
+                             spectra = data.frame(spectrum$intensity))
+    
+      # use a 5th order polynomial to subtract background
+      spectrum_clean = subtr_baseline(spectrum_clean, degree = 5, make_rel = F)
+  
+      # extract subtracted spectra for further processing
+      output = data.frame(wavenumber = spectrum$wavenumber,
+                          intensity = unlist(spectrum_clean$spectra),
+                          session = spectrum$session,
+                          sample = spectrum$sample,
+                          replicate = spectrum$replicate) %>%
+        # SNV normalization
+        mutate(intensity = scale(intensity))
+      return(output)
+  }) %>% bind_rows()
+}) %>% bind_rows()
+
+# process spectra w/ Kiel Routine
+
+# calculate Spectral Quality
+source("./Raman/assi.R")
+MD23abiogenic_assi <- MD23abiogenic_spectrum %>%
+  group_by(session, sample, replicate) %>%
+  summarise(assi = assi(intensity, scaled=T)) %>%
+  mutate(sample = case_when(str_detect(sample, "^TS") ~ str_sub(sample, start=3),
+                          T ~ sample))
+
+# load Raman routine
+source("./Raman/ramanFit_pmk.R")
+
+# run the Gausian FWHM routine for each replicate spectra
+MD23abiogenic_output <- MD23abiogenic_spectrum %>%
+  mutate(sample = case_when(str_detect(sample, "^TS") ~ str_sub(sample, start=3),
+                          T ~ sample)) %>%
+  group_by(session, sample, replicate) %>%
+  do(setNames(data.frame(t(ramanFit(.$wavenumber,.$intensity))),
+              c("fwhm", "peakInt", "peakPos",
+                "peakArea", "backgroundInt", "chisq", "pVal"))) %>%
+  ungroup() %>%
+  left_join(MD23abiogenic_assi,
+            by=c("session","sample", "replicate"))
+
+
+# Raman data filtering limits to exclude erroneous spectra
+# needed to remove spectra that missed sample and/or to remove spectra 
+# contaminated by cosmic rays.
+# Reproduced filtering logic from DeCarlo et al. 2017
+# minimum peak intensity = 50 (otherwise too much noise in data)
+# minimum peak wavenumber = 1085 (otherwise likely contaminated / not aragonite / cosmic ray if less than this)
+# maximum background = 2000 (remove fluorescence and cosmic rays)
+# minimum FWHM = 2.5(otherwise likely contaminated / not aragonite / cosmic ray if less than this)
+# maximum FWHM = 4.5 (otherwise likely contaminated / not aragonite / cosmic ray if more than this)
+
+# MD23 states their filtering logic
+# original v1 peak > 500
+# chi-square < 0.5
+# FWHM 3-4.5
+# 
+
+MD23abiogenic_filtered <- MD23abiogenic_output %>%
+  filter(pVal > 0.05 & assi >0.8 & fwhm<6 & fwhm>3) %>%
+  group_by(sample) %>%
+  filter(abs(scale(peakInt,
+                       center = median(peakInt, na.rm = T),
+                       scale = mad(peakInt, na.rm=T))) <= 3.5) %>%
+  filter(sample != "F32")
+
+abiogenicValues <- read_tsv('./Raman/abioticSpectra/MantanonaDeCarlo23/CalibrationCurveAves.txt',
+                            col_names = c('sample', 'experiment', 'omega', 'FWHM_MD23'),
+                            skip=1)
+
+# calculate weighted means,sd by peak intensity as an analog for quality of the spectra
+MD23abiogenic_summary <- MD23abiogenic_filtered %>%
+  group_by(sample) %>%
+  summarise(across(c('fwhm', 'peakPos', 'peakInt', 'peakArea'),
+                  ~mean(.x),
+                  .names = "{.col}_mean"),
+            across(c('fwhm', 'peakPos', 'peakInt', 'peakArea'),
+                   ~sd(.x),
+                   .names = "{.col}_sd"),
+            spectra = n(),
+            across(c('fwhm', 'peakPos', 'peakInt', 'peakArea'),
+                   ~weighted.mean(.x, assi),
+                   .names = "{.col}_wtdMean"),
+            across(c('fwhm', 'peakPos', 'peakInt', 'peakArea'),
+                   ~sqrt(wtd.var(.x, assi)),
+                   .names = "{.col}_wtdSD"))
+
+# MD23abiogenic_summary %>%
+#   left_join(abiogenicValues %>%
+#               select(-experiment), by="sample") %>%
+#   relocate(omega:FWHM_MD23, .after="sample") %>%
+#   arrange(fwhm_mean) %>%
+#   select(sample:fwhm_mean, fwhm_sd)
+
+# Run the Kiel Routine on the Raw Abiogenic Spectra from DeCarlo et al. (2017) ----
+# capture sample names
+fileNames <- list.files('./Raman/abioticSpectra/DeCarlo2017/data/abiogenic_calibration/',
+                        pattern = ".txt$",
+                        recursive = T)
+
+# read each replicate spectrum and place into sample sublist
+D17abiogenic_spectrum <- lapply(fileNames, function(loc) {
+    sample = str_extract(basename(loc), pattern = "^\\w?\\d+")
+    replicate = str_extract(basename(loc), pattern = "(?<=\\_)\\d+(?=\\_)")
+    date = parse_date(dirname(loc), format = "%d-%m-%Y")
+    
+    spectra = read_tsv(paste0('./Raman/abioticSpectra/DeCarlo2017/data/abiogenic_calibration/',
+                              loc),
+                col_names = 'wavenumber') %>%
+            rename_with(~as.character(as.numeric(str_extract(.x,"\\d+"))-1),
+                       .cols = !wavenumber) %>%
+            pivot_longer(!wavenumber,
+                         names_to = "replicate",
+                         values_to = "intensity") %>%
+            # at least 5 spectra were captured for each replicate grain
+            # calculate the average intensity for each grain
+            group_by(wavenumber) %>%
+            summarise(intensity = mean(intensity))
+
+      #convert to an OpenSpecy object
+      spectra_clean = as_OpenSpecy(x = spectra$wavenumber,
+                             spectra = data.frame(spectra$intensity))
+
+      # use a 5th order polynomial to subtract background
+      spectra_clean = subtr_baseline(spectra_clean, degree = 5, make_rel = F)
+
+      # extract subtracted spectra for further processing
+      output = data.frame(wavenumber = spectra$wavenumber,
+                          intensity = unlist(spectra_clean$spectra),
+                          sample = sample,
+                          date = date,
+                          replicate = as.numeric(replicate)) %>%
+        # SNV normalization
+        mutate(intensity = scale(intensity))
+
+
+      return(output)
+  }) %>% bind_rows()
+
+
+# calculate Spectral Quality
+D17abiogenic_assi <- D17abiogenic_spectrum %>%
+  group_by(sample, date, replicate) %>%
+  summarise(assi = assi(intensity, scaled=T)) %>%
+  mutate(sample = case_when(str_detect(sample, "^f") ~ "1F",
+                          T ~ sample))
+
+# run the Gausian FWHM routine for each replicate spectra
+D17abiogenic_output <- D17abiogenic_spectrum %>%
+  mutate(sample = case_when(str_detect(sample, "^f") ~ "1F",
+                        T ~ sample)) %>%
+  group_by(sample, date, replicate) %>%
+  do(setNames(data.frame(t(ramanFit(.$wavenumber,.$intensity))),
+              c("fwhm", "peakInt", "peakPos",
+                "peakArea", "backgroundInt", "chisq", "pVal"))) %>%
+  ungroup() %>%
+  left_join(D17abiogenic_assi,
+            by=c("sample","date", "replicate"))
+
+D17abiogenic_filtered <- D17abiogenic_output %>%
+  filter(pVal > 0.05 & assi >0.8 & fwhm<6 & fwhm>3) %>%
+  group_by(sample) %>%
+  filter(abs(scale(peakInt,
+                       center = median(peakInt, na.rm = T),
+                       scale = mad(peakInt, na.rm=T))) <= 3.5)
+
+abiogenicValues <- read_csv('./Raman/abioticSpectra/DeCarlo2017/data/exp_data.csv',
+                            col_select = c(1,3))
+names(abiogenicValues) <- c("sample", "omega")
+
+# calculate weighted means,sd by peak intensity as an analog for quality of the spectra
+D17abiogenic_summary <- D17abiogenic_filtered %>%
+  group_by(sample) %>%
+  summarise(across(c('fwhm', 'peakPos', 'peakInt', 'peakArea'),
+                  ~mean(.x),
+                  .names = "{.col}_mean"),
+            across(c('fwhm', 'peakPos', 'peakInt', 'peakArea'),
+                   ~sd(.x),
+                   .names = "{.col}_sd"),
+            spectra = n(),
+            across(c('fwhm', 'peakPos', 'peakInt', 'peakArea'),
+                   ~weighted.mean(.x, assi),
+                   .names = "{.col}_wtdMean"),
+            across(c('fwhm', 'peakPos', 'peakInt', 'peakArea'),
+                   ~sqrt(wtd.var(.x, assi)),
+                   .names = "{.col}_wtdSD"))
+
+# D17abiogenic_summary %>%
+#   left_join(abiogenicValues) %>%
+#   relocate(omega, .after="sample") %>%
+#   arrange(fwhm_mean) %>%
+#   select(sample:fwhm_mean, fwhm_sd)
+
+
+abiogenicComparison <- MD23abiogenic_summary %>%
+  select(sample, fwhm_MD23 = fwhm_mean) %>%
+  left_join(D17abiogenic_summary %>% select(sample, fwhm_D17 = fwhm_mean)) %>%
+  left_join(abiogenicValues) %>%
+  relocate(omega, .after="sample") %>%
+  arrange(omega) %>%
+  mutate(diff = fwhm_MD23 - fwhm_D17)
+
+# run an orthogonal regressiion
+
+pca <- prcomp(~fwhm_MD23+fwhm_D17, abiogenicComparison)
+slp <- with(pca, rotation[2,1] / rotation[1,1])
+int <- with(pca, center[2] - slp*center[1])
+
+
+```
+
+Unfortunately MD23 did not measure the JCP1 CRM, however, they did measure the same seven abiogenic aragonite grains, which is a more powerful correction than a single CRM. Here, we will align the MD23 measurements to the D17 measurements with both an OLS regression and an estimation of systematic error assuming the D17 measurements are the "true/standard" measurements (i.e. subtract a constant).
+
+Systematic error of `r round(mean(abiogenicComparison$diff),3)`, which is quite similar and within the estimate to our JCP1 derived systematic error of 0.494. This gives me great confidence that the measurements on Dr. Prasad's spectrometer closely approximate the measurements on Dr. DeCarlo's spectrometer in Hawaii. These values both differ, however, from the values measured on the WITEC spectrometer at UWA. Alternatively we can use the OLS regression to fit the fwhm_MD23 to the values measured in D17 using the equation, `r paste("MD23_fitted = ",round(slp,3), "* MD23_raw ", if_else(int>0, "+", "-"), abs(round(int,3)))`.
+
+```{r abiotic graphs}
+fwhmRightPlot <- MD23abiogenic_filtered %>%
+  ggplot(aes(reorder(sample, fwhm), fwhm, fill=sample, color=sample)) +
+  geom_violin(alpha=0.7) +
+  theme_bw() +
+  scale_y_continuous(limits = c(3.5,5.5)) +
+  labs(x = "Sample") +
+  theme(panel.grid = element_blank())
+
+fwhmLeftPlot <- D17abiogenic_filtered%>%
+  ggplot(aes(reorder(sample, fwhm), fwhm, fill=sample, color=sample)) +
+  geom_violin(alpha=0.7) +
+  theme_bw() +
+  scale_y_continuous(limits = c(3.5,4.75)) +
+  labs(x = "Sample") +
+  theme(panel.grid = element_blank())
+
+capFig("Violin plots of measured abiogenic aragonite FWHM in <strong>A</strong> D17 and <strong>B</strong> MD23")
+gridExtra::grid.arrange(fwhmLeftPlot + theme(legend.position = "none") + geom_text(label = "A", x="53", y=4.75, color="black", size=5, nudge_y = 0.5),
+                        fwhmRightPlot + labs(y = "") + theme(legend.position = "none") + geom_text(label = "B", x="53", y=5.5, color="black", size=5, nudge_y = 0.5),
+             get_legend(fwhmLeftPlot + theme(legend.position = "bottom") + guides(fill = guide_legend(nrow = 1))),
+             layout_matrix = matrix(c(1, 3, 2, 3), nrow = 2),
+             heights = c(1,0.15))
+```
+
+
+```{r}
+capTab("FWHM means for the two datasets for each abiogenic sample along with the known aragonite saturation state")
+abiogenicComparison 
+  
+```
+We can now build the twwo calibration curves for these datasets. I'll also build 2 additional calibrations of the MD23 dataset, corrected to match the D17 dataset assuming a systematic error (subtract constant) and an OLS reggression.
+
+```{r calibPlots}
+# using the normal data from the Kiel Method
+#fit the data to a logistic curve 
+MD23_model <- glm(fwhm_MD23~log(omega), data=abiogenicComparison)
+D17_model <- glm(fwhm_D17~log(omega), data=abiogenicComparison)
+
+modParams <- data.frame(dataset = c("MD23", "D17"),
+                        x = c(14,20),
+                        y = c(4.7,3.7),
+                       slp = c(MD23_model$coefficients[[2]],
+                               D17_model$coefficients[[2]]),
+                       int = c(MD23_model$coefficients[[1]],
+                               D17_model$coefficients[[1]]),
+                       r2 = c(with(summary(MD23_model), 1 - deviance/null.deviance),
+                              with(summary(D17_model), 1 - deviance/null.deviance))) %>%
+  mutate(eqn = paste0("FWHM = ", round(slp,3), " x ln(Omega) + ", round(int,3)))
+
+
+# add in the D17 & MD23 published curves
+publishedCurves <- data.frame(omega = abiogenicComparison$omega,
+                              d17 = 0.57*log(omega)+2.09,
+                              md23 = 0.321*log(omega)+3.21) %>%
+  pivot_longer(!omega,
+               names_to="dataset",
+               values_to="fwhm")
+
+#plot the average FWHM measurements, including the logistic regression line
+logPlotLeft <- abiogenicComparison %>%
+  pivot_longer(c(fwhm_MD23,fwhm_D17),
+              names_pattern = "fwhm_(.*)",
+              names_to = "dataset",
+              values_to = "FWHM") %>%
+  ggplot(aes(x = omega, y = FWHM, color = dataset)) +
+  geom_point(size=2.5) +
+  theme_bw() +
+  labs(x="Saturation State", y="FWHM (cm-1)") +
+  theme(axis.line.x = element_line(color="grey", size = 1),
+        axis.line.y = element_line(color="grey", size = 1),
+        legend.position = "top") +
+  scale_x_continuous(limits=c(9, 30)) +
+  # add in the published curves
+  geom_smooth(data = publishedCurves, aes(x=omega,y=FWHM, color = dataset),
+              alpha=0.3, show.legend = F) + 
+  #add in my generated curves
+  geom_smooth(method = "glm", formula = y~log(x), se=F, show.legend = F) +
+  # eqn labels
+  geom_text(data = modParams, aes(x, y,
+                                   color=dataset,
+                                   label=eqn), show.legend = F) +
+  # eqn R2
+  geom_text(data = modParams, aes(x, y-0.07,
+                                   color=dataset,
+                                   label= paste("R^2 =",round(r2,3))), show.legend = F)
+
+
+# correcting the MD23 to the D17 data in 2 different ways
+sys <- mean(abiogenicComparison$diff)
+
+abiogenicComparison %>%
+  mutate(fwhm_sys = fwhm_MD23 - sys,
+         fwhm_OLS = slp * fwhm_MD23 + int) %>%
+  select(-c(fwhm_D17,diff, fwhm_MD23)) -> MD23_corrected
+
+# correcting the MD23 data to the D17 data in 2 ways
+MD23_sys <- glm(fwhm_sys~log(omega), data=MD23_corrected)
+MD23_OLS <- glm(fwhm_OLS~log(omega), data=MD23_corrected)
+
+
+modParams <- data.frame(method = c("sys", "OLS"),
+                        x = c(14,20),
+                        y = c(4.2,3.8),
+                       slp = c(MD23_sys$coefficients[[2]],
+                               MD23_OLS$coefficients[[2]]),
+                       int = c(MD23_sys$coefficients[[1]],
+                               MD23_OLS$coefficients[[1]]),
+                       r2 = c(with(summary(MD23_sys), 1 - deviance/null.deviance),
+                              with(summary(MD23_OLS), 1 - deviance/null.deviance))) %>%
+  mutate(eqn = paste0("FWHM = ", round(slp,3), " x ln(Omega) + ", round(int,3)))
+
+#plot the average FWHM measurements, including the logistic regression line
+logPlotRight <- MD23_corrected %>%
+  pivot_longer(c(fwhm_sys,fwhm_OLS),
+              names_pattern = "fwhm_(.*)",
+              names_to = "method",
+              values_to = "FWHM") %>%
+  ggplot(aes(x = omega, y = FWHM, color = method)) +
+  geom_point(size=2.5) +
+  theme_bw() +
+  labs(x="Saturation State", y="") +
+  theme(axis.line.x = element_line(color="grey", size = 1),
+        axis.line.y = element_line(color="grey", size = 1),
+        legend.position = "top") +
+  scale_x_continuous(limits=c(9, 30)) +
+  geom_smooth(method = "glm", formula = y~log(x), se=T, show.legend = F, aes(fill=method)) +
+  # eqn labels
+  geom_text(data = modParams, aes(x, y,
+                                   color=method,
+                                   label=eqn), show.legend = F) +
+  # eqn R2
+  geom_text(data = modParams, aes(x, y-0.07,
+                                   color=method,
+                                   label= paste("R^2 =",round(r2,3))), show.legend = F) +
+  scale_color_manual(values = wes_palette("Royal1")) +
+  scale_fill_manual(values = wes_palette("Royal1"))
+
+capFig("Logarithim calibration curves from <strong>A</strong> raw datasets and <strong>B</strong> corrected MD23 datasets")
+ggarrange(logPlotLeft, logPlotRight + theme(axis.title.x = element_blank()), 
+          labels = c("A", "B"),
+          ncol = 2)
+
+```
+So now we have four different calibration curves all generated from abiogenic samples measured by D17 and MD23 analyzed with the Kiel routine. These four calibration curves are distinct from the two published calibration curves in D17 and MD23, which are:
+1. FWHM = $0.57 \times  ln(omega) + 2.09, R^2 = 0.95$ (D17)
+2. FWHM = $0.321 \times ln(omega) + 3.21, R^2 = 0.95$ (MD23)
+
+
+## Coral Analysis
+
+```{r coralAnalysis}
+setwd("~/Grad School/ULink 2022/")
+source('~/Grad School/ULink 2022/Raman/FWHMcalcs.R')
+```
+
+```{r coralPlots}
+spectra_summary %>%
+  ggplot(aes(treatment, fwhm_corrected, fill=treatment)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(title = "Raman Data",
+       y = "FWHM")
+
+spectra_summary %>%
+  ggplot(aes(genotype, fwhm_corrected, fill=treatment)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(title = "Raman Data",
+       y = "FWHM")
+```
+
+
+# Questions
+
+1) After not observing burning of sample at low power, we set the laser intensity to 100% to maximize signal without saturating the spectra. The prior literature used a laser intensity of 1%. While absolute laser output is a function of the specific laser power and the user chosen retarding percentage, I believe differences in absolute laser intensity should only alter intensity values of the spectra. By normalizing the spectra (SNV), this should account for differences in spectral intensity while maintaining relative peak intensities. Is this logic correct, or could the difference in intensity explain some of the differences in FWHM and peak positions?
+
+10 seconds at 10%; 10 seconds at 50%
+
+2) Similarly, prior literature used a 20x objective, while we used a 100x objective. Similar to above, I'd like to try and collect some spectra at 20x to compare. Do you expect to see any differences based on objective alone?
+
+3) I have come across a single paper that attempts to standardize FWHM across different machines by accounting for the spectral resolutions of each individual machine. DeCarlo *et al.* (2017) cites this paper by Nasdala *et al.*, which cites a paper by. However, DeCarlo does not use this method in any of his papers and I have not a, giving me the impression this practice is not widely accepted. Their method is as follows,
+
+
+
+</div>

@@ -183,7 +183,7 @@ Next, I estimated power-sample size curves with pooled standard deviations (SD) 
 
 Our 2-factor anova will have the following form: aov(G ~ treatment * species). There will be 2 levels to treatment and 2 levels to species. The significance of an interactive effect (treatment:species) suggests that at least one of the species responded differently to the MAT compared to the other two.
 
-```{r, calculating }
+```{r, calculating pwr}
 dat <- data.frame(species = c("ACER", "MCAV", "PSTR"),
          growth = c(7.2720,
                     0.6198,
@@ -280,51 +280,56 @@ ANOVA_power(design_result,
 ```
 
 
-<!-- # Alternative Experiment -->
+# Alternative Experiment
 
-<!-- Alternatively, we could focus excluseively on the treatment and ignore the species/morphology comparison. -->
+Alternatively, we could focus exclusively on the treatment and ignore the species/morphology comparison.
 
-<!-- ```{r} -->
-<!-- power1way <- lapply(seq(0.8,0.05, -0.05), function (beta) { -->
-<!--   lapply(seq(0.05,0.25,0.05), function(sd) { -->
-<!--   lapply(seq(0.05,0.5, 0.05), function(multiplier) { -->
-<!--       ss.1way(k=2, -->
-<!--               alpha=0.05, -->
-<!--               beta = beta, -->
-<!--               delta=multiplier, -->
-<!--               sigma=sd, -->
-<!--               B=100) %>% -->
-<!--         broom::tidy() %>% -->
-<!--       mutate(matMultpiplier = multiplier, -->
-<!--              sd = sd) -->
-<!--   }) %>% -->
-<!--     bind_rows() -->
-<!-- }) %>%  -->
-<!--   bind_rows() -->
-<!-- }) %>% -->
-<!--   bind_rows() %>% -->
-<!--   select(matMultpiplier, power, sd, n) %>% -->
-<!--   arrange(matMultpiplier) %>% -->
-<!--   mutate(across(c(matMultpiplier), ~paste0(.x*100,"%"))) -->
+```{r, warning=F}
+power1way <- lapply(seq(0.8,0.05, -0.05), function (beta) {
+  lapply(seq(0.01,0.5,0.05), function(sd) {
+  lapply(seq(0.05,0.5, 0.05), function(multiplier) {
+      ss.1way(k=2,
+              alpha=0.05,
+              beta = beta,
+              delta=multiplier,
+              sigma=sd,
+              B=100) %>%
+        broom::tidy() %>%
+      mutate(matMultpiplier = multiplier,
+             sd = sd)
+  }) %>%
+    bind_rows()
+}) %>%
+  bind_rows()
+}) %>%
+  bind_rows() %>%
+  select(matMultpiplier, power, sd, n) %>%
+  arrange(matMultpiplier) %>%
+  mutate(across(c(matMultpiplier), ~paste0(.x*100,"%")))
 
-<!-- power1way$matMultpiplier <- factor(power$matMultpiplier, -->
-<!--                                levels = c('5%', '10%', '15%', -->
-<!--                                           '20%', '25%', '30%', -->
-<!--                                           '35%', '40%', '45%', '50%'))  -->
+power1way$matMultpiplier <- factor(power1way$matMultpiplier,
+                               levels = c('5%', '10%', '15%',
+                                          '20%', '25%', '30%',
+                                          '35%', '40%', '45%', '50%'))
 
-<!-- capFig("Group-size power curves for estimated % increase in growth rates. Horizontal line denotes 80% power.") -->
-<!-- power1way %>% -->
-<!--   ggplot(aes(power, n, color=as.factor(sd))) + -->
-<!--   geom_point() + -->
-<!--   geom_smooth(se=F) + -->
-<!--   geom_vline(xintercept = 0.8) + -->
-<!--   facet_wrap(~matMultpiplier, scales = "free_y") + -->
-<!--   scale_x_continuous(limits = c(0,1), breaks = seq(0,1,.25), labels = scales::label_percent(), -->
-<!--                     name = "Power (%)") + -->
-<!--   scale_y_continuous(breaks = integer_breaks()) + -->
-<!--   theme_bw() + -->
-<!--   labs(color = "Standard Deviation") -->
-<!-- ``` -->
+# capFig("Group-size power curves for estimated % increase in growth rates. Horizontal line denotes 80% power.")
+power1way %>%
+  mutate(sd = round(sd,2)-0.01) %>%
+  ggplot(aes(power, n, color=as.factor(sd))) +
+  geom_point() +
+  geom_smooth(se=F) +
+  geom_vline(xintercept = 0.8) +
+  #3 tanks, n= 24
+  geom_hline(yintercept = 24, color="red", linetype = "dashed") +
+  #4 tanks, n= 32
+  geom_hline(yintercept = 32, color="red", linetype = "dotted") +
+  facet_wrap(~matMultpiplier, scales = "free_y") +
+  scale_x_continuous(limits = c(0,1), breaks = seq(0,1,.25), labels = scales::label_percent(),
+                    name = "Power (%)") +
+  scale_y_continuous(breaks = integer_breaks(), limits = c(0,50)) +
+  theme_bw() +
+  labs(color = "Standard Deviation")
+```
 
 
 # Electrical Considerations

@@ -314,13 +314,17 @@ dat <- spec_dat %>%
 Now we need to convert from our absorbance to our total protein or [NADH] concentration. To do that, we will need to use our standard curves.
 
 ```{r standardCurves}
-curveProtein <- structure(list(concentration = c(1500L, 1000L, 750L, 500L, 250L, 
+curveProtein <- structure(list(`concentration.ug.ml` = c(1500L, 1000L, 750L, 500L, 250L, 
 125L, 25L, 0L, 2000L, 1500L, 1000L, 750L, 500L, 250L, 125L, 25L, 
 0L), Abs = c(0.869, 0.545, 0.5545, 0.385, 0.2135, 0.101, 0.015, 
 0, 1.333, 1.029, 0.728, 0.557, 0.4, 0.204, 0.1, 0.011, 0)), class = "data.frame", row.names = c(NA, 
 -17L))
 
-curveNADH <- structure(list(concentration = c(0, 0.25, 0.25, 0.25, 0.25, 0.3, 0.35, 
+write.csv(curveProtein,
+          '~/Grad School/TA/SWS-F23/data/enzyme/proteinStandardCurve.csv',
+          row.names=F)
+
+curveNADH <- structure(list(`concentration.umol.ml` = c(0, 0.25, 0.25, 0.25, 0.25, 0.3, 0.35, 
                                               0.4, 0.45, 1, 1, 1.25, 1.25, 0.75, 0.75,
                                               0.75, 0.5, 0.5, 0.5,0.5),
                             Abs = c(0.0009, 0.1065, 0.1169, 0.0648, 0.0779, 0.1195, 
@@ -329,6 +333,10 @@ curveNADH <- structure(list(concentration = c(0, 0.25, 0.25, 0.25, 0.25, 0.3, 0.
                                     0.1651, 0.1743)),
                        class = "data.frame",
                        row.names = c(NA, -20L))
+
+write.csv(curveNADH,
+          '~/Grad School/TA/SWS-F23/data/enzyme/nadhStandardCurve.csv',
+          row.names=F)
 
 
 mcExample <- dat %>%

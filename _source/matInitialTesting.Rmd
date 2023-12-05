@@ -1,0 +1,180 @@
+---
+layout: post
+title:  "Mineral Accretion Techn"
+author: "Patrick M Kiel"
+date: '2023-08-25'
+categories: [research]
+description: "Testing of the mineral accretion technology device to inform preliminary experiment."
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, 
+  encoding = encoding, 
+  output_file = paste0("2023-08-25", "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
+  output_dir = "../_posts") })
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#load packages
+library(tidyverse)
+library(kableExtra)
+library(readxl)
+library(ggpubr)
+library(rstatix)
+library(wesanderson)
+
+base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
+fig_path <- "images/matInitialTesting/" #add a new folder if you want to group output into a single foder
+
+# Set base directories
+knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
+
+# Set figure directories
+knitr::opts_chunk$set(fig.path = fig_path,
+                    cache.path = '../cache/',
+                    fig.align = 'center', out.width = '90%',
+                    dpi=300,
+                    message=FALSE, warning=FALSE,
+                    cache = FALSE, results = "asis")
+
+#set default color paletes
+options(ggplot2.discrete.fill=wes_palette("Darjeeling1"))
+options(ggplot2.discrete.colour=wes_palette("Darjeeling1"))
+```
+
+<!-- ```{js} -->
+<!-- window.onload = function() { -->
+<!--     //query string in the password -->
+<!--     const urlParams = new URLSearchParams(window.location.search); -->
+<!--     const pass = urlParams.get('pass') -->
+<!--     document.getElementById("password").value = pass; -->
+<!-- }; -->
+
+<!-- function verify() { -->
+<!-- set the password here -->
+<!--   if (document.getElementById('password').value === 'password') { -->
+<!--     document.getElementById('HIDDENDIV').classList.remove("hidden");  -->
+<!--     document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials -->
+<!--   } else { -->
+<!--     alert('Invalid Password! You cannot view this content.'); -->
+<!--     password.setSelectionRange(0, password.value.length); -->
+<!--   } -->
+<!--   return false; -->
+<!-- } -->
+<!-- ``` -->
+
+```{css}
+/*Change content Display */
+<!-- .hidden { -->
+<!--   display: none; -->
+<!-- } -->
+
+img {
+margin: 0 auto;
+}
+
+table {
+    width: 90%;
+    border: 0px solid #fff;
+    border-collapse: collapse;
+    overflow-x: auto;
+    margin: 0 auto;
+    display: block;
+}
+```
+
+```{r FigCaptions, echo=FALSE}
+
+#Figure and Table Caption Numbering
+capTabNo = 1; capFigNo = 1;
+
+#Function to add the Table Number
+capTab = function(x){
+    x = paste0("Table ",capTabNo,". ",x)
+    capTabNo <<- capTabNo + 1
+    cat(x)
+}
+
+#Function to add the Figure Number
+capFig = function(x){
+    x = paste0("<h5>Figure ",capFigNo,". ",x,"</h5>")
+    capFigNo <<- capFigNo + 1
+    cat(x)
+}
+```
+
+<!-- The password box -->
+<!-- <div id="credentials"> -->
+<!--   <input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" /> -->
+<!--   <br/> -->
+<!--   <input id="button" type="button" value="Show Content" onclick="verify()" /> -->
+<!-- </div> -->
+
+<!-- The content we want to show after password -->
+<div id="HIDDENDIV" class="hidden" markdown="1">
+
+<!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
+
+# Overview
+
+As an initial test of the complete mineral accretion technology (MAT) setup, I built an acrylic mount that would hold the cathode at set distances from the platinum mesh anode. Various current densities would be applied to the cathode at distances ranging from 5 - 25 cm. Current densities were chosen within the range of 0-5 $A/m^2$. A single cathode has a surface area of 21.6 $cm^2$. The hypothesis is that for equal power supply output, the cathode potential relative to a standard reference electrode would proportionally increase with electrode distance since V $\propto$ R and R $\propto$ L. This is important because R is expected to increase throughout the growth phase as carbonates grow on the steel cathode, which has reduced conductivity relative to the steel anode (thus increasing total resistance). As the resistance of the electrolytic system increases, so too will the potential difference. Since we want to keep the potential across the steel cathode and the current density constant, we can adjust the distance between the electrodes through time. This test helps us understand how much adjustments we can do within our aquariums before we need to terminate the experiment.
+
+<!-- Need to update this overview -->
+Then, I conducted a few incubations to measure the change in bulk carbonate chemistry parameters at each. The electrode spacing was held constant throughout
+
+
+## Electrochemistry Half Reactions
+
+![Water reduction reactions producing hydrogen gas bubbles on the steel cathode](/notebook/images/matInitialTesting/figure1.jpg)
+
+1. @ the steel cathode, oxygen/water reduction
+ - $O_{2(g)} + 2H_20_{(aq)} + 4e^- \rightarrow 4OH^-_{(aq)}$ 
+ - $2H_2O_{(aq)} + 2e^- \rightarrow H_{2(g)} + 2(OH)^- _{(aq)}$
+ - $OH^-_{(aq)} + HCO_3^{2-} \iff CO_3^{2-} + H_2O_{(aq)}$
+ 
+2. @ the platinum anode, oxidation of chloride
+ - $2Cl^-_{(aq)} \rightarrow Cl_{2(g)} + 2e^-$
+ 
+ 
+For steel, the potential needs to be < -0.356V/SSC (potential relative to silver-silver chloride electrode) to be below the corrosion domain. From -0.406 to -1.006V/SSC, the cathode is in the oxygen reduction domain; above 1.006V/SSC, the steel is in the water reduction domain. On a steel cathode, potentials more cathodic than −1.044 V/SCC, the pH value at the steel–seawater interface will exceed 9.0, which may favor the formation of brucite Mg(OH)2, which requires a minimum value of 9.3. 
+
+Further, at these higher potentials, the rate of chloride oxidation increases. Thus, there is a two-fold advantage of operating at lower cathodic potentials between -0.4 and -1.0V/SSC to minimize chloride evolution and maintain within the oxygen reduction domain to precipiate calcium carbonate and not brucite. 
+
+
+```{r, distanceTest}
+dist <- read_csv("~/Grad School/mineralAccretionTechnology/distanceTest/distanceTest.csv") %>%
+  filter(notes!="positive not connected" | is.na(notes)) %>%
+  mutate(SHE = `reference potential`-197,
+         across(c("reference potential", "SHE"), ~.x*-1)) %>%
+  select(-notes)
+
+dist %>%
+  group_by(`current set`) %>%
+  summarize(minV = min(SHE),
+          maxV = max(SHE),
+          range = maxV-minV,
+          min_d = `electrode d`[which(SHE==min(SHE))],
+          max_d = `electrode d`[which(SHE==max(SHE))]) %>%
+  #run these 2 if there were multiple distances that had the same max/min for current density
+  slice_min(min_d) %>%
+  slice_max(max_d) %>%
+  ungroup() %>%
+  mutate(`current density` = round(((`current set`/1000)/0.0021593505), 1)/10,
+         .before="current set")
+  
+```
+
+We can see that overall the more cathodic (greatest numbers in magnitude) state of the cathode is reached when the distance between the electrodes is at its minimum. However, when the electrodes were 10cm apart had on average the 
+
+The largest range in the mV readings at the same current density was in the 0.01 $mA/cm^2$ group. However, the setting of the current for one cathode was 0.2 mA, which wash hard to remain stable for this power supply as it rapidly switched between 0mA, 0.1ma, and 0.2ma. For all other current densities, the output current remained completely stable. So I'm not trusting the data from this series of data. However, if we desired a current density of 0.01 $mA/cm^2$, we would certainly be able to achieve that as the required output for multiple cathodes would linearly scale. For instance, if we had 15 cathodes in an aquarium, the constant current output would be set at 3mA, which we were able to maintain with good stability in the test here that had a current density of 0.15 $mA/cm^2$.
+
+</div>
