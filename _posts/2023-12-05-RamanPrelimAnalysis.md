@@ -612,19 +612,21 @@ and was used for DeCarlo’s most recent publication.
 The goal with this analysis is to recreate two calibration curves from
 these two datasets of DeCarlo’s abiotic aragonite using the Kiel Routine
 outlined above. I will then compare to the two published calibration
-curves.D17 denotes the published JCP1 and abiogenic spectra from DeCarlo
+curves. D17 denotes the published JCP1 and abiogenic spectra from DeCarlo
 *et al.* (2017) and MD23 denotes the abiogenic spectra from Mantanona &
 DeCarlo (2023).
 
-Unfortunately MD23 did not measure the JCP1 CRM, however, they did
+Unfortunately MD23 did not measure the JCp-1 CRM, however, they did
 measure the same seven abiogenic aragonite grains, which is a more
 powerful correction than a single CRM. Here, we will align the MD23
 measurements to the D17 measurements with both an OLS regression and an
 estimation of systematic error assuming the D17 measurements are the
 “true/standard” measurements (i.e. subtract a constant).
 
-Systematic error of 0.463, which is quite similar and within the
-estimate to our JCP1 derived systematic error of 0.494. This gives me
+Violin (density plots) in Figure 2 show the spread of measured v1 FWHM of
+the abiogenic aragonite from the D17 and MD23 datasets. There is an average
+systematic error of error of 0.463, which is quite similar and within the
+estimate to our JCp-1 derived systematic error of 0.494. This gives me
 great confidence that the measurements on Dr. Prasad’s spectrometer
 closely approximate the measurements on Dr. DeCarlo’s spectrometer in
 Hawaii. These values both differ, however, from the values measured on
@@ -634,7 +636,7 @@ equation, MD23_fitted = 1.288 X MD23_raw - 1.745.
 
 <h5>
 Figure 2. Violin plots of measured abiogenic aragonite FWHM in
-<strong>A</strong> D17 and <strong>B</strong> MD23
+<strong>A</strong> D17 and <strong>B</strong> MD23. Dashed lines are published curves.
 </h5>
 
 <img src="/notebook/images/RamanPrelim/abiotic graphs-1.png" width="90%" style="display: block; margin: auto;" />
@@ -786,10 +788,10 @@ diff
 </tbody>
 </table>
 
-We can now build the twwo calibration curves for these datasets. I’ll
+We can now build the two calibration curves for these datasets. I’ll
 also build 2 additional calibrations of the MD23 dataset, corrected to
 match the D17 dataset assuming a systematic error (subtract constant)
-and an OLS reggression.
+and an OLS regression.
 
 <h5>
 Figure 3. Logarithim calibration curves from <strong>A</strong> raw
@@ -808,8 +810,8 @@ These two published curves are visualized in Figure 3A by the light,
 dashed lines. They have on average a smaller FWHM due to the different
 spectra analysis routines as discussed in the JCp-1 section above.
 
-Ideally, I’d use the MD23 raw curve (solid blue in Figure 3A), since
-this is the most recently published calibration curve by DeCarlo and is
+Ideally, I’d use the MD23 curve analyzed with the Kiel routine (solid blue in Figure 3A),
+since this is the most recently published calibration curve by DeCarlo and is
 generated from a spectrometer nearly identical to that in Dr. Prasad’s
 lab. However, this requires 2 stages of data manipulation to align (1:
 JCp-1 derived systematic error to align our measurements to D17 values and
@@ -899,20 +901,19 @@ samples. These are the same questions I included in the email:
 3.  I have come across a single paper that attempts to standardize FWHM
     across different machines by accounting for the spectral resolutions
     of each individual spectrometer. DeCarlo *et al.* (2017) cites this
-    paper by Nasdala *et al.*, which cites a German paper by Irmer
+    paper by Nasdala *et al.* (2001), which cites a German-language paper by Irmer
     from 1985. However, DeCarlo does not use this method in any of his
     subsequent papers and I have not come across this spectral
     resolution standardizing equation in any other Raman resource I’ve
     come across. This gives me the impression this practice is not
-    widely accepted. Their method is as
-    follows,$b = b_s \times \sqrt{1-2(\frac{s}{b_s})^2}$, where b is the
-    corrected FWHM, $b_s$ is the measured FWHM, and s is the spectral
+    widely accepted or not widely used since Raman spectra are rarely compared between different
+	spectrometers. Their method is as follows,$b = b_s \times \sqrt{1-2(\frac{s}{b_s})^2}$,
+	where b is the corrected FWHM, $b_s$ is the measured FWHM, and s is the spectral
     resolution of the Raman system.
-		- Have you come across any similar spectral resolution standardization
-		  technique before?
-		- Is spectral resolution just defined as the bins in the Raman shift,
-          e.g. 1.14 $cm^{-1}$?
+	+ Have you come across any similar spectral resolution standardization
+	  technique before?
+	+ Is spectral resolution just defined as the bins in the Raman shift,
+	  e.g. 1.14 $cm^{-1}$?
 4.  Are there any steps in this analysis you find is lacking, not common
     practice, or needs more thought before measuring additional samples?
-
 </div>

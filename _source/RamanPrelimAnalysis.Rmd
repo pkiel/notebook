@@ -277,7 +277,7 @@ Therefore, I am not choosing a routine method solely based on accuracy as the gr
 
 DeCarlo created abiogenic aragonite samples in the lab. These were then measured on a Raman spectrometer at Woods Hole for initial analysis, re-analyzed at the University of Westrn Australia (UWA), and then re-analyzed again at Hawaii Pacific University. I am going to ignore the Woods Hole measurements as these have not been extensively used for DeCarlo's Raman work. The measurements and generated calibration curve at UWA have been extensively used. Further, the JCp-1 measurements from above were all measured on the UWA setup. I am purposefully including the new Hawaii Pacific University measurements as it is nearly the exact same Renishaw Raman setup that is available at FIU in Dr. Prasad's lab and was used for DeCarlo's most recent publication.
 
-The goal with this analysis is to recreate two calibration curves from these two datasets of DeCarlo's abiotic aragonite using the Kiel Routine outlined above. I will then compare to the two published calibration curves.D17 denotes the published JCp1 and abiogenic spectra from DeCarlo *et al.* (2017) and MD23 denotes the abiogenic spectra from Mantanona & DeCarlo (2023).
+The goal with this analysis is to recreate two calibration curves from these two datasets of DeCarlo's abiotic aragonite using the Kiel Routine outlined above. I will then compare to the two published calibration curves. D17 denotes the published JCp1 and abiogenic spectra from DeCarlo *et al.* (2017) and MD23 denotes the abiogenic spectra from Mantanona & DeCarlo (2023).
 
 ```{r load abiotic spectra, include=FALSE}
 setwd("~/Grad School/ULink 2022/")
@@ -523,7 +523,7 @@ int <- with(pca, center[2] - slp*center[1])
 
 Unfortunately MD23 did not measure the JCp-1 CRM, however, they did measure the same seven abiogenic aragonite grains, which is a more powerful correction than a single CRM. Here, we will align the MD23 measurements to the D17 measurements with both an OLS regression and an estimation of systematic error assuming the D17 measurements are the "true/standard" measurements (i.e. subtract a constant).
 
-Systematic error of `r round(mean(abiogenicComparison$diff),3)`, which is quite similar and within the estimate to our JCp-1 derived systematic error of 0.494. This gives me great confidence that the measurements on Dr. Prasad's spectrometer closely approximate the measurements on Dr. DeCarlo's spectrometer in Hawaii. These values both differ, however, from the values measured on the WITEC spectrometer at UWA. Alternatively we can use the OLS regression to fit the fwhm_MD23 to the values measured in D17 using the equation, `r paste("MD23_fitted = ",round(slp,3), "X MD23_raw ", if_else(int>0, "+", "-"), abs(round(int,3)))`.
+Violin (density plots) in Figure 2 show the spread of measured v1 FWHM of the abiogenic aragonite from the D17 and MD23 datasets. There is a systematic error of `r round(mean(abiogenicComparison$diff),3)`, which is quite similar and within the estimate to our JCp-1 derived systematic error of 0.494. This gives me great confidence that the measurements on Dr. Prasad's spectrometer closely approximate the measurements on Dr. DeCarlo's spectrometer in Hawaii. These values both differ, however, from the values measured on the WITEC spectrometer at UWA. Alternatively we can use the OLS regression to fit the fwhm_MD23 to the values measured in D17 using the equation, `r paste("MD23_fitted = ",round(slp,3), "X MD23_raw ", if_else(int>0, "+", "-"), abs(round(int,3)))`.
 
 ```{r abiotic graphs}
 fwhmRightPlot <- MD23abiogenic_filtered %>%
@@ -542,7 +542,7 @@ fwhmLeftPlot <- D17abiogenic_filtered%>%
   labs(x = "Sample") +
   theme(panel.grid = element_blank())
 
-capFig("Violin plots of measured abiogenic aragonite FWHM in <strong>A</strong> D17 and <strong>B</strong> MD23")
+capFig("Violin plots of measured abiogenic aragonite FWHM in <strong>A</strong> D17 and <strong>B</strong> MD23. Dashed lines in a are the published curves")
 gridExtra::grid.arrange(fwhmLeftPlot + theme(legend.position = "none") + geom_text(label = "A", x="53", y=4.75, color="black", size=5, nudge_y = 0.5),
                         fwhmRightPlot + labs(y = "") + theme(legend.position = "none") + geom_text(label = "B", x="53", y=5.5, color="black", size=5, nudge_y = 0.5),
              get_legend(fwhmLeftPlot + theme(legend.position = "bottom") + guides(fill = guide_legend(nrow = 1))),
@@ -557,10 +557,8 @@ abiogenicComparison %>%
     kbl(align = 'c',
       digits = 3) %>%
   kable_classic()
-  
-  
 ```
-We can now build the twwo calibration curves for these datasets. I'll also build 2 additional calibrations of the MD23 dataset, corrected to match the D17 dataset assuming a systematic error (subtract constant) and an OLS reggression.
+We can now build the two calibration curves for these datasets. I'll also build 2 additional calibrations of the MD23 dataset, corrected to match the D17 dataset assuming a systematic error (subtract constant) and an OLS regression.
 
 ```{r calibPlots}
 # using the normal data from the Kiel Method
@@ -683,7 +681,7 @@ So now we have four different calibration curves all generated from abiogenic sa
 
 These two published curves are visualized in Figure 3A by the light, dashed lines. They have on average a smaller FWHM due to the different spectra analysis routines as discussed in the JCp-1 section above.
 
-Ideally, I'd use the MD23 raw curve (solid blue in Figure 3A), since this is the most recently published calibration curve by DeCarlo and is generated from a spectrometer nearly identical to that in Dr. Prasad's lab. However, this requires 2 stages of data manipulation to align (1: JCp-1 derived systematic error to align our measurements to D17 values and then 2: OLS/systematic error correction to MD23 values). Therefore, I will take a more conservative approach and align our data to DeCarlo *et al.* (2017) by subtracting 0.494 and then estimate the FWHM with, FWHM = 0.655 x ln(omega) + 2.148. 
+Ideally, I'd use the MD23 curve analyzed with the Kiel routine (solid blue in Figure 3A), since this is the most recently published calibration curve by DeCarlo and is generated from a spectrometer nearly identical to that in Dr. Prasad's lab. However, this requires 2 stages of data manipulation to align (1: JCp-1 derived systematic error to align our measurements to D17 values and then 2: OLS/systematic error correction to MD23 values). Therefore, I will take a more conservative approach and align our data to DeCarlo *et al.* (2017) by subtracting 0.494 and then estimate the FWHM with, FWHM = 0.655 x ln(omega) + 2.148. 
 
 Since we are only comparing FWHM and estimated calcifying fluid omega between samples measured on the same spectrometer, this exercise doesn't really matter too much. However, if we want to compare either of these values to other published datasets, then we will need to put some more thought into this.
 
@@ -738,6 +736,7 @@ spectra_summary %>%
 ncol = 3,
 labels = c("A", "B", "C"),
 vjust = 0.2,
+widths = c(1,1.25,1.5),
 common.legend = T)
 
 ```
@@ -876,11 +875,9 @@ The following are a bunch of remaining questions I have for this data, which I'd
 
 1. After not observing burning of sample at low power, we set the laser intensity to 100% to maximize signal without saturating the spectra. The MD23 paper (with a similar if not identical Raman setup) used a laser intensity of 1% (from a 45mW source) and recorded peak intensity values much less than we were measuring. Their peak intensities were about 700 compared to ours at about 70,000. This two order of magnitude difference was reduced by SNV (z-score) normalizing the spectra, granting a normalized peak intensity of about 15 vs ours at about 18, highlighting the increased SNR of our spectra measured with a greater laser intensity. Are there any reasons to operate at a lower power besides not burning the sample, which we did not observe? From my understanding, the higher SNR should increase our ability to discern small-scale changes in peak widths. Is this correct?
 2. Similarly, prior literature used a 40x, 20x, and a 50x objective, while we used a 100x objective. Given the range of objectives used by different authors, I would not expect objective to alter the spectra. I'm assuming objective choice is function of grain size, with smaller grains needing greater magnification to properly focus. Does this make sense, or do you expect to see any differences based on objective alone?
-3. I have come across a single paper that attempts to standardize FWHM across different machines by accounting for the spectral resolutions of each individual spectrometer. DeCarlo *et al.* (2017) cites this paper by Nasdala *et al.*, which cites a German paper by Irmer from 1985. However, DeCarlo does not use this method in any of his subsequent papers and I have not come across this spectral resolution standardizing equation in any other Raman resource I've come across. This gives me the impression this practice is not widely accepted. Their method is as follows,$b = b_s \times \sqrt{1-2(\frac{s}{b_s})^2}$, where b is the corrected FWHM, $b_s$ is the measured FWHM, and s is the spectral resolution of the Raman system.
-  + Have you come across any similar spectral resolution standardization technique before? 
-  + Is spectral resolution just defined as the bins in the Raman shift, e.g. 1.14 $cm^{-1}$?
+3. I have come across a single paper that attempts to standardize FWHM across different machines by accounting for the spectral resolutions of each individual spectrometer. DeCarlo *et al.* (2017) cites this paper by Nasdala *et al.* (2001), which cites a German-language paper by Irmer from 1985. However, DeCarlo does not use this method in any of his subsequent papers and I have not come across this spectral resolution standardizing equation in any other Raman resource I've come across. This gives me the impression this practice is not widely accepted. Their method is as follows,$b = b_s \times \sqrt{1-2(\frac{s}{b_s})^2}$, where b is the corrected FWHM, $b_s$ is the measured FWHM, and s is the spectral resolution of the Raman system.
++ Have you come across any similar spectral resolution standardization technique before? 
++ Is spectral resolution just defined as the bins in the Raman shift, e.g. 1.14 $cm^{-1}$?
 4. Are there any steps in this analysis you find is lacking, not common practice, or needs more thought before measuring additional samples?
-
-
 
 </div>
