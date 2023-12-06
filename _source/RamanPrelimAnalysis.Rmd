@@ -128,7 +128,7 @@ Raman is a spectroscopic technique which measures inelastic light scattering due
 
 Raman has successfully been used to describe biogenic calcium carbonates and mineralogical conformations under various perturbations. Kamenos *et al.* (2013) observed decreases in v1 peak width as ambient seawater pCO2 increased and further noticed marked decreases in peak width when the pCO2 was rapidly increased compared to a gradual increase in pCO2. Follow up work by this research team further supported this linear relationship between pCO2 concentration and v1 peak width in CCA cultured under multiple pCO2 scenarios, and they have since proposed Raman as a tool for paleoclimate reconstructions (Pauly *et al.* 2014).
 
-Corals calcify from an internal fluid, which is composed of external seawater which has been altered to promote calcification. The differential modifications of this calcifying fluid by different coral species may explain the species-specific sensitivity to ocean acidification and has been an active area of research for over a decade. Recently, Tom DeCarlo has published numerous papers using Raman to characterize corals' calcifying fluid aragonite saturation state. Given the background above, DeCarlo *et al.* (2017) built a regression of *v1* FWHM of abiogenic aragonites precipitated at known aragonite saturation states in the lab. They have applied this logarithmic regression to calculate the calcifying fluid aragonite saturation state of corals from experiments culturing corals under temperature and CO2 stress and from field experiments, cores, and a widely accepted paleoclimate coral CRM (JCp-1). To highlight a few notable findings from their Raman work: 
+Corals calcify from an internal fluid, which is composed of external seawater which has been altered to promote calcification. The differential modifications of this calcifying fluid by different coral species may explain the species-specific sensitivity to ocean acidification and has been an active area of research for over a decade. Recently, Tom DeCarlo has published numerous papers using Raman to characterize corals' calcifying fluid aragonite saturation state. Given the background above, DeCarlo *et al.* (2017) built a regression of *v1* FWHM of abiogenic aragonites precipitated at known aragonite saturation states in the lab. They have applied this logarithmic regression to calculate the calcifying fluid aragonite saturation state of corals from experiments culturing corals under temperature and CO2 stress and from field experiments, cores, and a thoroughly analyzed paleoclimate coral CRM (JCp-1). To highlight a few notable findings from their Raman work: 
 
 1. They were able to identify diurnal, night-day patterns of increasing *v1* FWHM ($\Omega_{cf}$) corresponding to light-enhanced calcification, highlighting the high spatial resolution available with Raman (DeCarlo *et al.* 2019); 
 2. They combined Raman spectroscopy data with boron isotopes and elemental geochemistry to constrain calcium concentrations of the calcifying fluid. In *Pocillopora damicornis* cultured under high pCO2, they observed a nearly 25% increase in [$Ca_2$]cf and constant calcification rates. They propose increasing calcium concentrations of the calcifying fluid as an alternative mechanism to maintain aragonite saturation states despite decreasing carbonate concentrations (Decarlo et al., 2018);
@@ -832,6 +832,7 @@ ggarrange(spectra %>%
   scale_y_continuous(limits = c(0,3), expand = c(0,0)) +
   theme_classic() +
   facet_grid(group~., switch = "y") +
+  labs(x = "Raman shift") +
   theme(panel.spacing = unit(0,'lines'),
         strip.background = element_blank(),
         axis.line.y.left = element_blank(),
@@ -854,6 +855,7 @@ spectra %>%
   scale_y_continuous(limits = c(0,19), expand = c(0,0)) +
   theme_classic() +
   facet_grid(group~., switch = "y") +
+  labs(x = "Raman shift") +
   theme(panel.spacing = unit(0,'lines'),
         strip.text = element_blank(),
         strip.background = element_blank(),

@@ -110,7 +110,7 @@ FWHM of abiogenic aragonites precipitated at known aragonite saturation
 states in the lab. They have applied this logarithmic regression to
 calculate the calcifying fluid aragonite saturation state of corals from
 experiments culturing corals under temperature and CO2 stress and from
-field experiments, cores, and a widely accepted paleoclimate coral CRM
+field experiments, cores, and a thoroughly analyzed paleoclimate coral CRM
 (JCp-1). To highlight a few notable findings from their Raman work:
 
 1.  They were able to identify diurnal, night-day patterns of increasing
@@ -124,7 +124,7 @@ field experiments, cores, and a widely accepted paleoclimate coral CRM
     constant calcification rates. They propose increasing calcium
     concentrations of the calcifying fluid as an alternative mechanism
     to maintain aragonite saturation states despite decreasing carbonate
-    concentrations (Decarlo et al., 2018);
+    concentrations (DeCarlo et al., 2018);
 3.  They used Raman on live corals held in seawater filled containers,
     showcasing the ability to study corals *in vivo* (DeCarlo *et al.*
     2019).
@@ -913,7 +913,7 @@ samples. These are the same questions I included in the email:
 	+ Have you come across any similar spectral resolution standardization
 	  technique before?
 	+ Is spectral resolution just defined as the bins in the Raman shift,
-	  e.g. 1.14 $cm^{-1}$?
+	  e.g. 1.14 $cm^{-1} from the Renishaw spectra$?
 4.  Are there any steps in this analysis you find is lacking, not common
     practice, or needs more thought before measuring additional samples?
 </div>
