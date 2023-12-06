@@ -20,15 +20,14 @@ knit: (function(inputFile, encoding) {
 always_allow_html: true
 ---
 
-<script type="text/javascript">
+<script>
 window.onload = function() {
     //query string in the password
     const urlParams = new URLSearchParams(window.location.search);
     const pass = urlParams.get('pass')
     document.getElementById("password").value = pass;
 };
-
-function verify() {
+&#10;function verify() {
   <!-- set the password here -->
   if (document.getElementById('password').value === 'soup') {
     document.getElementById('HIDDENDIV').classList.remove("hidden"); 
@@ -40,16 +39,15 @@ function verify() {
   return false;
 }
 </script>
-
 <style type="text/css">
 /*Change content Display */
 .hidden {
   display: none;
 }
-img {
+&#10;img {
 margin: 0 auto;
 }
-table {
+&#10;table {
     width: 90%;
     border: 0px solid #fff;
     border-collapse: collapse;
@@ -238,11 +236,9 @@ incorporates a baseline subtraction step.
 
 There is a small difference in the Gaussian fit between the Origin Pro
 and the two open source scripting routines. Origin Pro uses this form of
-the Gaussian curve, $$y = y_0 + ke ^\frac{-(x-p)^2}{2s^2}$$ while the
-two open source scripting routines incorporate an m term, which
-corresponds to the slope of the background intensity $$
-y = y_0 + mx + ke ^\frac{-(x-p)^2}{2s^2}
-$$
+the Gaussian curve, $y = y_0 + ke ^\frac{-(x-p)^2}{2s^2}$ while the two
+open source scripting routines incorporate an m term, which corresponds
+to the slope of the background intensity \$ y = y_0 + mx + ke ^ \$
 
 where y is the intensity, $y_0$ is the background intensity, x is the
 Raman shift, m is the background slope, k is the peak height, p is the
@@ -272,29 +268,281 @@ Table 1. Determinants for each method including coefficient of variation
 (%CV = precision), and relative standard error (%rse = precision, %
 accuracy, and systematic error correction
 </h5>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:center;">
+metric
+</th>
+<th style="text-align:center;">
+method
+</th>
+<th style="text-align:center;">
+cv
+</th>
+<th style="text-align:center;">
+rse
+</th>
+<th style="text-align:center;">
+JcP1_accuracy
+</th>
+<th style="text-align:center;">
+JcP1_sysCorrection
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+fwhm
+</td>
+<td style="text-align:center;">
+DeCarloRoutine
+</td>
+<td style="text-align:center;">
+2.639
+</td>
+<td style="text-align:center;">
+0.476
+</td>
+<td style="text-align:center;">
+89.644
+</td>
+<td style="text-align:center;">
+0.364
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+fwhm
+</td>
+<td style="text-align:center;">
+KielRoutine
+</td>
+<td style="text-align:center;">
+2.666
+</td>
+<td style="text-align:center;">
+0.470
+</td>
+<td style="text-align:center;">
+86.671
+</td>
+<td style="text-align:center;">
+0.494
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+fwhm
+</td>
+<td style="text-align:center;">
+OriginProRoutine
+</td>
+<td style="text-align:center;">
+2.681
+</td>
+<td style="text-align:center;">
+0.428
+</td>
+<td style="text-align:center;">
+82.707
+</td>
+<td style="text-align:center;">
+0.625
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+peakArea
+</td>
+<td style="text-align:center;">
+DeCarloRoutine
+</td>
+<td style="text-align:center;">
+15.411
+</td>
+<td style="text-align:center;">
+3.350
+</td>
+<td style="text-align:center;">
+69.475
+</td>
+<td style="text-align:center;">
+14.872
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+peakArea
+</td>
+<td style="text-align:center;">
+KielRoutine
+</td>
+<td style="text-align:center;">
+5.862
+</td>
+<td style="text-align:center;">
+0.623
+</td>
+<td style="text-align:center;">
+63.867
+</td>
+<td style="text-align:center;">
+21.415
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+peakArea
+</td>
+<td style="text-align:center;">
+OriginProRoutine
+</td>
+<td style="text-align:center;">
+5.413
+</td>
+<td style="text-align:center;">
+0.400
+</td>
+<td style="text-align:center;">
+57.223
+</td>
+<td style="text-align:center;">
+24.935
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+peakInt
+</td>
+<td style="text-align:center;">
+DeCarloRoutine
+</td>
+<td style="text-align:center;">
+15.168
+</td>
+<td style="text-align:center;">
+3.196
+</td>
+<td style="text-align:center;">
+82.095
+</td>
+<td style="text-align:center;">
+2.336
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+peakInt
+</td>
+<td style="text-align:center;">
+KielRoutine
+</td>
+<td style="text-align:center;">
+5.448
+</td>
+<td style="text-align:center;">
+0.479
+</td>
+<td style="text-align:center;">
+79.934
+</td>
+<td style="text-align:center;">
+3.017
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+peakInt
+</td>
+<td style="text-align:center;">
+OriginProRoutine
+</td>
+<td style="text-align:center;">
+5.699
+</td>
+<td style="text-align:center;">
+0.504
+</td>
+<td style="text-align:center;">
+78.178
+</td>
+<td style="text-align:center;">
+3.306
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+peakPos
+</td>
+<td style="text-align:center;">
+DeCarloRoutine
+</td>
+<td style="text-align:center;">
+0.009
+</td>
+<td style="text-align:center;">
+0.002
+</td>
+<td style="text-align:center;">
+99.852
+</td>
+<td style="text-align:center;">
+-1.610
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+peakPos
+</td>
+<td style="text-align:center;">
+KielRoutine
+</td>
+<td style="text-align:center;">
+0.008
+</td>
+<td style="text-align:center;">
+0.002
+</td>
+<td style="text-align:center;">
+99.851
+</td>
+<td style="text-align:center;">
+-1.625
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+peakPos
+</td>
+<td style="text-align:center;">
+OriginProRoutine
+</td>
+<td style="text-align:center;">
+0.011
+</td>
+<td style="text-align:center;">
+0.002
+</td>
+<td style="text-align:center;">
+99.871
+</td>
+<td style="text-align:center;">
+-1.402
+</td>
+</tr>
+</tbody>
+</table>
 
-# A tibble: 12 × 6
-
-# Groups: metric \[4\]
-
-metric method cv rse JcP1_accuracy JcP1_sysCorrection <chr> <chr> <dbl>
-<dbl> <dbl> <dbl> 1 fwhm DeCarloRoutine 2.64 0.476 89.6 0.364 2 fwhm
-KielRoutine 2.67 0.47 86.7 0.494 3 fwhm OriginProRoutine 2.68 0.428 82.7
-0.625 4 peakArea DeCarloRoutine 15.4 3.35 69.5 14.9  
-5 peakArea KielRoutine 5.86 0.623 63.9 21.4  
-6 peakArea OriginProRoutine 5.41 0.4 57.2 24.9  
-7 peakInt DeCarloRoutine 15.2 3.20 82.1 2.34 8 peakInt KielRoutine 5.45
-0.479 79.9 3.02 9 peakInt OriginProRoutine 5.70 0.504 78.2 3.31 10
-peakPos DeCarloRoutine 0.009 0.002 99.9 -1.61 11 peakPos KielRoutine
-0.008 0.002 99.9 -1.62 12 peakPos OriginProRoutine 0.011 0.002 99.9
--1.40 The FWHM of the DeCarlo *et al.* (2017) spectra is consistently
-less than the FWHM we measured for the JcP-1 CRM, with a difference
-ranging between 0.364-0.625, which grants an accuracy of 89.6-82.7%.
-However, the precision of each analysis routine produces a comparable CV
-between 2.64-2.68%. There is a general increase in measured FWHM when
-using the Kiel routine and Origin Pro routine compared to the DeCarlo
-Routine regardless of dataset, while the difference between the Kiel
-Routine and the Origin Pro Routine are comparably small.
+The FWHM of the DeCarlo *et al.* (2017) spectra is consistently less
+than the FWHM we measured for the JcP-1 CRM, with a difference ranging
+between 0.364-0.625, which grants an accuracy of 89.6-82.7%. However,
+the precision of each analysis routine produces a comparable CV between
+2.64-2.68%. There is a general increase in measured FWHM when using the
+Kiel routine and Origin Pro routine compared to the DeCarlo Routine
+regardless of dataset, while the difference between the Kiel Routine and
+the Origin Pro Routine are comparably small.
 
 For peak area, the Kiel routine and Origin Pro routine produce
 comparable results with higher precision, 5.86% and 5.41%, but sacrifice
@@ -382,7 +630,7 @@ closely approximate the measurements on Dr. DeCarlo’s spectrometer in
 Hawaii. These values both differ, however, from the values measured on
 the WITEC spectrometer at UWA. Alternatively we can use the OLS
 regression to fit the fwhm_MD23 to the values measured in D17 using the
-equation, MD23_fitted = 1.288 \* MD23_raw - 1.745.
+equation, MD23_fitted = 1.288 X MD23_raw - 1.745.
 
 <h5>
 Figure 2. Violin plots of measured abiogenic aragonite FWHM in
@@ -395,16 +643,153 @@ Figure 2. Violin plots of measured abiogenic aragonite FWHM in
 Table 2. FWHM means for the two datasets for each abiogenic sample along
 with the known aragonite saturation state
 </h5>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:center;">
+sample
+</th>
+<th style="text-align:center;">
+omega
+</th>
+<th style="text-align:center;">
+fwhm_MD23
+</th>
+<th style="text-align:center;">
+fwhm_D17
+</th>
+<th style="text-align:center;">
+diff
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+53
+</td>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+4.195
+</td>
+<td style="text-align:center;">
+3.682
+</td>
+<td style="text-align:center;">
+0.514
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+50
+</td>
+<td style="text-align:center;">
+11
+</td>
+<td style="text-align:center;">
+4.263
+</td>
+<td style="text-align:center;">
+3.736
+</td>
+<td style="text-align:center;">
+0.527
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+37
+</td>
+<td style="text-align:center;">
+14
+</td>
+<td style="text-align:center;">
+4.305
+</td>
+<td style="text-align:center;">
+3.784
+</td>
+<td style="text-align:center;">
+0.521
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+1F
+</td>
+<td style="text-align:center;">
+16
+</td>
+<td style="text-align:center;">
+4.437
+</td>
+<td style="text-align:center;">
+3.998
+</td>
+<td style="text-align:center;">
+0.440
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+19
+</td>
+<td style="text-align:center;">
+4.579
+</td>
+<td style="text-align:center;">
+4.112
+</td>
+<td style="text-align:center;">
+0.468
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+25
+</td>
+<td style="text-align:center;">
+24
+</td>
+<td style="text-align:center;">
+4.593
+</td>
+<td style="text-align:center;">
+4.182
+</td>
+<td style="text-align:center;">
+0.411
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+12
+</td>
+<td style="text-align:center;">
+30
+</td>
+<td style="text-align:center;">
+4.766
+</td>
+<td style="text-align:center;">
+4.407
+</td>
+<td style="text-align:center;">
+0.359
+</td>
+</tr>
+</tbody>
+</table>
 
-# A tibble: 7 × 5
-
-sample omega fwhm_MD23 fwhm_D17 diff <chr> <dbl> <dbl> <dbl> <dbl> 1 53
-10 4.20 3.68 0.514 2 50 11 4.26 3.74 0.527 3 37 14 4.30 3.78 0.521 4 1F
-16 4.44 4.00 0.440 5 10 19 4.58 4.11 0.468 6 25 24 4.59 4.18 0.411 7 12
-30 4.77 4.41 0.359 We can now build the twwo calibration curves for
-these datasets. I’ll also build 2 additional calibrations of the MD23
-dataset, corrected to match the D17 dataset assuming a systematic error
-(subtract constant) and an OLS reggression.
+We can now build the twwo calibration curves for these datasets. I’ll
+also build 2 additional calibrations of the MD23 dataset, corrected to
+match the D17 dataset assuming a systematic error (subtract constant)
+and an OLS reggression.
 
 <h5>
 Figure 3. Logarithim calibration curves from <strong>A</strong> raw
@@ -412,43 +797,123 @@ datasets and <strong>B</strong> corrected MD23 datasets
 </h5>
 
 <img src="/notebook/images/RamanPrelim/calibPlots-1.png" width="90%" style="display: block; margin: auto;" />
+So now we have four different calibration curves all generated from
+abiogenic samples measured by D17 and MD23 analyzed with the Kiel
+routine. These four calibration curves are distinct from the two
+published calibration curves in D17 and MD23, which are: 1. FWHM =
+$0.57 \times ln(omega) + 2.09, R^2 = 0.95$ (D17) 2. FWHM =
+$0.321 \times ln(omega) + 3.21, R^2 = 0.95$ (MD23)
+
+These two published curves are visualized in Figure 3A by the light,
+dashed lines. They have on average a smaller FWHM due to the different
+spectra analysis routines as discussed in the JCP section above.
+
+Ideally, I’d use the MD23 raw curve (solid blue in Figure 3A), since
+this is the most recently published calibration curve by DeCarlo and is
+generated from a spectrometer nearly identical to that in Dr. Prasad’s
+lab. However, this requires 2 stages of data manipulation to align (1:
+JCP derived systematic error to align our measurements to D17 values and
+then OLS/systematic error correction to MD23 values). Therefore, I will
+take a more conservative approach and align our data to DeCarlo *et al.*
+(2017) by subtracting 0.494 and then estimate the FWHM with, FWHM =
+0.655 x ln(omega) + 2.148.
+
+Since we are only comparing FWHM and estimated calcifying fluid omega
+between samples measured on the same spectrometer, this exercise doesn’t
+really matter too much. However, if we want to compare either of these
+values to other published datasets, then we will need to put some more
+thought into this.
 
 ## Coral Analysis
 
-\[1\] “Error: convergence not reached. Try adjusting ‘start’ values of
-nls function” \[1\] “Error: convergence not reached. Try adjusting
-‘start’ values of nls function” \[1\] “Error: convergence not reached.
-Try adjusting ‘start’ values of nls function” \[1\] “Error: convergence
-not reached. Try adjusting ‘start’ values of nls function”
+<img src="/notebook/images/RamanPrelim/treatmentPlots-1.png" width="90%" style="display: block; margin: auto;" />
+On first glance, this is not what I was expecting. First the FWHM of
+these corals, and thereby the derived omega, do not have as much
+variability as I was anticipating. Further, I was expecting the LCO2
+corals to have a greater FWHM compared to the HCO2 corals. I chose these
+11 samples as they had the greatest variability in $\delta^{11}B$ (proxy
+for pH of the calcifying fluid), with the LCO2 having greater
+$\delta^{11}B$ than HCO2 corals.
 
-<img src="/notebook/images/RamanPrelim/coralPlots-1.png" width="90%" style="display: block; margin: auto;" /><img src="/notebook/images/RamanPrelim/coralPlots-2.png" width="90%" style="display: block; margin: auto;" />
+There are some limitations to this analysis. First, we only measured 11
+samples and collected a single spectra on 10 haphazardly chosen grains
+for each sample. Some of the DeCarlo methods looked at 10-25 grains and
+collected 5-10 spectra per grain. I do not expect more spectra to
+drastically change our interpretation, but it may reduce our variability
+somewhat for each sample (shown below in Figure 4). Further, the uneven
+sample distribution combined with the one high measure of FWHM in an
+HCO2 Ac-2 sample is skewing our interpretation. All in all, I am
+planning to collect 3 spectra per grain with 25 grains per sample going
+forward. This will increase the measurement time on the Raman slightly,
+but should help and be worthwhile.
+
+<h5>
+Figure 4. Significant variability exists for each grain, shown here is
+1SD above and below the mean
+</h5>
+
+<img src="/notebook/images/RamanPrelim/unnamed-chunk-4-1.png" width="90%" style="display: block; margin: auto;" />
+\## Comparing the spectra
+
+Here we are looking at an average spectra for each genotype-treatment
+combination to see if there are any visibly noticable differences other
+than v1 FWHM.From the v4 and v1 peak, we can’t really see anything too
+drastically different, and the v1 FWHM data from above corroborates
+this.
+
+<h5>
+Figure 5. Mean generated spectra for each genotype-sample combination,
+centered at the v1 and v4 regions
+</h5>
+
+<img src="/notebook/images/RamanPrelim/unnamed-chunk-5-1.png" width="90%" style="display: block; margin: auto;" />
 
 # Questions
 
-1)  After not observing burning of sample at low power, we set the laser
+The following are a bunch of remaining questions I have for this data,
+which I’d like to get a better handle of before measuring the remaining
+samples. These are the same questions I included in the email:
+
+1.  After not observing burning of sample at low power, we set the laser
     intensity to 100% to maximize signal without saturating the spectra.
-    The prior literature used a laser intensity of 1%. While absolute
-    laser output is a function of the specific laser power and the user
-    chosen retarding percentage, I believe differences in absolute laser
-    intensity should only alter intensity values of the spectra. By
-    normalizing the spectra (SNV), this should account for differences
-    in spectral intensity while maintaining relative peak intensities.
-    Is this logic correct, or could the difference in intensity explain
-    some of the differences in FWHM and peak positions?
-
-10 seconds at 10%; 10 seconds at 50%
-
-2)  Similarly, prior literature used a 20x objective, while we used a
-    100x objective. Similar to above, I’d like to try and collect some
-    spectra at 20x to compare. Do you expect to see any differences
-    based on objective alone?
-
-3)  I have come across a single paper that attempts to standardize FWHM
+    The MD23 paper (with a similar if not identical Raman setup) used a
+    laser intensity of 1% (from a 45mW source) and recorded peak
+    intensity values much less than we were measuring. Their peak
+    intensities were about 700 compared to ours at about 70,000. This
+    two order of magnitude difference was reduced by SNV (z-score)
+    normalizing the spectra, granting a normalized peak intensity of
+    about 15 vs ours at about 18, highlighting the increased SNR of our
+    spectra measured with a greater laser intensity. Are there any
+    reasons to operate at a lower power besides not burning the sample,
+    which we did not observe? From my understanding, the higher SNR
+    should increase our ability to discern small-scale changes in peak
+    widths. Is this correct?
+2.  Similarly, prior literature used a 40x, 20x, and a 50x objective,
+    while we used a 100x objective. Given the range of objectives used
+    by different authors, I would not expect objective to alter the
+    spectra. I’m assuming objective choice is function of grain size,
+    with smaller grains needing greater magnification to properly focus.
+    Does this make sense, or do you expect to see any differences based
+    on objective alone?
+3.  I have come across a single paper that attempts to standardize FWHM
     across different machines by accounting for the spectral resolutions
-    of each individual machine. DeCarlo *et al.* (2017) cites this paper
-    by Nasdala *et al.*, which cites a paper by. However, DeCarlo does
-    not use this method in any of his papers and I have not a, giving me
-    the impression this practice is not widely accepted. Their method is
-    as follows,
+    of each individual spectrometer. DeCarlo *et al.* (2017) cites this
+    paper by Nasdala *et al.*, which cites a German paper by Irmer
+    from 1985. However, DeCarlo does not use this method in any of his
+    subsequent papers and I have not come across this spectral
+    resolution standardizing equation in any other Raman resource I’ve
+    come across. This gives me the impression this practice is not
+    widely accepted. Their method is as
+    follows,$b = b_s \times \sqrt{1-2(\frac{s}{b_s})^2}$, where b is the
+    corrected FWHM, $b_s$ is the measured FWHM, and s is the spectral
+    resolution of the Raman system.
+
+- Have you come across any similar spectral resolution standardization
+  technique before?
+- Is spectral resolution just defined as the bins in the Raman shift,
+  e.g. 1.14 $cm^{-1}$?
+
+4.  Are there any steps in this analysis you find is lacking, not common
+    practice, or needs more thought before measuring additional samples?
 
 </div>

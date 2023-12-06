@@ -21,13 +21,13 @@ always_allow_html: true
 ---
 
 <script>
-&#10;window.onload = function() {
+window.onload = function() {
     //query string in the password
     const urlParams = new URLSearchParams(window.location.search);
     const pass = urlParams.get('pass')
     document.getElementById("password").value = pass;
 };
-&#10;function verify() {
+function verify() {
   <!-- set the password here -->
   if (document.getElementById('password').value === 'password') {
     document.getElementById('HIDDENDIV').classList.remove("hidden"); 
@@ -38,13 +38,13 @@ always_allow_html: true
   }
   return false;
 }
-</script>
+</script  type="text/javascript">
 <style type="text/css">
 /*Change content Display */
-&#10;img {
+img {
 margin: 0 auto;
 }
-&#10;table {
+table {
     width: 90%;
     border: 0px solid #fff;
     border-collapse: collapse;

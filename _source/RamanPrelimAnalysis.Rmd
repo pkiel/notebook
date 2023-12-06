@@ -53,7 +53,6 @@ options(ggplot2.discrete.colour=wes_palette("Darjeeling1"))
 ```
 
 ```{js}
-
 window.onload = function() {
     //query string in the password
     const urlParams = new URLSearchParams(window.location.search);
@@ -178,11 +177,11 @@ In summary, I analyzed the data in three ways,
 The only modification of the original DeCarlo Routine was the incorporation of an SNV normalization step to remove peak intensity artifacts and make spectra more comparable across Raman spectrometers. The Kiel Routine is identical to the Modified DeCarlo Routine, except it incorporates a baseline subtraction step. 
 
 There is a small difference in the Gaussian fit between the Origin Pro and the two open source scripting routines. Origin Pro uses this form of the Gaussian curve,
-$$y = y_0 + ke ^\frac{-(x-p)^2}{2s^2}$$
+$y = y_0 + ke ^\frac{-(x-p)^2}{2s^2}$
 while the two open source scripting routines incorporate an m term, which corresponds to the slope of the background intensity
-$$
+$
 y = y_0 + mx + ke ^\frac{-(x-p)^2}{2s^2}
-$$
+$
 
 where y is the intensity, $y_0$ is the background intensity, x is the Raman shift, m is the background slope, k is the peak height, p is the peak position (in Raman shift numbers), and s is the standard deviation. The FWHM of the Gaussian curve is calculated by, $FWHM =  2s\sqrt{2ln(2)}$ and the area of the Gaussian curve is calculated by, $A =1.064467\times FWHM \times \text{peak height}$. In R, a non-linear least squares approach is used to fit the Gaussian model to the measured intensity data.
 
@@ -259,7 +258,10 @@ jcp_summary %>%
             rse = mean(rse),
             JcP1_accuracy = (1-abs((mean[which(dataset=="DeCarloB17")]-mean[which(dataset=="Kiel")])/mean[which(dataset=="DeCarloB17")]))*100,
             JcP1_sysCorrection = mean[which(dataset=="Kiel")] - mean[which(dataset=="DeCarloB17")]) %>%
-  mutate(across(cv:JcP1_sysCorrection, ~ round(.x,3)))
+  mutate(across(cv:JcP1_sysCorrection, ~ round(.x,3))) %>%
+  kbl(align = 'c',
+      digits = 3) %>%
+  kable_classic()
 
 
 
@@ -522,13 +524,11 @@ abiogenicComparison <- MD23abiogenic_summary %>%
 pca <- prcomp(~fwhm_MD23+fwhm_D17, abiogenicComparison)
 slp <- with(pca, rotation[2,1] / rotation[1,1])
 int <- with(pca, center[2] - slp*center[1])
-
-
 ```
 
 Unfortunately MD23 did not measure the JCP1 CRM, however, they did measure the same seven abiogenic aragonite grains, which is a more powerful correction than a single CRM. Here, we will align the MD23 measurements to the D17 measurements with both an OLS regression and an estimation of systematic error assuming the D17 measurements are the "true/standard" measurements (i.e. subtract a constant).
 
-Systematic error of `r round(mean(abiogenicComparison$diff),3)`, which is quite similar and within the estimate to our JCP1 derived systematic error of 0.494. This gives me great confidence that the measurements on Dr. Prasad's spectrometer closely approximate the measurements on Dr. DeCarlo's spectrometer in Hawaii. These values both differ, however, from the values measured on the WITEC spectrometer at UWA. Alternatively we can use the OLS regression to fit the fwhm_MD23 to the values measured in D17 using the equation, `r paste("MD23_fitted = ",round(slp,3), "* MD23_raw ", if_else(int>0, "+", "-"), abs(round(int,3)))`.
+Systematic error of `r round(mean(abiogenicComparison$diff),3)`, which is quite similar and within the estimate to our JCP1 derived systematic error of 0.494. This gives me great confidence that the measurements on Dr. Prasad's spectrometer closely approximate the measurements on Dr. DeCarlo's spectrometer in Hawaii. These values both differ, however, from the values measured on the WITEC spectrometer at UWA. Alternatively we can use the OLS regression to fit the fwhm_MD23 to the values measured in D17 using the equation, `r paste("MD23_fitted = ",round(slp,3), "X MD23_raw ", if_else(int>0, "+", "-"), abs(round(int,3)))`.
 
 ```{r abiotic graphs}
 fwhmRightPlot <- MD23abiogenic_filtered %>%
@@ -558,7 +558,11 @@ gridExtra::grid.arrange(fwhmLeftPlot + theme(legend.position = "none") + geom_te
 
 ```{r}
 capTab("FWHM means for the two datasets for each abiogenic sample along with the known aragonite saturation state")
-abiogenicComparison 
+abiogenicComparison %>%
+    kbl(align = 'c',
+      digits = 3) %>%
+  kable_classic()
+  
   
 ```
 We can now build the twwo calibration curves for these datasets. I'll also build 2 additional calibrations of the MD23 dataset, corrected to match the D17 dataset assuming a systematic error (subtract constant) and an OLS reggression.
@@ -570,8 +574,8 @@ MD23_model <- glm(fwhm_MD23~log(omega), data=abiogenicComparison)
 D17_model <- glm(fwhm_D17~log(omega), data=abiogenicComparison)
 
 modParams <- data.frame(dataset = c("MD23", "D17"),
-                        x = c(14,20),
-                        y = c(4.7,3.7),
+                        x = c(18,22),
+                        y = c(4.7,3.5),
                        slp = c(MD23_model$coefficients[[2]],
                                D17_model$coefficients[[2]]),
                        int = c(MD23_model$coefficients[[1]],
@@ -582,9 +586,9 @@ modParams <- data.frame(dataset = c("MD23", "D17"),
 
 
 # add in the D17 & MD23 published curves
-publishedCurves <- data.frame(omega = abiogenicComparison$omega,
-                              d17 = 0.57*log(omega)+2.09,
-                              md23 = 0.321*log(omega)+3.21) %>%
+publishedCurves <- data.frame(omega = abiogenicComparison$omega) %>%
+      mutate(D17 = 0.57*log(omega)+2.09,
+             MD23 = 0.321*log(omega)+3.21) %>%
   pivot_longer(!omega,
                names_to="dataset",
                values_to="fwhm")
@@ -604,18 +608,21 @@ logPlotLeft <- abiogenicComparison %>%
         legend.position = "top") +
   scale_x_continuous(limits=c(9, 30)) +
   # add in the published curves
-  geom_smooth(data = publishedCurves, aes(x=omega,y=FWHM, color = dataset),
-              alpha=0.3, show.legend = F) + 
+  geom_line(stat="smooth",  method="glm", formula = y~log(x),
+            data = publishedCurves,
+            linetype ="dashed",
+            aes(x=omega,y=fwhm, color = dataset),
+            alpha=0.3, show.legend = F) + 
   #add in my generated curves
   geom_smooth(method = "glm", formula = y~log(x), se=F, show.legend = F) +
   # eqn labels
   geom_text(data = modParams, aes(x, y,
                                    color=dataset,
-                                   label=eqn), show.legend = F) +
+                                   label=eqn), show.legend = F, size=3) +
   # eqn R2
   geom_text(data = modParams, aes(x, y-0.07,
                                    color=dataset,
-                                   label= paste("R^2 =",round(r2,3))), show.legend = F)
+                                   label= paste("R^2 =",round(r2,3))), show.legend = F, size=3)
 
 
 # correcting the MD23 to the D17 data in 2 different ways
@@ -632,8 +639,8 @@ MD23_OLS <- glm(fwhm_OLS~log(omega), data=MD23_corrected)
 
 
 modParams <- data.frame(method = c("sys", "OLS"),
-                        x = c(14,20),
-                        y = c(4.2,3.8),
+                        x = c(17,23),
+                        y = c(4.4,3.8),
                        slp = c(MD23_sys$coefficients[[2]],
                                MD23_OLS$coefficients[[2]]),
                        int = c(MD23_sys$coefficients[[1]],
@@ -660,11 +667,11 @@ logPlotRight <- MD23_corrected %>%
   # eqn labels
   geom_text(data = modParams, aes(x, y,
                                    color=method,
-                                   label=eqn), show.legend = F) +
+                                   label=eqn), show.legend = F, size=3) +
   # eqn R2
   geom_text(data = modParams, aes(x, y-0.07,
                                    color=method,
-                                   label= paste("R^2 =",round(r2,3))), show.legend = F) +
+                                   label= paste("R^2 =",round(r2,3))), show.legend = F, size=3) +
   scale_color_manual(values = wes_palette("Royal1")) +
   scale_fill_manual(values = wes_palette("Royal1"))
 
@@ -678,40 +685,204 @@ So now we have four different calibration curves all generated from abiogenic sa
 1. FWHM = $0.57 \times  ln(omega) + 2.09, R^2 = 0.95$ (D17)
 2. FWHM = $0.321 \times ln(omega) + 3.21, R^2 = 0.95$ (MD23)
 
+These two published curves are visualized in Figure 3A by the light, dashed lines. They have on average a smaller FWHM due to the different spectra analysis routines as discussed in the JCP section above.
+
+Ideally, I'd use the MD23 raw curve (solid blue in Figure 3A), since this is the most recently published calibration curve by DeCarlo and is generated from a spectrometer nearly identical to that in Dr. Prasad's lab. However, this requires 2 stages of data manipulation to align (1: JCP derived systematic error to align our measurements to D17 values and then OLS/systematic error correction to MD23 values). Therefore, I will take a more conservative approach and align our data to DeCarlo *et al.* (2017) by subtracting 0.494 and then estimate the FWHM with, FWHM = 0.655 x ln(omega) + 2.148. 
+
+Since we are only comparing FWHM and estimated calcifying fluid omega between samples measured on the same spectrometer, this exercise doesn't really matter too much. However, if we want to compare either of these values to other published datasets, then we will need to put some more thought into this.
 
 ## Coral Analysis
 
-```{r coralAnalysis}
+```{r coralAnalysis, include=F}
 setwd("~/Grad School/ULink 2022/")
 source('~/Grad School/ULink 2022/Raman/FWHMcalcs.R')
 ```
 
-```{r coralPlots}
-spectra_summary %>%
+```{r treatmentPlots}
+ggarrange(
+  spectra_summary %>%
   ggplot(aes(treatment, fwhm_corrected, fill=treatment)) +
   geom_boxplot() +
   theme_bw() +
-  labs(title = "Raman Data",
-       y = "FWHM")
+  labs(y = "FWHM"),
+  # scale_y_continuous(
+  #   # Features of the first axis
+  #   name = "FWHM",
+  #   # Add a second axis and specify its features
+  #   sec.axis = sec_axis( trans=~exp((.-2.14810)/0.655), name="")
+  # ),
+
+spectra_summary %>%
+  ggplot(aes(genotype, fwhm_corrected, fill=genotype)) +
+  geom_boxplot() +
+  theme_bw() +
+  # scale_y_continuous(
+  #   # Features of the first axis
+  #   name = "",
+  #   # Add a second axis and specify its features
+  #   sec.axis = sec_axis( trans=~exp((.-2.14810)/0.655), name="")
+  # )  +
+scale_fill_manual(values = wes_palette("GrandBudapest2")) +
+  theme(axis.title.y = element_blank(),
+        axis.text.y = element_blank()),
 
 spectra_summary %>%
   ggplot(aes(genotype, fwhm_corrected, fill=treatment)) +
   geom_boxplot() +
   theme_bw() +
-  labs(title = "Raman Data",
-       y = "FWHM")
+  scale_y_continuous(
+    # Features of the first axis
+    name = "",
+    # Add a second axis and specify its features
+    sec.axis = sec_axis( trans=~exp((.-2.14810)/0.655), name="Omega")
+  ) +
+  theme(axis.title.y.left = element_blank(),
+        axis.text.y.left = element_blank(),
+        axis.title.y.right = element_text(margin = margin(t = 0, r = 0, b = 0, l = 10))),
+ncol = 3,
+labels = c("A", "B", "C"),
+vjust = 0.2,
+common.legend = T)
+
+```
+On first glance, this is not what I was expecting. First the FWHM of these corals, and thereby the derived omega, do not have as much variability as I was anticipating. Further, I was expecting the LCO2 corals to have a greater FWHM compared to the HCO2 corals. I chose these 11 samples as they had the greatest variability in $\delta^{11}B$ (proxy for pH of the calcifying fluid), with the LCO2 having greater $\delta^{11}B$ than HCO2 corals. 
+
+There are some limitations to this analysis. First, we only measured 11 samples and collected a single spectra on 10 haphazardly chosen grains for each sample. Some of the DeCarlo methods looked at 10-25 grains and collected 5-10 spectra per grain. I do not expect more spectra to drastically change our interpretation, but it may reduce our variability somewhat for each sample (shown below in Figure 4). Further, the uneven sample distribution combined with the one high measure of FWHM in an HCO2 Ac-2 sample is skewing our interpretation. All in all, I am planning to collect 3 spectra per grain with 25 grains per sample going forward. This will increase the measurement time on the Raman slightly, but should help and be worthwhile.
+
+```{r}
+capFig("Significant variability exists for each grain, shown here is 1SD above and below the mean")
+spectra_summary %>%
+  ggplot(aes(genotype, color=treatment)) +
+  #geom_point(aes(y=fwhm_raw-0.494), position=position_dodge2()) +
+  geom_pointrange(aes(ymin=(fwhm_raw-fwhm_sd)-0.494, ymax=(fwhm_raw+fwhm_sd)-0.494, y=fwhm_raw-0.494),
+                  position = position_dodge2(0.5),
+                  width=0.4, alpha=0.7, linewidth=1.1, show.legend = T) +
+  theme_bw() +
+  labs(y = "FWHM")
+```
+## Comparing the spectra
+
+Here we are looking at an average spectra for each genotype-treatment combination to see if there are any visibly noticable differences other than v1 FWHM.From the v4 and v1 peak, we can't really see anything too drastically different, and the v1 FWHM data from above corroborates this.
+
+```{r}
+setwd("~/Grad School/ULink 2022/")
+library(Hmisc)
+library(OpenSpecy)
+
+# create a list of samples, within each list item is all replicate spectra
+# organize Raman data as folder names = sample names and replicate spectra within each folder
+
+# capture sample names
+sampleNames <- list.files('./Raman/dat/')
+
+# remove JCP from the sampleNames
+sampleNames <- sampleNames[str_which(sampleNames,
+                                     fixed('jcp', ignore_case=TRUE),
+                                     negate = T)]
+
+# read each replicate spectrum and place into sample sublist
+spectra <- lapply(sampleNames, function(sample) {
+  fileNames = list.files(paste0('./Raman/dat/',sample),
+             pattern = "([^extended])(.txt$)",
+             recursive = T, 
+             full.names = T)
+  
+  # remove fileNames with "extended" in the name denoting additional full spectra scans
+  fileNames = fileNames[str_which(fileNames, "(extended)|(results)", negate = T)]
+
+  spectrum = mapply(function(file, sample, replicate) {
+  # not sure whats the format of these, so only keeping first intensity data
+    spectra = read_tsv(file,
+         col_select = 1:2,
+         col_names=c('wavenumber', 'intensity'),
+         show_col_types = FALSE,
+         skip = 1)
+    
+    # convert to an OpenSpecy object
+    spectra = as_OpenSpecy(x = spectra$wavenumber,
+                           spectra = data.frame(spectra$intensity))
+    
+    # use a 5th order polynomial to subtract background
+    spectra = subtr_baseline(spectra, degree = 5, make_rel = F)
+    
+    # extract subtracted spectra for further processing
+    output = data.frame(wavenumber = spectra$wavenumber,
+                        intensity = unlist(spectra$spectra),
+                        sample = sample,
+                        replicate = replicate) %>%
+      # SNV normalization
+      mutate(intensity = scale(intensity))
+  }, fileNames, sample, c(1:length(fileNames)), SIMPLIFY = F) %>%
+    bind_rows()
+  
+  return(spectrum)
+}) %>% 
+  bind_rows()
+
+metadata <- read_csv("./tankAssignment.csv")%>%
+              mutate(tag=as.character(tag))
+
+# create an average spectra for each genotype-sample combination
+capFig("Mean generated spectra for each genotype-sample combination, centered at the v1 and v4 regions")
+ggarrange(spectra %>%
+  left_join(metadata,
+            by=c("sample"="tag")) %>%
+  group_by(genotype, treatment, wavenumber) %>%
+  summarise(intensity = mean(intensity),
+            group = paste(genotype,"-",treatment)) %>%
+  ggplot(aes(wavenumber, intensity)) +
+  geom_line() +
+  scale_x_continuous(limits = c(690,720)) +
+  scale_y_continuous(limits = c(0,3), expand = c(0,0)) +
+  theme_classic() +
+  facet_grid(group~., switch = "y") +
+  theme(panel.spacing = unit(0,'lines'),
+        strip.background = element_blank(),
+        axis.line.y.left = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        strip.text.y.left = element_text(size = 9, angle = 360, hjust = 1),
+        legend.position = "none",
+        plot.margin = margin(0,0,0,0,unit="lines")),
+
+spectra %>%
+  left_join(metadata,
+            by=c("sample"="tag")) %>%
+  group_by(genotype, treatment, wavenumber) %>%
+  summarise(intensity = mean(intensity),
+            group = paste(genotype,"-",treatment)) %>%
+  ggplot(aes(wavenumber, intensity)) +
+  geom_line() +
+  scale_x_continuous(limits = c(1075,1095)) +
+  scale_y_continuous(limits = c(0,19), expand = c(0,0)) +
+  theme_classic() +
+  facet_grid(group~., switch = "y") +
+  theme(panel.spacing = unit(0,'lines'),
+        strip.text = element_blank(),
+        strip.background = element_blank(),
+        axis.line.y.left = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        #strip.text.y.left = element_text(size = 9, angle = 360, hjust = 1),
+        legend.position = "none",
+        plot.margin = margin(0,0,0,0,unit="lines")),
+labels = c("v4", "v1")
+  )
 ```
 
 
 # Questions
 
-1) After not observing burning of sample at low power, we set the laser intensity to 100% to maximize signal without saturating the spectra. The prior literature used a laser intensity of 1%. While absolute laser output is a function of the specific laser power and the user chosen retarding percentage, I believe differences in absolute laser intensity should only alter intensity values of the spectra. By normalizing the spectra (SNV), this should account for differences in spectral intensity while maintaining relative peak intensities. Is this logic correct, or could the difference in intensity explain some of the differences in FWHM and peak positions?
+The following are a bunch of remaining questions I have for this data, which I'd like to get a better handle of before measuring the remaining samples. These are the same questions I included in the email:
 
-10 seconds at 10%; 10 seconds at 50%
-
-2) Similarly, prior literature used a 20x objective, while we used a 100x objective. Similar to above, I'd like to try and collect some spectra at 20x to compare. Do you expect to see any differences based on objective alone?
-
-3) I have come across a single paper that attempts to standardize FWHM across different machines by accounting for the spectral resolutions of each individual machine. DeCarlo *et al.* (2017) cites this paper by Nasdala *et al.*, which cites a paper by. However, DeCarlo does not use this method in any of his papers and I have not a, giving me the impression this practice is not widely accepted. Their method is as follows,
+1. After not observing burning of sample at low power, we set the laser intensity to 100% to maximize signal without saturating the spectra. The MD23 paper (with a similar if not identical Raman setup) used a laser intensity of 1% (from a 45mW source) and recorded peak intensity values much less than we were measuring. Their peak intensities were about 700 compared to ours at about 70,000. This two order of magnitude difference was reduced by SNV (z-score) normalizing the spectra, granting a normalized peak intensity of about 15 vs ours at about 18, highlighting the increased SNR of our spectra measured with a greater laser intensity. Are there any reasons to operate at a lower power besides not burning the sample, which we did not observe? From my understanding, the higher SNR should increase our ability to discern small-scale changes in peak widths. Is this correct?
+2. Similarly, prior literature used a 40x, 20x, and a 50x objective, while we used a 100x objective. Given the range of objectives used by different authors, I would not expect objective to alter the spectra. I'm assuming objective choice is function of grain size, with smaller grains needing greater magnification to properly focus. Does this make sense, or do you expect to see any differences based on objective alone?
+3. I have come across a single paper that attempts to standardize FWHM across different machines by accounting for the spectral resolutions of each individual spectrometer. DeCarlo *et al.* (2017) cites this paper by Nasdala *et al.*, which cites a German paper by Irmer from 1985. However, DeCarlo does not use this method in any of his subsequent papers and I have not come across this spectral resolution standardizing equation in any other Raman resource I've come across. This gives me the impression this practice is not widely accepted. Their method is as follows,$b = b_s \times \sqrt{1-2(\frac{s}{b_s})^2}$, where b is the corrected FWHM, $b_s$ is the measured FWHM, and s is the spectral resolution of the Raman system.
+  + Have you come across any similar spectral resolution standardization technique before? 
+  + Is spectral resolution just defined as the bins in the Raman shift, e.g. 1.14 $cm^{-1}$?
+4. Are there any steps in this analysis you find is lacking, not common practice, or needs more thought before measuring additional samples?
 
 
 
