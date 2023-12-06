@@ -20,7 +20,7 @@ knit: (function(inputFile, encoding) {
 always_allow_html: true
 ---
 
-<script>
+<script type="text/javascript">
 window.onload = function() {
     //query string in the password
     const urlParams = new URLSearchParams(window.location.search);
@@ -38,7 +38,7 @@ function verify() {
   }
   return false;
 }
-</script  type="text/javascript">
+</script>
 <style type="text/css">
 /*Change content Display */
 img {
