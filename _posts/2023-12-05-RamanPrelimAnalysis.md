@@ -238,7 +238,7 @@ There is a small difference in the Gaussian fit between the Origin Pro
 and the two open source scripting routines. Origin Pro uses this form of
 the Gaussian curve, $y = y_0 + ke ^\frac{-(x-p)^2}{2s^2}$ while the two
 open source scripting routines incorporate an m term, which corresponds
-to the slope of the background intensity \$ y = y_0 + mx + ke ^ \$
+to the slope of the background intensity $y = y_0 + mx + ke ^\frac{-(x-p)^2}{2s^2}$
 
 where y is the intensity, $y_0$ is the background intensity, x is the
 Raman shift, m is the background slope, k is the peak height, p is the
@@ -565,20 +565,20 @@ $cm^{-1}$ with a precision of approximately 0.01%.
 
 There are two main points which need to be kept in mind when thinking of
 these accuracy and precision numbers. First, I only measured 10 spectra
-of JCP-1, while the DeCarlo dataset is comprised of 440 spectra (2-3
+of JCp-1, while the DeCarlo dataset is comprised of 440 spectra (2-3
 spectra are rejected due to poor spectral quality). Relative standard
 error (RSE) should be a better comparison of precision when the N varies
 significantly, but the conclusions remain the same when using RSE or CV
 in the table above. I plan to measure at least 10 spectra (will shoot
 for 25 going forward) during each Raman session to correct that day’s
 data. I will revisit this accuracy analysis and pool all measured
-spectra to compare against the DeCarlo dataset. Second, JCP-1 has been
+spectra to compare against the DeCarlo dataset. Second, JCp-1 has been
 phased out of the biogeochemical community since there was large
 variability and it was deemed not sufficient for climate quality
 reconstructions of pH from coral. Thus, the biogeochemistry community
 has shifted to synthetic simulated coral standards, which has led to
 increased accuracy and inter-lab comparisons. This seems obvious since
-JCP-1 is a single large *Porites* colony that was collected from the
+JCp-1 is a single large *Porites* colony that was collected from the
 wild and subsequently ground in a ball-mill to a homogenized powder.
 Thus a given aragonite grain from this homogenized sample may be
 compositionally distinct from another grain due to overall decreases in
@@ -607,7 +607,7 @@ at UWA have been extensively used. Further, the JcP measurements from
 above were all measured on the UWA setup. I am purposefully including
 the new Hawaii Pacific University measurements as it is nearly the exact
 same Renishaw Raman setup that is available at FIU in Dr. Prasad’s lab
-and was used forDeCarlo’s most recent publication.
+and was used for DeCarlo’s most recent publication.
 
 The goal with this analysis is to recreate two calibration curves from
 these two datasets of DeCarlo’s abiotic aragonite using the Kiel Routine
@@ -800,20 +800,20 @@ datasets and <strong>B</strong> corrected MD23 datasets
 So now we have four different calibration curves all generated from
 abiogenic samples measured by D17 and MD23 analyzed with the Kiel
 routine. These four calibration curves are distinct from the two
-published calibration curves in D17 and MD23, which are: 1. FWHM =
-$0.57 \times ln(omega) + 2.09, R^2 = 0.95$ (D17) 2. FWHM =
-$0.321 \times ln(omega) + 3.21, R^2 = 0.95$ (MD23)
+published calibration curves in D17 and MD23, which are:
+1. FWHM = $0.57 \times ln(omega) + 2.09, R^2 = 0.95$ (D17)
+2. FWHM = $0.321 \times ln(omega) + 3.21, R^2 = 0.95$ (MD23)
 
 These two published curves are visualized in Figure 3A by the light,
 dashed lines. They have on average a smaller FWHM due to the different
-spectra analysis routines as discussed in the JCP section above.
+spectra analysis routines as discussed in the JCp-1 section above.
 
 Ideally, I’d use the MD23 raw curve (solid blue in Figure 3A), since
 this is the most recently published calibration curve by DeCarlo and is
 generated from a spectrometer nearly identical to that in Dr. Prasad’s
 lab. However, this requires 2 stages of data manipulation to align (1:
-JCP derived systematic error to align our measurements to D17 values and
-then OLS/systematic error correction to MD23 values). Therefore, I will
+JCp-1 derived systematic error to align our measurements to D17 values and
+then 2: OLS/systematic error correction to MD23 values). Therefore, I will
 take a more conservative approach and align our data to DeCarlo *et al.*
 (2017) by subtracting 0.494 and then estimate the FWHM with, FWHM =
 0.655 x ln(omega) + 2.148.
@@ -853,7 +853,8 @@ Figure 4. Significant variability exists for each grain, shown here is
 </h5>
 
 <img src="/notebook/images/RamanPrelim/unnamed-chunk-4-1.png" width="90%" style="display: block; margin: auto;" />
-\## Comparing the spectra
+
+## Comparing the spectra
 
 Here we are looking at an average spectra for each genotype-treatment
 combination to see if there are any visibly noticable differences other
@@ -907,12 +908,10 @@ samples. These are the same questions I included in the email:
     follows,$b = b_s \times \sqrt{1-2(\frac{s}{b_s})^2}$, where b is the
     corrected FWHM, $b_s$ is the measured FWHM, and s is the spectral
     resolution of the Raman system.
-
-- Have you come across any similar spectral resolution standardization
-  technique before?
-- Is spectral resolution just defined as the bins in the Raman shift,
-  e.g. 1.14 $cm^{-1}$?
-
+		- Have you come across any similar spectral resolution standardization
+		  technique before?
+		- Is spectral resolution just defined as the bins in the Raman shift,
+          e.g. 1.14 $cm^{-1}$?
 4.  Are there any steps in this analysis you find is lacking, not common
     practice, or needs more thought before measuring additional samples?
 
