@@ -30,6 +30,6 @@ Resources on open science can be found here:
 
 Open sourced under the [MIT license](LICENSE.md).
 
-Best regards,
+Kind regards,
 
 Patrick
