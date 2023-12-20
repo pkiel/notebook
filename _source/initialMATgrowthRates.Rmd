@@ -102,7 +102,7 @@ capTabNo = 1; capFigNo = 1;
 
 #Function to add the Table Number
 capTab = function(x){
-    x = paste0("Table ",capTabNo,". ",x)
+    x = paste0("<h5>Table ",capTabNo,". ",x, "</h5>")
     capTabNo <<- capTabNo + 1
     cat(x)
 }

@@ -111,7 +111,7 @@ Figure 3. Acrylic Controls Standardized Daily Growth Rate by Tank
 
 <img src="/notebook/images/MATinitGrowth/acrylic-growth-3.png" width="90%" style="display: block; margin: auto;" />
 The average daily increase in mass of the control corals growing on an
-inert, acrylic plug was 6.702 mg/day, 95% CI\[5.963, 7.44\].
+inert, acrylic plug was 6.702 mg/day, 95% CI \[5.963, 7.44\].
 
 We can further initial-mass standardize these growth rates to the the
 initial mass of each fragment since I don’t have the surface areas just
@@ -133,8 +133,8 @@ Figure 5. Filtered MAT Controls Daily Mass Gain by Date
 <h5>
 Figure 6. Filtered MAT Controls Daily Mass Gain by Tank
 </h5>
-<img src="/notebook/images/MATinitGrowth/control-growth-3.png" width="90%" style="display: block; margin: auto;" />Table 1.
-Tukey Multiple Comparisons Output
+<img src="/notebook/images/MATinitGrowth/control-growth-3.png" width="90%" style="display: block; margin: auto;" />
+<h5>Table 1. Tukey Multiple Comparisons Output </h5>
 <table>
 <thead>
 <tr>
@@ -325,7 +325,7 @@ I labeled these dates as “no electric” and filtered them from the
 analysis.
 
 The average daily abiotic growth rate of the steel cathodes was 34.047
-mg/day, 95% CI\[31.287, 36.808\]. There is no significant difference in
+mg/day, 95% CI \[31.287, 36.808\]. There is no significant difference in
 the growth rates of these MAT controls when performing a Tukey multiple
 comparisons of means ($\alpha = 0.05$). These abiotic growth rates need
 to be taken into account when looking at the growth rates of the MAT
@@ -333,7 +333,7 @@ corals since this abiotic growth is on average 27.345 mg more or 408%
 more than just the growth of the corals on the inert acrylic plugs.
 
 I did not present a mass-standardized growth rate here because the
-relationship is identical to the daily mass gain graph (Figure 5).
+relationship is identical to the daily mass gain graph (Figure 6).
 
 # MAT Corals
 
@@ -360,8 +360,8 @@ Figure 9. Filterd MAT Corals by Tank
 <h5>
 Figure 10. Filtered MAT Corals’ Standardized Daily Growth Rate by Tank
 </h5>
-<img src="/notebook/images/MATinitGrowth/mat-corals-4.png" width="90%" style="display: block; margin: auto;" />Table
-2. Tukey Multiple Groups Comparisons
+<img src="/notebook/images/MATinitGrowth/mat-corals-4.png" width="90%" style="display: block; margin: auto;" />
+<h5>Table 2. Tukey Multiple Groups Comparisons</h5>
 <table>
 <thead>
 <tr>
@@ -530,11 +530,11 @@ tank
 </tbody>
 </table>
 
-The average daily increase in mass of the MAT corals growing on was
-40.133 mg/day, 95% CI\[37.717, 42.549\].
+The average daily increase in mass of the MAT corals was
+40.133 mg/day, 95% CI \[37.717, 42.549\].
 
 The average initial-mass standardized daily growth rate was 1.14 mg/day/
-initial g, 95% CI\[1.071, 1.21\].
+initial g, 95% CI \[1.071, 1.21\].
 
 ## Subtracting MAT controls from the MAT Corals
 
@@ -545,9 +545,9 @@ robust way to compare the MAT to the combination of MAT controls +
 acrylic controls, but for now I’ll just present this straight forward
 way.
 
-Table 3. Comparing group means and CI. Combined controls is the sum of
+<h5>Table 3. Comparing group means and CI. Combined controls is the sum of
 the bare MAT cathodes and the acrylic control corals, which is an apt
-comparison to the MAT corals.
+comparison to the MAT corals. </h5>
 <table>
 <thead>
 <tr>
@@ -645,15 +645,16 @@ experiment
 - The average growth rate of the MAT corals is indistinguishable from
   the combination of MAT controls + acrylic controls
 - The abiotic precipitate grew at a rate of 5.08x the control corals.
-  This is within the range (3-20x) of the increased growth rate proposed
-  by some of the extreme early case studies. Some of the field studies
-  by other authors which saw a more moderate 20-50% increase in growth
-  rates as determined by total linear extension, falls in line with
+  This is within the range (3-20x) of the increased growth rates proposed
+  by some of the early case studies. Some of the field studies
+  by other authors saw a more moderate 20-50% increase in growth
+  rates as determined by total linear extension. This moderate increase falls in line with
   increases in growth rates seen on different restoration nursery
-  platforms (e.g., Kuffner *et al.* 2017; O’Donnell *et al.* 2017).
+  platforms (e.g., Kuffner *et al.* 2017; O’Donnell *et al.* 2017), suggesting that the 
+  increases from the moderate field studies may be entirely explained by the growth platform and
+  not by electrolysis.
 - From my preliminary abiotic growth rates derived from total alkalinity
-  anomaly incubations, the 3-20x increased growth rates could be
-  achieved if we increased current density to greater than we used in
+  anomaly incubations, I achieved a spectrum of growth rates which could align with the 3-20x increased growth rates . This could be achieved by increasing the current density greater than what we used in
   this study (say 3 or 5 $A/m^2$ compared to the 1$A/m^2$ here).
   However, this would change the precipitated mineral from calcium
   carbonate to brucite.
@@ -661,5 +662,14 @@ experiment
   likely because all increases in carbonate ion concentration are
   immediately used by the abiotic precipitation occurring at the
   cathode-seawater interface.
+  
+# Devil's Advocate
+- The growth tip of *A. cervicornis* is placed distal to the cathode, potentially out of its sphere of influence. We may not have experienced the growth potential.
+- Abiotic growth may not be such a bad thing. If the coral can maintain a veneer of tissue over the abiotic growth, then the skeleton may incorporate this abiotic precipitate. 
+
+One way to test both of these ideas is to place these corals horizontally how Ian has suggested before, rather than a normal upright position. I stopped regluing the fallen corals after the weighing session on 12/15 and placed these corals horizontally. My expectation is that the coral will die and be overgrown by the precipitate, negating both the points raised above. We shall see.
+
+## Other evidence
+I need to go through the carbonate chemistry data and then relook at the pH microprofiles and the abiotic incubations I did. 
 
 </div>
