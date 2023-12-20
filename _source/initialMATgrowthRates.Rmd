@@ -1,0 +1,393 @@
+---
+layout: post
+title:  "Initial MAT Growth Rates"
+author: "Patrick M Kiel"
+date: '2023-12-20'
+categories: [research]
+description: "Investigating the initial MAT growth rates from the >1 month of buoyant weight data."
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, 
+  encoding = encoding, 
+  output_file = paste0('2023-12-20', "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
+  output_dir = "../_posts") })
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#load packages
+library(tidyverse)
+library(kableExtra)
+library(readxl)
+library(ggpubr)
+library(rstatix)
+library(wesanderson)
+library(seacarb)
+
+base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
+fig_path <- "images/MATinitGrowth/" #add a new folder if you want to group output into a single foder
+
+# Set base directories
+knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
+
+# Set figure directories
+knitr::opts_chunk$set(fig.path = fig_path,
+                    cache.path = '../cache/',
+                    fig.align = 'center', out.width = '90%',
+                    dpi = 300,
+                    message=FALSE, warning=FALSE,
+                    cache = FALSE, results = "asis")
+
+
+#set default color paletes
+options(ggplot2.discrete.fill=wes_palette("Darjeeling1"))
+options(ggplot2.discrete.colour=wes_palette("Darjeeling1"))
+```
+
+```{js}
+
+window.onload = function() {
+    //query string in the password
+    const urlParams = new URLSearchParams(window.location.search);
+    const pass = urlParams.get('pass')
+    document.getElementById("password").value = pass;
+};
+
+function verify() {
+  <!-- set the password here -->
+  if (document.getElementById('password').value === 'frankencoral') {
+    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
+    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
+  } else {
+    alert('Invalid Password! You cannot view this content.');
+    password.setSelectionRange(0, password.value.length);
+  }
+  return false;
+}
+```
+
+```{css}
+/*Change content Display */
+.hidden {
+  display: none;
+}
+
+img {
+margin: 0 auto;
+}
+
+table {
+    width: 90%;
+    border: 0px solid #fff;
+    border-collapse: collapse;
+    overflow-x: auto;
+    margin: 0 auto;
+    display: block;
+}
+```
+
+```{r FigCaptions, echo=FALSE}
+
+#Figure and Table Caption Numbering
+capTabNo = 1; capFigNo = 1;
+
+#Function to add the Table Number
+capTab = function(x){
+    x = paste0("Table ",capTabNo,". ",x)
+    capTabNo <<- capTabNo + 1
+    cat(x)
+}
+
+#Function to add the Figure Number
+capFig = function(x){
+    x = paste0("<h5>Figure ",capFigNo,". ",x,"</h5>")
+    capFigNo <<- capFigNo + 1
+    cat(x)
+}
+```
+
+<!-- The password box -->
+<div id="credentials">
+  <input type="text" id="password" onkeydown="if (event.keyCode == 13) verify()" />
+  <br/>
+  <input id="button" type="button" value="Show Content" onclick="verify()" />
+</div>
+
+<!-- The content we want to show after password -->
+<div id="HIDDENDIV" class="hidden" markdown="1">
+
+<!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
+
+```{r, load data}
+assignment <- read_csv("~/Grad School/mineralAccretionTechnology/tankAssignment.csv") %>%
+    mutate(tag = as.character(tag),
+           tank = as.factor(tank))
+
+bw <- read_csv("~/Grad School/mineralAccretionTechnology/bwData.csv") %>%
+        # sw calculate density from YSI vlaues
+  mutate(rho = rho(S= sal, T = temp)/1000, .after="mass",
+         # calculate mass in air from sw density, aragonite density, bw
+          mass_a = mass/(1-rho/2.93),
+         # convert date to date object
+         date = as.Date(date, format="%m/%d/%Y"))
+
+growth <- bw %>%
+  left_join(assignment, by="tag") %>%
+  arrange(tag,date) %>%
+  group_by(tag) %>%
+  # calculate mass gain in mg
+  mutate(dailyMassGain = (mass_a - lag(mass_a))*1000/as.numeric(date-lag(date)),
+         massG = dailyMassGain/first(mass_a),
+         .after = "mass_a") %>%
+  drop_na(tank, dailyMassGain)
+```
+
+```{r lmExtractFunction, include=F}
+# function to extract linear model parameters
+
+lmExtractCI <- function(mod) {
+  combinedCoefs = c(coef(mod), confint(mod, level=0.95))
+  names(combinedCoefs) = c("mean", "lowerCI", "upperCI")
+  return(combinedCoefs)
+}
+
+```
+
+# Controls
+
+## How did control acrylic corals grow?
+
+```{r acrylic-growth}
+capFig("Acrylic Controls Daily Mass Gain")
+growth %>%
+  filter(substrate=="acrylic") %>%
+  ggplot(aes(x=date, y=dailyMassGain,
+             group=interaction(as.factor(date),tank),
+             fill = tank)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(y = "Daily Mass gain (mg/day)")
+
+capFig("Acrylic Controls Daily Mass Gain by Tank")
+growth %>%
+  filter(substrate=="acrylic") %>%
+  ggplot(aes(x=tank, y=dailyMassGain,
+             fill = tank)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(y = "Daily Mass gain (mg/day)")
+
+capFig("Acrylic Controls Standardized Daily Growth Rate by Tank")
+growth %>%
+  filter(substrate=="acrylic") %>%
+  ggplot(aes(x=tank, y=massG,
+             fill = tank)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(y = "Daily Growth Rate (mg/day/gram)")
+
+growth %>%
+  filter(substrate=="acrylic") %>%
+  group_by(substrate) %>%
+  nest %>%
+  mutate(mod = map(data,
+                   ~lm(dailyMassGain ~ 1, data=.) %>%
+                    lmExtractCI(.)
+                  )
+  ) %>%
+  unnest_wider(mod) -> acrylicDailyGrowthStats
+
+growth %>%
+  filter(substrate=="acrylic") %>%
+  group_by(substrate) %>%
+  nest %>%
+  mutate(mod = map(data,
+                   ~lm(massG ~ 1, data=.) %>%
+                    lmExtractCI(.)
+                  )
+  ) %>%
+  unnest_wider(mod) -> acrylicStdDailyGrowthStats
+```
+The average daily increase in mass of the control corals growing on an inert, acrylic plug was `r round(acrylicDailyGrowthStats$mean,3)` mg/day, 95% CI[`r paste(round(c(acrylicDailyGrowthStats$lowerCI, acrylicDailyGrowthStats$upperCI),3), collapse = ", ")`].
+
+We can further initial-mass standardize these growth rates to the the initial mass of each fragment since I don't have the surface areas just yet, i.e. Figure 3 above, to produce an average daily growth rate of `r round(acrylicStdDailyGrowthStats$mean,3)` mg/day/ initial g, 95% CI[`r paste(round(c(acrylicStdDailyGrowthStats$lowerCI, acrylicStdDailyGrowthStats$upperCI),3), collapse = ", ")`]. The same conclusions are drawn regardless of the standardization chosen, likely because the corals are evenly mixed and of the approximate same size.
+
+## How did the control MAT plugs abiotically grow?
+```{r control-growth}
+capFig("All MAT Controls Daily Mass Gain by Date")
+growth %>%
+  filter(genotype=="control") %>%
+  ggplot(aes(x=date, y=dailyMassGain,
+             group=interaction(as.factor(date),tank),
+             fill = tank)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(y = "Daily Mass gain (mg/day)")
+
+capFig("Filtered MAT Controls Daily Mass Gain by Date")
+growth %>%
+  filter(genotype=="control" & (str_detect(notes, "glue", negate=T) | is.na(notes))) %>%
+  ggplot(aes(x=date, y=dailyMassGain,
+             group=interaction(as.factor(date),tank),
+             fill = tank)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(y = "Daily Mass gain (mg/day)")
+
+capFig("Filtered MAT Controls Daily Mass Gain by Tank")
+growth %>%
+  filter(genotype=="control" & (str_detect(notes, "glue", negate=T) | is.na(notes))) %>%
+  ggplot(aes(x=tank, y=dailyMassGain,fill = tank)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(y = "Daily Mass gain (mg/day)")
+
+growth %>%
+  filter(genotype=="control" & (str_detect(notes, "glue", negate=T) | is.na(notes))) %>%
+  group_by(genotype) %>%
+  nest %>%
+  mutate(mod = map(data,
+                   ~lm(dailyMassGain ~ 1, data=.) %>%
+                    lmExtractCI(.)
+                  )
+  ) %>%
+  unnest_wider(mod) -> matWeeklyGrowthStats
+
+capTab("Tukey Multiple Comparisons Output")
+growth %>%
+  filter(genotype=="control" & (str_detect(notes, "glue", negate=T) | is.na(notes))) %>%
+  group_by(genotype) %>%
+  aov(dailyMassGain ~ tank, data=.) %>%
+  TukeyHSD() %>%
+  broom::tidy() %>%
+  kbl()
+```
+On the cathodes, we experienced a problem I term "electro-pop". This is when the calcium carbonate precipitate, growing at the interface of the cathode and water, pushed off the coral or glue from the cathode. When this happened, I scraped off some of the precipitate, rescored the top of the cathode, and reglued the coral. The mass is thus altered not only by coral growth and abiotic mineral accretion, but also by the removal of old precipitate and the addition of new glue. I labeled these mass changes as "reglued" and filtered them from the analysis. 
+
+Additionally, towards the end of this growth period the precipitate grew so much that it was blocking electrical contact between the ring terminal and the bottom of the cathode. It was visible when this occurred since there was no longer production of hydrogen gas bubbles. I fixed this by removing a small amount of abiotic precipitate and cleaning the ring terminals. This small removal was approximately even for all MAT controls and corals. While this small removal will result in a slight decreased growth rate, these decrease should be even for both MAT controls and corals and therefore should not impact the conclusions. I labeled these dates as "no electric" and filtered them from the analysis. 
+
+The average daily abiotic growth rate of the steel cathodes was `r round(matWeeklyGrowthStats$mean,3)` mg/day, 95% CI[`r paste(round(c(matWeeklyGrowthStats$lowerCI, matWeeklyGrowthStats$upperCI),3), collapse = ", ")`]. There is no significant difference in the growth rates of these MAT controls when performing a Tukey multiple comparisons of means ($\alpha = 0.05$). These abiotic growth rates need to be taken into account when looking at the growth rates of the MAT corals since this abiotic growth is on average `r round(matWeeklyGrowthStats$mean - acrylicDailyGrowthStats$mean,3)` mg more or `r round((matWeeklyGrowthStats$mean - acrylicDailyGrowthStats$mean)/acrylicDailyGrowthStats$mean,3)*100`% more than just the growth of the corals on the inert acrylic plugs.
+
+I did not present a mass-standardized growth rate here because the relationship is identical to the daily mass gain graph (Figure 5).
+
+# MAT Corals
+
+We will first look at the total MAT growth and then subtract out this average MAT growth per tank for the corals to see how they perform against the combination of the bare cathode and acrylic controls. This is the basis of our investigation: do corals grown with MAT grow faster than controls after accounting for the abiotic precipitate.
+
+## How did the MAT corals grow?
+
+```{r mat-corals}
+capFig("All MAT Corals by Tank and Date")
+growth %>%
+  filter(substrate=="MAT" & genotype!="control") %>%
+  ggplot(aes(date, dailyMassGain, group=interaction(as.factor(date),tank),
+             fill=tank)) +
+  geom_boxplot() +
+  #facet_wrap(~tank, scales="free") +
+  theme_bw() +
+  labs(y = "Daily Mass gain (mg/day)")
+
+capFig("Filtered MAT Corals by Tank and Date")
+growth %>%
+    filter(substrate=="MAT" & genotype!="control" & ((str_detect(notes, "glue", negate=T) & str_detect(notes, "electric", negate=T)) | is.na(notes))) %>%
+  ggplot(aes(date, dailyMassGain, group=interaction(as.factor(date),tank),
+             fill=tank)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(y = "Daily Mass gain (mg/day)",
+       title = "Filtered MAT Corals by Tank and Date")
+
+capFig("Filterd MAT Corals by Tank")
+growth %>%
+    filter(substrate=="MAT" & genotype!="control" & ((str_detect(notes, "glue", negate=T) & str_detect(notes, "electric", negate=T)) | is.na(notes))) %>%
+  ggplot(aes(tank, dailyMassGain,
+             fill=tank)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(y = "Daily Mass gain (mg/day)")
+
+
+capFig("Filtered MAT Corals' Standardized Daily Growth Rate by Tank")
+growth %>%
+    filter(substrate=="MAT" & genotype!="control" & ((str_detect(notes, "glue", negate=T) & str_detect(notes, "electric", negate=T)) | is.na(notes))) %>%
+  ggplot(aes(tank, massG,
+             fill=tank)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(y = "Daily Growth Rates (mg/day/gram)")
+
+growth %>%
+   filter(substrate=="MAT" & genotype!="control" & ((str_detect(notes, "glue", negate=T) & str_detect(notes, "electric", negate=T)) | is.na(notes))) %>%
+  group_by(substrate) %>%
+  nest %>%
+  mutate(mod = map(data,
+                   ~lm(dailyMassGain ~ 1, data=.) %>%
+                    lmExtractCI(.)
+                  )
+  ) %>%
+  unnest_wider(mod) -> matCoralDailyGrowthStats
+
+growth %>%
+   filter(substrate=="MAT" & genotype!="control" & ((str_detect(notes, "glue", negate=T) & str_detect(notes, "electric", negate=T)) | is.na(notes))) %>%
+  group_by(substrate) %>%
+  nest %>%
+  mutate(mod = map(data,
+                   ~lm(massG ~ 1, data=.) %>%
+                    lmExtractCI(.)
+                  )
+  ) %>%
+  unnest_wider(mod) -> matCoralStdDailyGrowthStats
+
+capTab("Tukey Multiple Groups Comparisons")
+growth %>%
+    filter(substrate=="MAT" & genotype!="control" & ((str_detect(notes, "glue", negate=T) & str_detect(notes, "electric", negate=T)) | is.na(notes))) %>%
+  group_by(genotype) %>%
+  aov(dailyMassGain ~ tank, data=.) %>%
+  TukeyHSD() %>%
+  broom::tidy() %>%
+  kbl()
+```
+
+The average daily increase in mass of the MAT corals growing on was `r round(matCoralDailyGrowthStats$mean,3)` mg/day, 95% CI[`r paste(round(c(matCoralDailyGrowthStats$lowerCI, matCoralDailyGrowthStats$upperCI),3), collapse = ", ")`].
+
+The average initial-mass standardized daily growth rate was `r round(matCoralStdDailyGrowthStats$mean,3)` mg/day/ initial g, 95% CI[`r paste(round(c(matCoralStdDailyGrowthStats$lowerCI, matCoralStdDailyGrowthStats$upperCI),3), collapse = ", ")`].
+
+
+## Subtracting MAT controls from the MAT Corals
+
+We can combine the means and confidence intervals for all the corals thus far to get a rough comparison to the MAT corals. I'm labeling this row "combined controls" below. There's likely a more statistically robust way to compare the MAT to the combination of MAT controls + acrylic controls, but for now I'll just present this straight forward way.
+
+```{r}
+capTab("Comparing group means and CI. Combined controls is the sum of the bare MAT cathodes and the acrylic control corals, which is an apt comparison to the MAT corals.")
+bind_rows(acrylicDailyGrowthStats, 
+          matWeeklyGrowthStats %>% mutate(substrate = "MAT")) %>%
+  ungroup() %>%
+  mutate(type = "control") %>%
+  bind_rows(summarise(., across(where(is.numeric), ~sum(.x, na.rm = T))) %>%
+              mutate(substrate = "combined controls", type = "control"),
+
+          matCoralDailyGrowthStats %>% mutate(substrate = "MAT",
+                                              type = "experiment")) %>%
+  select(-c(data,genotype)) %>%
+  relocate(type, .after="substrate") %>%
+  kbl()
+```
+
+# Takeaways
+
+- The average growth rate of the MAT corals is indistinguishable from the combination of MAT controls + acrylic controls
+- The abiotic precipitate grew at a rate of `r round(matWeeklyGrowthStats$mean / acrylicDailyGrowthStats$mean,3)`x the control corals. This is within the range (3-20x) of the increased growth rate proposed by some of the extreme early case studies. Some of the field studies by other authors which saw a more moderate 20-50% increase in growth rates as determined by total linear extension, falls in line with increases in growth rates seen on different restoration nursery platforms (e.g., Kuffner *et al.* 2017; O'Donnell *et al.* 2017).
+- From my preliminary abiotic growth rates derived from total alkalinity anomaly incubations, the 3-20x increased growth rates could be achieved if we increased current density to greater than we used in this study (say 3 or 5 $A/m^2$ compared to the 1$A/m^2$ here). However, this would change the precipitated mineral from calcium carbonate to brucite.
+- From this initial evidence, MAT does not increase coral growth rates, likely because all increases in carbonate ion concentration are immediately used by the abiotic precipitation occurring at the cathode-seawater interface.
+
+
+</div>
