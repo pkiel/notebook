@@ -20,14 +20,15 @@ knit: (function(inputFile, encoding) {
 always_allow_html: true
 ---
 
-<script>
-&#10;window.onload = function() {
+<script type="text/javascript">
+window.onload = function() {
     //query string in the password
     const urlParams = new URLSearchParams(window.location.search);
     const pass = urlParams.get('pass')
     document.getElementById("password").value = pass;
 };
-&#10;function verify() {
+
+function verify() {
   <!-- set the password here -->
   if (document.getElementById('password').value === 'frankencoral') {
     document.getElementById('HIDDENDIV').classList.remove("hidden"); 
@@ -44,10 +45,11 @@ always_allow_html: true
 .hidden {
   display: none;
 }
-&#10;img {
+img {
 margin: 0 auto;
 }
-&#10;table {
+
+table {
     width: 90%;
     border: 0px solid #fff;
     border-collapse: collapse;
@@ -71,6 +73,25 @@ margin: 0 auto;
 <div id="HIDDENDIV" class="hidden" markdown="1">
 
 <!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
+
+# Overview
+
+Below is a quick analysis of the growth rates from the mineral accretion
+technology (MAT) experiment. After initial kinks were ironed out, there
+was about one month of growth data recorded weekly, from November 14 to
+December 15.
+
+Since some abiotic precipitate was knocked loose during each weighing
+session generating non-linear growth, I used the mass change between
+consecutive weighing sessions to calculate a daily growth rate for each
+week. This analysis method may require me to revisit the statistics
+since I am artificially inflating the n for each group (e.g., there’s
+only 8 corals per group per tank, but I have about about 30 daily growth
+rates when combining multiple weighing sessions). A
+repeated-measurements anova design is more appropriate for this type of
+analysis. However, I would expect this revised analysis to increase
+p-values, further supporting my conclusions (i.e. lack of statistically
+significant differences between groups).
 
 # Controls
 

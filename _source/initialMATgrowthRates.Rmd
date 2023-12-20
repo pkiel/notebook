@@ -162,6 +162,12 @@ lmExtractCI <- function(mod) {
 
 ```
 
+# Overview
+
+Below is a quick analysis of the growth rates from the mineral accretion technology (MAT) experiment. After initial kinks were ironed out, there was about one month of growth data recorded weekly, from November 14 to December 15. 
+
+Since some abiotic precipitate was knocked loose during each weighing session generating non-linear growth, I used the mass change between consecutive weighing sessions to calculate a daily growth rate for each week. This analysis method may require me to revisit the statistics since I am artificially inflating the n for each group (e.g., there's only 8 corals per group per tank, but I have about about 30 daily growth rates when combining multiple weighing sessions). A repeated-measurements anova design is more appropriate for this type of analysis. However, I would expect this revised analysis to increase p-values, further supporting my conclusions (i.e. lack of statistically significant differences between groups).
+
 # Controls
 
 ## How did control acrylic corals grow?
