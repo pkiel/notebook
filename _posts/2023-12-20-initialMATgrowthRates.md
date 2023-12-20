@@ -4,7 +4,7 @@ title:  "Initial MAT Growth Rates"
 author: "Patrick M Kiel"
 date: '2023-12-20'
 categories: [research]
-description: "Investigating the initial MAT growth rates from the >1 month of buoyant weight data."
+description: "Investigating the initial MAT growth rates from the one month of buoyant weight data."
 output:
   md_document:
     variant: gfm
