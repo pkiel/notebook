@@ -263,7 +263,7 @@ If I had to pick a number, 1.5 mg/L diel variability could work. It’s
 not far from the Wet season range seen at Cheeca and its within the
 range season on reefs aross the world from the data collected by Ariel
 Pezner. This could be implemented with a -0.5 mg/L at night and + 1 mg/L
-during the day. Some treatment possibilities are shown below:
+during the day. Some treatment possibilities are shown below with a fifth-order polynomial fit to the desired variability and defined troughs and peaks.
 
 Table 2. 2 Posible Diel DO Implementations
 <table class=" lightable-material" style="font-family: &quot;Source Sans Pro&quot;, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
