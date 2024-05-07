@@ -148,12 +148,98 @@ Figure 9. Seasonal DO Range; Filled circles denote seasonally averaged
 daily mean DO; lines extend to seasonally averaged daily minimum and
 maximum DO
 </h5>
+<img src="/notebook/images/cheecaDO/unnamed-chunk-8-2.png" width="90%" style="display: block; margin: auto;" />Table 1.
+Seasonally averaged ranges
+<table class=" lightable-material" style="font-family: &quot;Source Sans Pro&quot;, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+season
+</th>
+<th style="text-align:right;">
+DO_min
+</th>
+<th style="text-align:right;">
+DO_max
+</th>
+<th style="text-align:right;">
+DO_mean
+</th>
+<th style="text-align:right;">
+DO_range
+</th>
+<th style="text-align:right;">
+peak_shift
+</th>
+<th style="text-align:right;">
+trough_shift
+</th>
+<th style="text-align:right;">
+ratio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+dry
+</td>
+<td style="text-align:right;">
+6.697787
+</td>
+<td style="text-align:right;">
+7.566482
+</td>
+<td style="text-align:right;">
+7.053075
+</td>
+<td style="text-align:right;">
+0.8686952
+</td>
+<td style="text-align:right;">
+0.5134069
+</td>
+<td style="text-align:right;">
+-0.3552883
+</td>
+<td style="text-align:right;">
+1.445043
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+wet
+</td>
+<td style="text-align:right;">
+5.578047
+</td>
+<td style="text-align:right;">
+6.968147
+</td>
+<td style="text-align:right;">
+6.123676
+</td>
+<td style="text-align:right;">
+1.3901000
+</td>
+<td style="text-align:right;">
+0.8444707
+</td>
+<td style="text-align:right;">
+-0.5456293
+</td>
+<td style="text-align:right;">
+1.547700
+</td>
+</tr>
+</tbody>
+</table>
 
-<img src="/notebook/images/cheecaDO/unnamed-chunk-8-2.png" width="90%" style="display: block; margin: auto;" />\[1\]
-8.432452
+Dry Season Range: 0.87 mg/L (26.54 umol O2/kg)
 
-Dry Season Range: 0.87 mg/L (26.54 umol O2/kg) Wet season Range: 1.39
-mg/L (42.48 umol O2/kg)
+Wet season Range: 1.39 mg/L (42.48 umol O2/kg)
+
+The absolute value of the peak shift relative to the average pH
 
 # How does all this compare to [Pezner et al. 2023?](https://doi.org/10.1038/s41558-023-01619-2)
 
@@ -164,15 +250,72 @@ umol O2/kg (8.43 mg/L).
 So Cheeca is certainly within the range of common DO ranges on reefs,
 albeit on the lower side.
 
-# What does all this mean for FRESCA Experiments
+# What does all this mean for FRESCA Experiments?
 
 Not too much. The DO data is too messy for my liking. I’d prefer to do a
 similar analysis by grouping together multiple reef sites in Florida,
 spanning reefs with various proximities to seagrass beds, coral cover,
-residence times, etc. I’d have to go looking for continious datasets
-rather than discrete samples clustered during the day.
+residence times, etc before making a final recommendation. I’d have to
+go looking for continuous datasets rather than discrete samples
+clustered during the day.
 
 If I had to pick a number, 1.5 mg/L diel variability could work. It’s
 not far from the Wet season range seen at Cheeca and its within the
 range season on reefs aross the world from the data collected by Ariel
-Pezner.
+Pezner. This could be implemented with a -0.5 mg/L at night and + 1 mg/L
+during the day. Some treatment possibilities are shown below:
+
+Table 2. 2 Posible Diel DO Implementations
+<table class=" lightable-material" style="font-family: &quot;Source Sans Pro&quot;, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+scenario
+</th>
+<th style="text-align:right;">
+average
+</th>
+<th style="text-align:right;">
+peak
+</th>
+<th style="text-align:right;">
+trough
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+peak = 8
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+6.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+average = 8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+7.5
+</td>
+</tr>
+</tbody>
+</table>
+<h5>
+Figure 10. Experimental Diel Curve
+</h5>
+
+<img src="/notebook/images/cheecaDO/unnamed-chunk-9-1.png" width="90%" style="display: block; margin: auto;" />
