@@ -261,12 +261,11 @@ clustered during the day.
 
 If I had to pick a number, 1.5 mg/L diel variability could work. It’s
 not far from the Wet season range seen at Cheeca and its within the
-range season on reefs across the world from the data collected by Ariel
+range season on reefs aross the world from the data collected by Ariel
 Pezner. This could be implemented with a -0.5 mg/L at night and + 1 mg/L
-during the day. Below is an example where the prescribed DO has an average
-or peak of 8 mg/L,  with hourly setpoints drawn from a fifth-order polynomial
-fit to the desired variability and defined troughs and peaks. The plots can easily
-shift down to desired means, e.g., 6, 4.5, or 2.5 mg/L. 
+during the day. Some treatment possibilities are shown below with a
+fifth-order polynomial fit to the desired variability and defined
+troughs and peaks.
 
 Table 2. 2 Posible Diel DO Implementations
 <table class=" lightable-material" style="font-family: &quot;Source Sans Pro&quot;, helvetica, sans-serif; margin-left: auto; margin-right: auto;">

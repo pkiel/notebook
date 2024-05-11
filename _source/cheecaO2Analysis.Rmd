@@ -1,0 +1,529 @@
+---
+layout: post
+title:  "Cheeca DO Analysis"
+author: "Patrick M Kiel"
+date: '2024-05-06'
+categories: [research]
+description: "Reviewing the dissolved oxygen data from Cheeca Rocks, Florida Keys."
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, 
+  encoding = encoding, 
+  output_file = paste0('2024-05-06', "-",
+                        gsub(pattern = "\\.Rmd$",
+                              "", basename(inputFile))
+                        ,".md"), 
+  output_dir = "../_posts") })
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#load packages
+library(tidyverse)
+library(kableExtra)
+library(readxl)
+library(ggpubr)
+library(rstatix)
+library(wesanderson)
+library(leaflet)
+library(sf)
+library(htmlwidgets)
+library(seacarb)
+library(respR)
+library(rnaturalearth)
+library(ggspatial)
+
+base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
+base_url <- "/notebook/" # subdirectory of patrickmkiel.com
+fig_path <- "images/cheecaDO/" #add a new folder if you want to group output into a single foder
+
+# Set base directories
+knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
+
+# Set figure directories
+knitr::opts_chunk$set(fig.path = fig_path,
+                    cache.path = '../cache/',
+                    fig.align = 'center', out.width = '90%',
+                    dpi = 300,
+                    message=FALSE, warning=FALSE,
+                    cache = FALSE, results = "asis")
+
+
+#set default color paletes
+options(ggplot2.discrete.fill=wes_palette("Darjeeling1"))
+options(ggplot2.discrete.colour=wes_palette("Darjeeling1"))
+```
+
+```{js}
+
+window.onload = function() {
+    //query string in the password
+    const urlParams = new URLSearchParams(window.location.search);
+    const pass = urlParams.get('pass')
+    document.getElementById("password").value = pass;
+};
+
+function verify() {
+  <!-- set the password here -->
+  if (document.getElementById('password').value === 'soup') {
+    document.getElementById('HIDDENDIV').classList.remove("hidden"); 
+    document.getElementById('credentials').classList.add("hidden"); // Hide the div containing the credentials
+  } else {
+    alert('Invalid Password! You cannot view this content.');
+    password.setSelectionRange(0, password.value.length);
+  }
+  return false;
+}
+```
+
+```{css}
+/*Change content Display */
+.hidden {
+  display: none;
+}
+
+img {
+margin: 0 auto;
+}
+
+table {
+    width: 90%;
+    border: 0px solid #fff;
+    border-collapse: collapse;
+    overflow-x: auto;
+    margin: 0 auto;
+    display: block;
+}
+```
+
+```{r FigCaptions, echo=FALSE}
+
+#Figure and Table Caption Numbering
+capTabNo = 1; capFigNo = 1;
+
+#Function to add the Table Number
+capTab = function(x){
+    x = paste0("Table ",capTabNo,". ",x)
+    capTabNo <<- capTabNo + 1
+    cat(x)
+}
+
+#Function to add the Figure Number
+capFig = function(x){
+    x = paste0("<h5>Figure ",capFigNo,". ",x,"</h5>")
+    capFigNo <<- capFigNo + 1
+    cat(x)
+}
+```
+
+<!-- Place all chunks, text, etc here as you would a normal RMarkdown document -->
+
+# Overview
+
+Here I am analyzing the available dissolved oxygen (DO) data from Cheeca Rocks, Florida Keys. The data is available from [NCEI](https://www.ncei.noaa.gov/access/ocean-carbon-acidification-data-system/oceans/Moorings/Cheeca.html).
+
+
+`r capFig("Cheeca Rock Buoy in the Florida Keys")`
+<iframe src="/notebook/images/cheecaDO/cheecaMap.html" height="600px" width="100%" style="border:none;"></iframe>
+
+```{r, cheecaMap, include=FALSE}
+world <- ne_countries(scale = "large", returnclass = "sf")
+map <- leaflet(world) %>% addTiles()
+qpal <- colorQuantile("RdYlBu", world$gdp_md, n = 5)
+
+map %>%
+  addMarkers(lng = -80.62, lat = 24.897,
+             popup = "Cheeca Rocks Buoy Station \n
+             https://www.ncei.noaa.gov/access/ocean-carbon-acidification-data-system/oceans/Moorings/Cheeca.html", label = "Cheeca Rocks") %>%
+  setView(lng = -80.62, lat = 24.897, zoom = 7) %>%
+saveWidget('C:/Users/pkiel/Github/notebook/images/cheecaDO/cheecaMap.html')
+```
+
+
+
+```{r, load dat}
+dat <- list.files(pattern = ".csv$",
+                  path = "~/Grad School/frescaDBL/cheecaO2/cheecaRawDat/",
+                  full.names = T) %>%
+  lapply(read.csv, na.strings = "-999") %>%
+  bind_rows() %>%
+  select(date = Date, time = Time, temp_licor = Licor.Temp..C.,
+         temp_sst = SST..C., sal = Salinity, 
+         pH_TS = pH_Total_Scale, pH_TS_alt = pH..total.scale.,
+         pH_SW, pH_SW_alt = pH.SW,
+         DOXY, DOXY_alt = DOXY..umol.kg.) %>%
+  mutate(dt = parse_datetime(paste(date, time),
+                               format = "%m/%d/%Y %H:%M"),
+         pH = case_when(!is.na(pH_TS) ~ pH_TS,
+                        !is.na(pH_TS_alt) ~ pH_TS_alt,
+                        !is.na(pH_SW) ~ pH_SW,
+                        !is.na(pH_SW_alt) ~ pH_SW_alt,
+                        T ~ NA),
+         DO = case_when(!is.na(DOXY) ~ DOXY,
+                        !is.na(DOXY_alt) ~ DOXY_alt,
+                        T ~ NA),
+         temp = case_when(!is.na(temp_sst) ~ temp_sst,
+                          !is.na(temp_licor) ~ temp_licor,
+                          T ~ NA)) %>%
+  select(-c(pH_TS, pH_TS_alt, pH_SW, pH_SW_alt, DOXY, DOXY_alt, temp_licor, temp_sst)) %>%
+  drop_na(DO, temp, sal) %>%
+  # convert DO units
+mutate(DO_mg = convert_DO(x = DO,
+                          from = "umol/kg",
+                          to = "mg/L",
+                          S = sal, #S = salinity (ppt)
+                          t = temp))
+
+```
+
+## All the Data
+
+```{r}
+capFig("DO Data (mg/L) throughout the monitoring period")
+dat %>% 
+  mutate(dt_rounded = round_date(dt, unit = "15 mins"),
+         time_rounded = hms::as_hms(str_extract(dt_rounded,
+                              '(?<=\\s).+')),
+         date = date(dt)
+  ) %>%
+  select(dt, date, time_rounded, DO_mg) %>%
+  mutate(DO_mg_SMA = zoo::rollmean(DO_mg, 3, fill=NA)) %>%
+  ungroup() %>%
+  drop_na() %>%
+  ggplot(aes(dt, DO_mg_SMA)) +
+  geom_line() +
+  theme_bw() +
+  labs(y = "Dissolved Oxygen (mg/L)",
+       x = "Date",
+       title = "Patchy Data") +
+  scale_y_continuous(limits = c(2,10))
+```
+The data is quite patchy indicating lapses in data collection. Furthere there is a general trendline around 7 mg/L, but there is a period of highs in 2018 and lows in 2020.
+
+
+Let's zoom into these years.
+
+```{r}
+# 2018
+capFig("2018: Seems offly high")
+dat %>% 
+  mutate(dt_rounded = round_date(dt, unit = "15 mins"),
+         time_rounded = hms::as_hms(str_extract(dt_rounded,
+                              '(?<=\\s).+')),
+         date = date(dt)
+  ) %>%
+  select(dt, date, time_rounded, DO_mg) %>%
+  mutate(DO_mg_SMA = zoo::rollmean(DO_mg, 3, fill=NA)) %>%
+  ungroup() %>%
+  drop_na() %>%
+  filter(between(date,
+                 as.Date("2018-01-01"),
+                 as.Date("2018-12-31"))) %>%
+  ggplot(aes(dt, DO_mg_SMA)) +
+  geom_line() +
+  theme_bw() +
+  labs(y = "Dissolved Oxygen (mg/L)",
+       x = "Date") +
+    scale_y_continuous(limits = c(2,10))
+
+# 2020
+capFig("2020: Low then Sensor Goes Offline in November")
+dat %>% 
+  mutate(dt_rounded = round_date(dt, unit = "15 mins"),
+         time_rounded = hms::as_hms(str_extract(dt_rounded,
+                              '(?<=\\s).+')),
+         date = date(dt)
+  ) %>%
+  select(dt, date, time_rounded, DO_mg) %>%
+  mutate(DO_mg_SMA = zoo::rollmean(DO_mg, 3, fill=NA)) %>%
+  ungroup() %>%
+  drop_na() %>%
+  filter(between(date,
+                 as.Date("2020-01-01"),
+                 as.Date("2020-12-31"))) %>%
+  ggplot(aes(dt, DO_mg_SMA)) +
+  geom_line() +
+  theme_bw() +
+  labs(y = "Dissolved Oxygen (mg/L)",
+       x = "Date") +
+    scale_y_continuous(limits = c(2,10))
+```
+
+Data during most of 2018 looks about ~2 mg/L too high. There seems to be an interesting dip in late July, which could have been a mild hypoxic event, but since the surrounding readings were high, it's hard to say. 
+
+Data during 2020 looks artificially low throughout the year. The sudden drop in November and then its rebounding to ~7 suggests it was malfunctioning, brought in for servicing, calibrated, and redeployed in December. 
+
+Since I want to capture normal variability, I'll throw away these 2018 and 2020 datasets.
+
+# Lets look at Diel Variability
+
+```{r}
+dat <- dat %>%
+  filter(date(dt)< as.Date("2020-01-01") & 
+           !between(dt,
+                    as.Date("2018-01-01"),
+                    as.Date("2018-12-31")))
+
+capFig("Average Diel Variability Throughout the Year. Filled circles denote 3-month rounded daily mean DO; lines extend to 3-month rounded daily minimum and maximum DO")
+dat %>% 
+  mutate(dt_rounded = round_date(dt, unit = "1 hour"),
+         time_rounded = hms::as_hms(str_extract(dt_rounded,
+                              '(?<=\\s).+')),
+         date = date(dt)
+  ) %>%
+  select(dt, date, time_rounded, DO_mg) %>%
+# group data into weeks to look at daily DO curve throughout the year in 52 bins
+  mutate(date_round = round_date(dt, "3 months")) %>%
+  group_by(month = month(date_round), time_rounded) %>%
+  summarise(DO_mg_mean = mean(DO_mg, na.rm=T),
+            n = n()) %>%
+  ungroup() %>%
+  left_join(data.frame(fakeDate = seq(as.Date("2024-01-01"),
+                                  as.Date("2024-12-31"), by="3 months")) %>%
+            mutate(month = month(fakeDate)),
+            by = "month") %>%
+  drop_na() %>%
+  mutate(fakeTime = ymd_hms(paste(fakeDate, time_rounded))) %>%
+  drop_na() %>%
+  group_by(fakeDate) %>%
+  summarise(DO_min = min(DO_mg_mean),
+            DO_max = max(DO_mg_mean),
+            DO_mean = mean(DO_mg_mean)) %>%
+  ggplot(aes(fakeDate, DO_mean, fill=as.factor(month(fakeDate)))) +
+  geom_pointrange(aes(ymin=DO_min, ymax=DO_max), 
+                  width=0.2, size=1, color = "black", shape=22) +
+  theme_bw() +
+  labs(y = "Dissolved Oxygen (mg/L)",
+       x = "Date",
+       fill = "Month") + 
+    scale_fill_manual(labels = c("January", "April", "July", "October"),
+                    values = c(1,4,7,10))
+```
+
+
+Where do these observations come from?
+```{r}
+capFig("Diel Variability across Three Month-Binned Monitoring Period. Filled circles denote 3-month rounded daily mean DO; lines extend to 3-month rounded daily minimum and maximum DO")
+dat %>% 
+  mutate(dt_rounded = round_date(dt, unit = "1 hour"),
+         time_rounded = hms::as_hms(str_extract(dt_rounded,
+                              '(?<=\\s).+')),
+         date = date(dt)
+  ) %>%
+  select(dt = dt_rounded, date, time_rounded, DO_mg) %>%
+  # group_by(date(date)) %>%
+  # mutate(DO_mg_SMA = zoo::rollmean(DO_mg, 3, fill=NA)) %>%
+  # ungroup() %>%
+  # drop_na() %>%
+# group data into weeks to look at daily DO curve throughout the year in 52 bins
+  mutate(date_round = round_date(dt, "3 months")) %>%
+  group_by(date_round) %>%
+  summarise(DO_min = min(DO_mg),
+            DO_max = max(DO_mg),
+            DO_mean = mean(DO_mg),
+            n = n()) %>%
+  ggplot(aes(date_round, DO_mean, fill=as.factor(month(date_round)))) +
+  geom_pointrange(aes(ymin=DO_min, ymax=DO_max), 
+                  size=1, color = "black", shape=22) +
+  theme_bw() +
+  labs(y = "Dissolved Oxygen (mg/L)",
+       x = "Date",
+       fill = "Month") +
+  scale_fill_manual(labels = c("January", "April", "July", "October"),
+                    values = c(1,4,7,10))
+```
+Overall there seems to be a seasonal component with the dry, windy season (November-April; Black and Blues) having higher DO than the wet season (May-October; Red and Yellows). Going to create 2 diel plots for 2 seasons.
+
+
+```{r}
+dat <- dat %>%
+  mutate(season = case_when(between(month(dt),
+                                    5,
+                                    10) ~ "wet",
+                    T ~ "dry"))
+
+capFig("Diel Variability Plots")
+dat %>%
+  mutate(dt_rounded = round_date(dt, unit = "1 hour"),
+         time_rounded = hms::as_hms(str_extract(dt_rounded,
+                              '(?<=\\s).+'))
+  ) %>%
+  group_by(season, time_rounded) %>%
+  summarise(DO_mean = mean(DO_mg),
+            DO_sd = sd(DO_mg)) %>%
+  ggplot(aes(time_rounded, DO_mean)) +
+  geom_line() +
+  geom_smooth(se=F) +
+  theme_bw() +
+  labs(y = "Dissolved Oxygen (mg/L)",
+       x = "Time (UTC)") +
+  facet_wrap(~season) +
+  scale_x_time(breaks = scales::date_breaks("6 hours"),
+               labels = scales::time_format("%H")) +
+  theme(panel.spacing = unit(0.75, "cm"))
+```
+The dry season panel is pretty messy and doesn't make much sense to me. Around midnight it shoots above 8. I'd expect the peak to be around 17-19 since peak should lag solar noon by about 30-120 minutes, and Cheeca's solar noon (UTC+5) is 17. The wet season panel looks like a nice sine wave approximating the changing of photosynthesis to match sunlight with a peak at the expected time. 
+
+What if I do the same with an outlier filter applied:
+
+```{r}
+capFig("Still messy")
+dat %>%
+  mutate(dt_rounded = round_date(dt, unit = "1 hour"),
+         time_rounded = hms::as_hms(str_extract(dt_rounded,
+                              '(?<=\\s).+'))
+  ) %>%
+  group_by(season, time_rounded) %>%
+  filter(abs(scale(DO_mg,
+                   center = median(DO_mg, na.rm = T),
+                   scale = mad(DO_mg, na.rm=T))) <= 3.5) %>%
+  ungroup() %>%
+  group_by(season, time_rounded) %>%
+  summarise(DO_mean = mean(DO_mg),
+            DO_sd = sd(DO_mg)) %>%
+  ggplot(aes(time_rounded, DO_mean)) +
+  geom_line() +
+  geom_smooth(se=F) +
+  theme_bw() +
+  labs(y = "Dissolved Oxygen (mg/L)",
+       x = "Time (UTC)",
+       title = "Seasonal Diel Plots") +
+  facet_wrap(~season) +
+  scale_x_time(breaks = scales::date_breaks("6 hours"),
+               labels = scales::time_format("%H")) +
+  theme(panel.spacing = unit(0.75, "cm"))
+
+
+
+capFig("Seasonal DO Range; Filled circles denote seasonally averaged daily mean DO; lines extend to seasonally averaged daily minimum and maximum DO")
+dat %>%
+  mutate(dt_rounded = round_date(dt, unit = "1 hour"),
+         time_rounded = hms::as_hms(str_extract(dt_rounded,
+                              '(?<=\\s).+'))
+  ) %>%
+  group_by(season, time_rounded) %>%
+  filter(abs(scale(DO_mg,
+                   center = median(DO_mg, na.rm = T),
+                   scale = mad(DO_mg, na.rm=T))) <= 3.5) %>%
+  ungroup() %>%
+  group_by(season, time_rounded) %>%
+  summarise(DO_mean = mean(DO_mg),
+            DO_sd = sd(DO_mg)) %>%
+  ungroup() %>%
+  group_by(season) %>%
+  summarise(DO_min = min(DO_mean),
+          DO_max = max(DO_mean),
+          DO_mean = mean(DO_mean),
+          DO_range = DO_max - DO_min) -> dat_cleaned
+
+dat_cleaned %>%
+  ggplot(aes(season, DO_mean, fill=as.factor(season))) +
+  geom_pointrange(aes(ymin=DO_min, ymax=DO_max), 
+                  width=0.2, size=1, color = "black", shape=22) +
+  theme_bw() +
+  labs(y = "Dissolved Oxygen (mg/L)",
+       x = "Season",
+       fill = "Season")
+
+
+capTab("Seasonally averaged ranges")
+dat_cleaned %>%
+  mutate(peak_shift = abs(DO_max - DO_mean),
+            trough_shift = DO_min - DO_mean,
+            ratio = abs(peak_shift/trough_shift)) %>%
+  kbl() %>%
+  kable_material()
+  
+```
+
+Dry Season Range: 0.87 mg/L (26.54  umol O2/kg)
+
+Wet season Range: 1.39 mg/L (42.48  umol O2/kg)
+
+The absolute value of the peak shift relative to the average pH
+
+
+
+# How does all this compare to [Pezner et al. 2023?](https://doi.org/10.1038/s41558-023-01619-2)
+They observed a mean daily range of 81 umol O2/kg (2.65 mg/L), with a minimum range of 23 umol O2/kg (0.75 mg/L) and a maximum range of 258 umol O2/kg (8.43 mg/L). 
+
+So Cheeca is certainly within the range of common DO ranges on reefs, albeit on the lower side. 
+
+
+# What does all this mean for FRESCA Experiments?
+
+Not too much. The DO data is too messy for my liking. I'd prefer to do a similar analysis by grouping together multiple reef sites in Florida, spanning reefs with various proximities to seagrass beds, coral cover, residence times, etc before making a final recommendation. I'd have to go looking for continuous datasets rather than discrete samples clustered during the day.
+
+If I had to pick a number, 1.5 mg/L diel variability could work. It's not far from the Wet season range seen at Cheeca and its within the range season on reefs aross the world from the data collected by Ariel Pezner. This could be implemented with a -0.5 mg/L at night and + 1 mg/L during the day. Some treatment possibilities are shown below with a fifth-order polynomial fit to the desired variability and defined troughs and peaks.
+
+```{r}
+capTab("2 Posible Diel DO Implementations")
+data.frame(scenario = c("peak = 8", "average = 8"),
+           average = c(7, 8),
+           peak = c(8, 9),
+           trough = c(6.5, 7.5)) %>%
+  kbl %>%
+  kable_material()
+
+dat <- structure(list(time = structure(c(1715040000, 1715043600, 1715047200, 
+1715050800, 1715054400, 1715058000, 1715061600, 1715065200, 1715068800, 
+1715072400, 1715076000, 1715079600, 1715083200, 1715086800, 1715090400, 
+1715094000, 1715097600, 1715101200, 1715104800, 1715108400, 1715112000, 
+1715115600, 1715119200, 1715122800), class = c("POSIXct", "POSIXt"
+), tzone = "UTC"), hms = c("0:00:00", "1:00:00", "2:00:00", "3:00:00", 
+"4:00:00", "5:00:00", "6:00:00", "7:00:00", "8:00:00", "9:00:00", 
+"10:00:00", "11:00:00", "12:00:00", "13:00:00", "14:00:00", "15:00:00", 
+"16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00", "21:00:00", 
+"22:00:00", "23:00:00"), DO = c(7.65, 7.63, 7.6, 7.57, 7.53, 
+7.51, 7.5, 7.699845525, 7.906251889, 8.1, 8.4, 8.6, 8.95, 9, 
+8.95, 8.9, 8.75, 8.6, 8.5, 8.35, 8, 7.943687628, 7.878386907, 
+7.8)), row.names = c(NA, -24L), class = "data.frame")
+
+
+nls(DO ~ 
+             d*hour(time)^5 +
+             e*hour(time)^4 +
+            f*hour(time)^3 +
+            g*hour(time)^2 +
+            h*hour(time)^1 +
+             i,
+      data=dat,
+      start = list(
+                    
+                    
+                    d = 0.5,
+                    e = 0.5,
+                   f =0.5,
+                   g =0.5,
+                   h =0.5,
+                    i = 6.5)) -> nlsFit
+
+
+capFig("Experimental Diel Curve")
+  data.frame(x = rep(seq(0:23), each=2), 
+             DO = rep(c(predict(nlsFit)[1:22],
+                                  7.769193,
+                                  7.70468), each=2),
+             type = c("average = 8", "peak=8")) %>%
+    mutate(DO = case_when(type == "peak=8" ~ DO-1,
+                          T ~ DO)) %>%
+  ggplot(aes(x, DO, color=type)) +
+  geom_line() + 
+  geom_point() +
+  annotate("segment", linetype="dashed", color="red",
+           x =0, xend=24, y=8, yend=8) +
+    annotate("segment", linetype="dashed", color="#00A08A",
+           x =0, xend=24, y=7, yend=7) +
+  scale_y_continuous(limits = c(6,9)) +
+  scale_x_continuous(limits=c(0,24),
+                     breaks = seq(0,24,6)) +
+  labs(x = "Time (Local)",
+       y = "DO (mg/L)") +
+  theme_bw() +
+  theme(panel.grid = element_blank())
+```

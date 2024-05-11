@@ -223,7 +223,7 @@ jcp_summary <- lapply(origin_outputs, function(spectra){
   relocate(method, .after = "dataset") %>%
   bind_rows(jcp_summary)
 
-rm(decarlob17_origin, kiel_origin, origin_outputs)
+# rm(decarlob17_origin, kiel_origin, origin_outputs)
 ```
 
 ```{r jcpAnalysis}
@@ -684,6 +684,19 @@ These two published curves are visualized in Figure 3A by the light, dashed line
 Ideally, I'd use the MD23 curve analyzed with the Kiel routine (solid blue in Figure 3A), since this is the most recently published calibration curve by DeCarlo and is generated from a spectrometer nearly identical to that in Dr. Prasad's lab. However, this requires 2 stages of data manipulation to align (1: JCp-1 derived systematic error to align our measurements to D17 values and then 2: OLS/systematic error correction to MD23 values). Therefore, I will take a more conservative approach and align our data to DeCarlo *et al.* (2017) by subtracting 0.494 and then estimate the FWHM with, FWHM = 0.655 x ln(omega) + 2.148. 
 
 Since we are only comparing FWHM and estimated calcifying fluid omega between samples measured on the same spectrometer, this exercise doesn't really matter too much. However, if we want to compare either of these values to other published datasets, then we will need to put some more thought into this.
+
+Nevertheless here is the calculation of omega and compared to DeCarlo's work:
+
+```{r}
+kiel_kiel %>%
+  mutate(omega = exp(((fwhm-0.494)-2.148)/0.65)) %>%
+  summarise(mean = mean(omega),
+            sd = sd(omega))
+
+0.494+2.148
+
+```
+
 
 ## Coral Analysis
 
