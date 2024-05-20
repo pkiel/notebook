@@ -33,7 +33,7 @@ library(wesanderson)
 
 base_dir <- "C:/Users/pkiel/Github/notebook/" # i.e. where the jekyll blog is on the hard drive.
 base_url <- "/notebook/" # subdirectory of patrickmkiel.com
-fig_path <- "images/RamanPrelim/" #add a new folder if you want to group output into a single foder
+fig_path <- "images/MOB7Conference/" #add a new folder if you want to group output into a single foder
 
 # Set base directories
 knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
@@ -93,3 +93,7 @@ capFig = function(x){
 # Overview
 
 Thank you for checking out my poster at the <a href="https://www.microscalemeeting.org/about-the-meeting.html" target="_blank">Microscale Ocean Biophysics Meeting 7.0 at Heron Island, Australia.</a> My poster is titled, "Surface Roughness Induces Intraspecific Ocean Acidification Resistance". 
+
+
+# Poster
+<img src="`r paste0('./',fig_path, 'KielMOB7poster_final.png')`" alt="Poster presented at MOB7 in Heron Island, Australia"/>
