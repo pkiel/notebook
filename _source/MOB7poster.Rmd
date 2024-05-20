@@ -94,6 +94,10 @@ capFig = function(x){
 
 Thank you for checking out my poster at the <a href="https://www.microscalemeeting.org/about-the-meeting.html" target="_blank">Microscale Ocean Biophysics Meeting 7.0 at Heron Island, Australia.</a> My poster is titled, "Surface Roughness Induces Intraspecific Ocean Acidification Resistance". 
 
+Coral restoration efforts are growing globally to increase gene flow, coral cover, and , all in an attempt to buy time while climate change and. The systematic investigation of these has highlighted the tremendous inter and intraspecific phyenotypic diversity naturally present within coral populations. While much of the community is focussed on understanding the molecular roles underlying these phenotype-genotype relationships, there is much to learn from the corals themselves. 
+
 
 # Poster
-<img src="`r paste0('./',fig_path, 'KielMOB7poster_final.png')`" alt="Poster presented at MOB7 in Heron Island, Australia"/>
+<img src="`r paste0(base_url, fig_path, 'KielMOB7poster_final.png')`" alt="Poster presented at MOB7 in Heron Island, Australia"/>
+
+# References
