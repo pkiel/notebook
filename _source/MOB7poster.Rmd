@@ -98,36 +98,74 @@ Coral restoration efforts are expanding globally to enhance gene flow and coral 
 
 A coral's shape is intimately linked to its physiological performance and, ultimately, survival. The colony geometry is molded by feedback loops with its environment and by competition with other species. Further, through acclimation strategies and phenotypic plasticity, fine-scale differences emerge across a continuous spectrum. These morphological diversities are likely to have ecologically relevant effects and arise from selective pressures from hydrodynamic stresses (Madin 2005) as well as optimizations for particle capture (Helmuth and Sebens 1993), photosynthetic performance (Hoogenboom *et al.* 2008; Kramer *et al.* 2022), and mass-transfer of physiologically-limiting metabolites, e.g., O2, pH, and dissolved inorganic carbon (Lesser *et al.* 1994; Mass *et al.* 2010). Therefore, the balance of these tradeoffs and competition among benthic organisms results in the tremendous morphological diversity observed on coral reefs (Chappell 1980).
 
-A given morphology can be described on a continuous scale, borrowing insights from geometry to integrate across morphological variation (Reichert *et al.* 2017; Zawada *et al.* 2019a). Zawada *et al.* (2019a) propose six metrics to constrain coral shape: sphericity and convexity (capturing volume compactness), packing and fractal dimension (capturing surface complexity), and the first moments of area and volume (capturing top-heaviness). 
-Ultimately, the goal is to understand how each of these shape descriptors physically interacts with the coral's environment and spurs physiological or ecological consequences. Of particular interest are the surface complexity metrics as these relate to the turbulence of water flow at the coral's surface and influence mass flux (Stocking *et al.* 2018; Hossain and Staples 2020b, 2020a). 
+Morphology can be described on a continuous scale, borrowing insights from geometry to integrate across morphological variation (Reichert *et al.* 2017; Zawada *et al.* 2019a). Zawada *et al.* (2019a) propose six metrics to constrain coral shape: sphericity and convexity (capturing volume compactness), packing and fractal dimension (capturing surface complexity), and the first moments of area and volume (capturing top-heaviness). 
+Ultimately, the goal is to understand how each of these shape descriptors captures a coral's physical interactions with its environment to spur physiological or ecological consequences. Of particular interest are the surface complexity metrics as these relate to the turbulence of water flow at the coral's surface and influence mass flux (Stocking *et al.* 2018; Hossain and Staples 2020b, 2020a). 
 
-Corals with complex surfaces will experience increased turbulence and develop smaller microenvironments or diffusion boundary layers (DBL). These microenvironments arise from the localized attenuation of fluid flow at the coral’s surface. Advection is slowed or completely halted at these scales, and the diffusion rate dominates mass transfer (Patterson 1992; Shashar *et al.* 1996). Further, corals alter the chemistry of the microenvironment through the changing balance of light-mediated carbon processes, including photosynthesis, respiration, calcification, and dissolution (Albright *et al.* 2015; Silbiger and Sorte 2018). During the day, a positive photosynthesis-to-respiration ratio increases dissolved oxygen (DO) and reduces carbon dioxide (CO2) concentrations. During the night, photosynthesis is halted, and there is a net decrease in DO and an increase in CO2. 
+Corals with complex surfaces will experience increased turbulence and develop smaller microenvironments or diffusion boundary layers (DBL). These microenvironments arise from the localized attenuation of fluid flow at the coral’s surface. Advection is slowed or completely halted at these scales, and the diffusion rate dominates mass transfer (Patterson 1992; Shashar *et al.* 1996). Further, corals alter the chemistry of this entrapped volume through the changing balance of light-mediated carbon processes, including photosynthesis, respiration, calcification, and dissolution (Albright *et al.* 2015; Silbiger and Sorte 2018). During the day, a positive photosynthesis-to-respiration ratio increases dissolved oxygen (DO) and reduces carbon dioxide (CO2) concentrations. During the night, photosynthesis is halted, and there is a net decrease in DO and an increase in CO2. Between maximum net productivity shortly following solar noon and maximum net respiration community shortly before sunrise, the pH is a dynamic environment closely approximately the changing photosynthetic active radiation experienced on the reef.
 
-For example, Shashar *et al.* (1993) observed an oxygen microenvironment around the relatively smooth species *Favia favus* and measured oxygen concentrations greater than 300% air saturation in light and nearly complete anoxia in darkness. Similarly, Kühl *et al.* (1995) measured pH changes ± 0.5 units from bulk conditions under light and darkness within a 300 μm DBL. On the other hand, comparably rougher, branching species exhibited marginal to non-measureable metabolic changes in microenvironment oxygen and pH due to the elevated turbulence and mass flux (Kühl *et al.* 1995; Chan *et al.* 2016; Schoepf *et al.* 2018; Comeau *et al.* 2019). A conceptual figure summarizing these results is presented in Figure 1 below.
+For example, Shashar *et al.* (1993) observed an oxygen microenvironment around the relatively smooth species *Favia favus* and measured oxygen concentrations greater than 300% air saturation in light and nearly complete anoxia in darkness. Similarly, Kühl *et al.* (1995) measured pH changes ± 0.5 units from bulk conditions under light and darkness within a 300 μm DBL. On the other hand, comparably rougher, branching species exhibited marginal to non-measureable metabolic changes in microenvironment oxygen and pH due to the elevated turbulence and mass flux (Kühl *et al.* 1995; Chan *et al.* 2016; Schoepf *et al.* 2018; Comeau *et al.* 2019). A conceptual figure combining the changing light conditions and various idealized surface roughnesses are summarized in Figure 1 below.
 
 <img src="`r paste0(base_url, fig_path, 'conceptualPlot.png')`" alt="Conceptual changes of microenvironment pH due to surface roughness"/>
 
 ```{r}
-capFig("pH variability within the microenvironment (pH<sub>DBL</sub>) is directly proportional to the colony's surface roughness, with smooth corals having increased day-time highs and reduced night-time lows compared to comparably rougher morphologies.")
+capFig("pH variability within the microenvironment (pH<sub>DBL</sub>) is proportional to the colony's surface roughness, with smooth corals having increased day-time highs and reduced night-time lows compared to comparably rougher morphologies.")
 ```
 
-The role of these microenvironments in modulating a coral’s response to OA ultimately relies on this discrete water volume influencing the calcifying fluid carbonate chemistry. The calcifying fluid (cf) is originally seawater, which has been partially closed off in cell junctions between the calicoblastic cells and the skeleton and is the ultimate source of carbon and ions for calcification (Allemand *et al.* 2011; Tambutté *et al.* 2011). Since the microenvironment envelops the coral colony and is the external seawater most proximal to the calcifying fluid, its concentration likely plays a role in shaping the calcifying fluid carbonate chemistry. Further, the calcifying fluid aragonite saturation state ($\Omega_{cf}$) repeats the species-specific microenvironment pH pattern, with rough *Acropora sp.* having a reduced mean and diel variability than a comparably smoother *Pocillopora damicornis* (DeCarlo *et al.* 2019). Finally, the microenvironment is the center of the proton flux hypothesis, which postulates that OA reduces coral calcification due to the reduced diffusive flux of protons out of the calcifying fluid and across the microenvironment with increasing bulk seawater acidification (Jokiel 2011). Therefore, rougher corals with elevated mass flux rates may be able to overcome OA stress.
+The role of these microenvironments in modulating a coral’s response to OA ultimately relies on this discrete water volume influencing the calcifying fluid carbonate chemistry. The calcifying fluid (cf) is originally seawater, which has been partially closed off in cell junctions between the calicoblastic cells and the skeleton and is the ultimate source of carbon and ions for calcification (Allemand *et al.* 2011; Tambutté *et al.* 2011). Since the microenvironment envelops the coral colony and is the external seawater most proximal to the calcifying fluid, the microenvironment's concentration likely plays a role in shaping the calcifying fluid carbonate chemistry. Further, the calcifying fluid aragonite saturation state ($\Omega_{cf}$) repeats the species-specific microenvironment pH pattern, with rough *Acropora sp.* having a reduced mean and diel variability than a comparably smoother *Pocillopora damicornis* (DeCarlo *et al.* 2019). Finally, the microenvironment is the center of the proton flux hypothesis, which postulates that OA reduces coral calcification due to the reduced diffusive flux of protons out of the calcifying fluid and across the microenvironment with increasing bulk seawater acidification (Jokiel 2011). Therefore, we are presented with two alternative hypotheses: 
+1) Smooth corals will elevate pH and experience daytime refugia, thereby maintaining elevated calcification rates (*sensu* Price *et al.* 2012)
+2) Rough corals will increase mass transfer and experience the highest night-time pH, thereby avoiding nightly dissolution
+
+The goal of this experiment was to test which of these hypotheses applies to intraspecifc OA sensitivity for *A. cervicornis*, a generally sensitive species to OA.
 
 # Methods
 
-This experiment exposed three *A. cervicornis* genets to either long-term low CO2 (LCO2; pH = 8.05) or high CO2 (HCO2; pH = 7.80) experimental aquarias, with replication of genets and treatments.Corals were collected from the [University of Miami/Rescue a Reef coral nursery](https://rescueareef.earth.miami.edu/), and the experiment was run at the [Experimental Reef Laboratory](https://www.aoml.noaa.gov/experimental-reef-lab/) run by NOAA/University of Miami's Cooperative Institute for Marine and Atmospheric Studies. A graphical overview of the experiment is presented in Figure 2.
+This experiment exposed three *A. cervicornis* genets to either long-term low CO2 (LCO2; pH = 8.05) or high CO2 (HCO2; pH = 7.80) experimental aquarias, with replication of genets and treatments. Corals were collected from the [University of Miami/Rescue a Reef coral nursery](https://rescueareef.earth.miami.edu/), and the experiment was run at the [Experimental Reef Laboratory](https://www.aoml.noaa.gov/experimental-reef-lab/) run by NOAA/University of Miami's Cooperative Institute for Marine and Atmospheric Studies. A graphical overview of the experiment is presented in Figure 2.
 
-<img src="`r paste0(base_url, fig_path, 'experimentalConditions.png')`" alt="Poster presented at MOB7 in Heron Island, Australia"/>
+<img src="`r paste0(base_url, fig_path, 'experimentalConditions.png')`" alt="Experimental timeline"/>
 
-Growth rates were monitored weekly via the buoyant weight technique and were standardized to total surface area determined by structured-light three-dimensional scanner. Reproduced 3D models were also used to calculate shape variables following methods outlined in Reichert *et al.* (2017) and Zawada *et al.* (2019a). A principal components analysis was used to identify the shape variables that described the most variation within the data.
+```{r}
+capFig("Experimental timeline, with programmed diel pH variability of 0.025 units, reflective of bulk water changes on a reef from long-term monitoring in the Florida Keys.")
+```
 
-Following the four-month treatment, apical tips representing new skeletal growth exclusively grown during treatment were sectioned and prepared for geochemical analyses to serve as proxies for the pH of the calcifying fluid.
+Growth rates were monitored weekly via the buoyant weight technique and were standardized to total surface area determined by a structured-light three-dimensional scanner. Reproduced 3D models were also used to calculate shape variables following methods outlined in Reichert *et al.* (2017) and Zawada *et al.* (2019a). A principal components analysis was used to identify the shape variables that described the most variation within the data.
+
+Following the four-month treatment, apical tips representing new skeletal growth exclusively grown during treatment were sectioned and prepared for geochemical analyses ($\delta^{11}B$) to serve as proxies for the pH of the calcifying fluid.
 
 Eighteen randomly selected skeletons (n= 3/treatment/genet) were left intact following the growth phase to perform particle image velocimetry (PIV) and particle tracking telemetry (PTV) analyses to calculate turbulence statistics around the coral colonies. Further, the 3D models were analyzed with computational fluid dynamics to calculate three-dimensional turbulence statistics and aid the PIV/PTV analyses. These data are still being collected and analyzed, and only a sample plot is produced.
 
 # Results
 
+The three genets, collected from the same common-gardened nursery, exhibited a conserved morphology, with genet-specific fractal dimensions and packing, both of which describe surface complexity.
+
+<img src="`r paste0(base_url, fig_path, 'morphoPCA.png')`" alt="Morphometric PCA, highlighting genet-specific surface roughness"/>
+```{r}
+capFig("Principal Component Analysis (PCA) of the morphological variables highlights the three genet barycenters, which fall along the fractal dimension (FD) eigenvector. Eigen vectors are colored (green < 0.05) based on statistical significance between the three genets.")
+```
+
+There was an overall reduction in growth rates under the simulated OA (HCO2) group, but the genets differentially experienced OA stress.
+
+<img src="`r paste0(base_url, 'images/ulinkGrowth2022/', 'calcification graphs-1.png')`" alt="Genet specific growth rates"/>
+```{r}
+capFig("The three genets had differnetial sensitivity to OA stress")
+```
+
+We can dive into the calcifying fluid pH with boron isotopes, and we see that calcifying fluid pH is almost inversely proportional to pH_{cf}. This falls in line with our conceptual plot where smoother corals experience higher day-time highs, driving the mean pH upwards since the change during the day is greater than the reduction at night.
+
+<img src="`r paste0(base_url, fig_path, 'phRegression.png')`" alt="Calcifying fluid pH is inversely proportional to surface roughness"/>
+```{r}
+capFig("Calcifying fluid pH is inversely proportional to surface roughness")
+```
+
+However, these pH_{cf} are not driving OA sensitivites, and rather corals with increase roughness experienced reduced sensitivity. This may be explained by the higher night-time lows in the rougher corals, thereby night-time dissolution likely drives OA sensitivity for *A. cervicornis*.
+
+<img src="`r paste0(base_url, fig_path, 'gRegression.png')`" alt="Growth rates scale with surface roughnes only under OA"/>
+```{r}
+capFig("Growth rates scale with surface roughnes only under OA")
+```
+
 # Conclusions
+
+These preliminary data suggest elevated calcifying fluid pH may not correlate with OA sensitivity in *A. cervicornis*. Rather, surface roughness induced changes in microenvironment confers OA resistance, with rougher corals having reduced reductions in growth rates under ocean acidification. This relationship is only present under simulated OA conditions and not under present-day scenarios. This is likely due to the night-time lows in smooth corals exacerbates a pH threshold for the species when the average bulk pH is 7.8. Further, smoother corals, with higher day-time pH, have higher average calcifying fluid pH. 
 
 # Poster
 <img src="`r paste0(base_url, fig_path, 'KielMOB7poster_final.png')`" alt="Poster presented at MOB7 in Heron Island, Australia"/>
@@ -135,7 +173,10 @@ Eighteen randomly selected skeletons (n= 3/treatment/genet) were left intact fol
 # References
 Chan NCS & Connolly SR. 2013. Sensitivity of coral calcification to ocean acidification: a meta-analysis. Global Change Biology. 19(1):282–290. https://doi.org/10.1111/gcb.12011
 
-Kiel PM, Formel N, Jankulak M, Baker AC, Cunning R, Gilliam DS, Kenkel CD, Langdon C, Lirman D, Lustic C, et al. 2023. Acropora Cervicornis Data Coordination Hub, an Open Access Database for Evaluating Genet Performance. Bulletin of Marine Science. 99(2):119–136. https://doi.org/10.5343/bms.2022.0064
+
+Kiel PM, Formel N, Jankulak M, Baker AC, Cunning R, Gilliam DS, Kenkel CD, Langdon C, Lirman D, Lustic C, et al. 2023. Acropora Cervicornis Data Coordination Hub, an Open Access Database for Evaluating Genet Performance. Bulletin of Marine Science. 99(2):119–136. https://doi.org/10.5343/
+
+Price, N. N., Martz, T. R., Brainard, R. E. & Smith, J. E. Diel variability in seawater pH relates to calcification and benthic community structure on coral reefs. PloS one 7, e43843–e43843 (2012).
 
 Suggett DJ, Guest J, Camp EF, Edwards A, Goergen L, Hein M, Humanes A, Levy JS, Montoya-Maya PH, Smith DJ, et al. 2024. Restoration as a meaningful aid to ecological recovery of coral reefs. npj Ocean Sustain. 3(1):1–4. https://doi.org/10.1038/s44183-024-00056-8
 
